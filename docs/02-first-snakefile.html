@@ -529,7 +529,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <blockquote class="blockquote">
 <p>Snakemake builds the first rule in the file, and whatever that rule needs.</p>
 </blockquote>
-<p>So <code>rule all</code> is where you list the things you actually want to exist at the end. Everything else gets built because something in that list, directly or indirectly, depends on it. A file that is not reachable from <code>rule all</code> will not be built, no matter how many rules could make it. By convention this is named <code>rule all</code>, but what matters is that it is first.</p>
+<p>So <code>rule all</code> is where you list the things you actually want to exist at the end. Everything else gets built because something in that list, directly or indirectly, depends on it. Anything not reachable from it is simply not part of a plain <code>snakemake</code> run — though you can still ask for it by name, which is the next section. By convention this is named <code>rule all</code>, but what matters is that it is first.</p>
 </section>
 <section id="the-dependency-graph" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="the-dependency-graph"><span class="header-section-number">2.3</span> The dependency graph</h2>
@@ -779,6 +779,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>You can also name a target directly, which is invaluable when you are developing and want to check one piece:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">--cores</span> 1 rds/sim-naive.rds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Snakemake finds the rule that can produce that file, builds whatever it needs, and stops. You can also name a <em>rule</em> — <code>snakemake --cores 1 figure</code> — which asks for that rule’s outputs.</p>
+<p>Neither form cares about <code>rule all</code>. A rule that nothing in <code>rule all</code> reaches is still perfectly buildable by naming it, which is how a half-finished piece of a project gets exercised before it is wired into the paper.</p>
+<p>The one restriction is that <strong>a rule whose output contains a wildcard cannot be named</strong> — Snakemake would have no way to know which values you meant:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>$ snakemake --cores 1 sim</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>WorkflowError:</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>Target rules may not contain wildcards. Please specify concrete files or a rule</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>without wildcards at the command line …</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Name a file instead, and the wildcards come from the filename as usual:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">--cores</span> 1 rds/200/sim/n50_rho0_naive.rds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="sec-shape" class="level2" data-number="2.8">
 <h2 data-number="2.8" class="anchored" data-anchor-id="sec-shape"><span class="header-section-number">2.8</span> One Snakefile, one project</h2>
@@ -789,12 +797,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-with-filename-file">
 <pre><strong>the shape of a project</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11" data-filename="the shape of a project"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>my-project/</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  Snakefile          &lt;- the map: every rule, in one file, at the root</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  config.yaml        &lt;- the settings (chapter 4)</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  scripts/              &lt;- the scripts the rules call</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  rds/               &lt;- computed results</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  out/               &lt;- figures and tables</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13" data-filename="the shape of a project"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>my-project/</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  Snakefile          &lt;- the map: every rule, in one file, at the root</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  config.yaml        &lt;- the settings (chapter 4)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  scripts/              &lt;- the scripts the rules call</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  rds/               &lt;- computed results</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  out/               &lt;- figures and tables</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Three of those deserve to be stated as rules rather than suggestions.</p>
 <p><strong>One Snakefile, at the root.</strong> Not one per subdirectory. The Snakefile is the only place that describes how the pieces of the project fit together, so a newcomer — a coauthor, a reviewer, you in a year — has exactly one file to open to find out what this project builds and what it builds it from. Snakemake does let you split rules across files with <code>include:</code>, and that is worth reaching for once a single file becomes genuinely unwieldy, but the default should be one file you can read top to bottom.</p>
@@ -811,9 +819,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-with-filename-file">
 <pre><strong>.gitignore</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12" data-filename=".gitignore"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>rds/</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>out/</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>.snakemake/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14" data-filename=".gitignore"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>rds/</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>out/</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>.snakemake/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Stated that way it also settles the case people otherwise talk themselves out of. A figure is small and it is genuinely convenient to look at a PDF on GitHub — but size has nothing to do with whether something is source, and <code>out/figure1.pdf</code> is as much an output as a four hundred megabyte <code>.rds</code>. If you want to see the figures, run <code>snakemake</code>. It takes seconds, and what you get is guaranteed to match the code you are looking at.</p>
 <p>The one thing this costs you is that a fresh clone cannot show anybody a result until it has been rebuilt. When the rebuild takes days rather than seconds that is a real cost, and <a href="10-scaling-up.html" class="quarto-xref"><span>Chapter 10</span></a> deals with it — by sharing <code>rds/</code> outside of git, not by committing it.</p>

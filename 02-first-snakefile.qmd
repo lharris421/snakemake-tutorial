@@ -57,8 +57,10 @@ because of a rule Snakemake follows strictly:
 
 So `rule all` is where you list the things you actually want to exist at the end.
 Everything else gets built because something in that list, directly or indirectly,
-depends on it. A file that is not reachable from `rule all` will not be built, no
-matter how many rules could make it. By convention this is named `rule all`, but what matters is that it is first.
+depends on it. Anything not reachable from it is simply not part of a plain
+`snakemake` run --- though you can still ask for it by name, which is the next
+section. By convention this is named `rule all`, but what matters is that it is
+first.
 
 ## The dependency graph
 
@@ -207,6 +209,26 @@ snakemake --cores 1 rds/sim-naive.rds
 Snakemake finds the rule that can produce that file, builds whatever it needs, and
 stops. You can also name a *rule* --- `snakemake --cores 1 figure` --- which asks
 for that rule's outputs.
+
+Neither form cares about `rule all`. A rule that nothing in `rule all` reaches is
+still perfectly buildable by naming it, which is how a half-finished piece of a
+project gets exercised before it is wired into the paper.
+
+The one restriction is that **a rule whose output contains a wildcard cannot be
+named** --- Snakemake would have no way to know which values you meant:
+
+```{.default}
+$ snakemake --cores 1 sim
+WorkflowError:
+Target rules may not contain wildcards. Please specify concrete files or a rule
+without wildcards at the command line …
+```
+
+Name a file instead, and the wildcards come from the filename as usual:
+
+```bash
+snakemake --cores 1 rds/200/sim/n50_rho0_naive.rds
+```
 
 ## One Snakefile, one project {#sec-shape}
 

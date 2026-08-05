@@ -436,9 +436,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#the-aggregating-rule" id="toc-the-aggregating-rule" class="nav-link active" data-scroll-target="#the-aggregating-rule"><span class="header-section-number">6.1</span> The aggregating rule</a></li>
   <li><a href="#figures" id="toc-figures" class="nav-link" data-scroll-target="#figures"><span class="header-section-number">6.2</span> Figures</a></li>
-  <li><a href="#tables" id="toc-tables" class="nav-link" data-scroll-target="#tables"><span class="header-section-number">6.3</span> Tables</a></li>
-  <li><a href="#rule-all-as-the-manifest" id="toc-rule-all-as-the-manifest" class="nav-link" data-scroll-target="#rule-all-as-the-manifest"><span class="header-section-number">6.4</span> rule all as the manifest</a></li>
-  <li><a href="#try-it" id="toc-try-it" class="nav-link" data-scroll-target="#try-it"><span class="header-section-number">6.5</span> Try it</a></li>
+  <li><a href="#try-it" id="toc-try-it" class="nav-link" data-scroll-target="#try-it"><span class="header-section-number">6.3</span> Try it</a></li>
   </ul>
 </nav>
     </div>
@@ -565,84 +563,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>R/one_rep.R</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>scripts/setup.R          sourced by figure.R and table.R</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>so that the two kinds of change cost what they should. Editing a hex code plans five jobs — the figure, the table and the two PDFs — and leaves the grid alone. Editing <code>R/one_rep.R</code> plans all twenty-three, because the results really are wrong now. Had both lived in one <code>setup.R</code>, the color change would have rerun eighteen simulations, since Snakemake cannot tell which half of a file you touched.</p>
-<p>The <code>R/</code> directory is the layout an R package uses, which is where this ends up once the functions are the contribution rather than the scaffolding. <a href="https://github.com/IowaBiostat/project-workflow">IowaBiostat/project-workflow</a> is a talk and a small example project on exactly that, with <code>R/</code>, <code>man/</code>, <code>scripts/</code> and a Snakefile, worth cloning and pulling apart.</p>
+<p>so that the two kinds of change cost what they should. Editing a hex code plans four jobs — the figure, the table and the two PDFs — and leaves the grid alone. Editing <code>R/one_rep.R</code> plans all twenty-three, because the results really are wrong now. Had both lived in one <code>setup.R</code>, the color change would have rerun eighteen unnecessary simulations, since Snakemake cannot tell which half of a file you touched.</p>
+<p>The <code>R/</code> directory is the layout an R package uses. <a href="https://github.com/IowaBiostat/project-workflow">IowaBiostat/project-workflow</a> is a talk and a small example project that goes into this further and is worth giving a read.</p>
 </div>
 </div>
 </section>
-<section id="tables" class="level2" data-number="6.3">
-<h2 data-number="6.3" class="anchored" data-anchor-id="tables"><span class="header-section-number">6.3</span> Tables</h2>
-<p>Tables are the same idea with a different output format: the script writes a LaTeX fragment that the manuscript <code>\input</code>s.</p>
-<div class="code-with-filename">
-<div class="code-with-filename-file">
-<pre><strong>scripts/table.R (excerpt)</strong></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" data-filename="scripts/table.R (excerpt)"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## escape = FALSE so that "$n$" reaches LaTeX as math rather than as literal</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="do">## dollar signs; the price is that anything else in the table must be valid LaTeX</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">kbl</span>(wide, <span class="at">format =</span> <span class="st">"latex"</span>, <span class="at">booktabs =</span> <span class="cn">TRUE</span>, <span class="at">digits =</span> <span class="dv">3</span>, <span class="at">linesep =</span> <span class="st">""</span>,</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">escape =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"$n$"</span>, <span class="fu">rep</span>(<span class="fu">unname</span>(method_labels), <span class="dv">2</span>)),</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">align =</span> <span class="fu">c</span>(<span class="st">"r"</span>, <span class="fu">rep</span>(<span class="st">"c"</span>, <span class="fu">ncol</span>(wide) <span class="sc">-</span> <span class="dv">1</span>)),</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">caption =</span> <span class="fu">sprintf</span>(<span class="fu">paste</span>(<span class="st">"Coverage of nominal %g</span><span class="sc">\\</span><span class="st">%% confidence"</span>,</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>             <span class="st">"intervals for coefficients selected by forward selection, by"</span>,</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>             <span class="st">"whether the selected coefficient is truly zero."</span>),</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>             <span class="dv">100</span> <span class="sc">*</span> opt<span class="sc">$</span>level),</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>           <span class="at">label =</span> <span class="st">"coverage"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_header_above</span>(<span class="fu">c</span>(<span class="st">" "</span> <span class="ot">=</span> <span class="dv">1</span>, <span class="st">"Non-null"</span> <span class="ot">=</span> <span class="dv">2</span>, <span class="st">"Null"</span> <span class="ot">=</span> <span class="dv">2</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>which produces:</p>
-<div class="code-with-filename">
-<div class="code-with-filename-file">
-<pre><strong>out/table1.tex</strong></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" data-filename="out/table1.tex"><pre class="sourceCode latex code-with-copy"><code class="sourceCode latex"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">\begin</span>{<span class="ex">table</span>}</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">\caption</span>{<span class="kw">\label</span>{<span class="ex">tab:coverage</span>}Coverage of nominal 95<span class="fu">\%</span> confidence intervals for coefficients selected by forward selection, by whether the selected coefficient is truly zero.}</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">\centering</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="kw">\begin</span>{<span class="ex">tabular</span>}[t]{rcccc}</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">\toprule</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">\multicolumn</span>{1}{c}{ } <span class="op">&amp;</span> <span class="fu">\multicolumn</span>{2}{c}{Non-null} <span class="op">&amp;</span> <span class="fu">\multicolumn</span>{2}{c}{Null} <span class="fu">\\</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">\cmidrule</span>(l{3pt}r{3pt}){2-3} <span class="fu">\cmidrule</span>(l{3pt}r{3pt}){4-5}</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="ss">$n$</span> <span class="op">&amp;</span> Naive <span class="op">&amp;</span> Sample splitting <span class="op">&amp;</span> Naive <span class="op">&amp;</span> Sample splitting<span class="fu">\\</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="fu">\midrule</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>50 <span class="op">&amp;</span> 0.917 <span class="op">&amp;</span> 0.941 <span class="op">&amp;</span> 0.598 <span class="op">&amp;</span> 0.952<span class="fu">\\</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>100 <span class="op">&amp;</span> 0.944 <span class="op">&amp;</span> 0.957 <span class="op">&amp;</span> 0.619 <span class="op">&amp;</span> 0.928<span class="fu">\\</span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>400 <span class="op">&amp;</span> 0.939 <span class="op">&amp;</span> 0.943 <span class="op">&amp;</span> 0.564 <span class="op">&amp;</span> 0.944<span class="fu">\\</span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="fu">\bottomrule</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">tabular</span>}</span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">table</span>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Points worth noting:</p>
-<ul>
-<li>The file contains a <strong>fragment</strong>, not a document — no <code>\documentclass</code>, no <code>\begin{document}</code>. It is meant to be <code>\input</code> into something else.</li>
-<li>The <strong>caption and label live with the numbers</strong>, not in the manuscript. That way <code>\ref{tab:coverage}</code> resolves and the caption cannot describe a table that the code no longer produces.</li>
-<li><code>escape = FALSE</code> lets <code>$n$</code> through as math. The cost is that everything else in the table must then be valid LaTeX — a <code>%</code> or <code>_</code> in a variable name will break the build, which is a reasonable trade when you control the contents.</li>
-</ul>
-<p>Writing <code>.tex</code> rather than pasting numbers into the manuscript by hand is the entire argument of this book, applied to tables. A number in your paper should be traceable to the code that computed it, and the only way to guarantee that is for no human hand to touch it in between.</p>
-</section>
-<section id="rule-all-as-the-manifest" class="level2" data-number="6.4">
-<h2 data-number="6.4" class="anchored" data-anchor-id="rule-all-as-the-manifest"><span class="header-section-number">6.4</span> rule all as the manifest</h2>
-<p>With figures and tables in place, <code>rule all</code> becomes the list of everything the paper is made of:</p>
-<div class="code-with-filename">
-<div class="code-with-filename-file">
-<pre><strong>Snakefile (excerpt)</strong></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" data-filename="Snakefile (excerpt)"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>rule <span class="bu">all</span>:</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span>:</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>        <span class="co">"build/paper.pdf"</span>,</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>        <span class="co">"build/submission.pdf"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Here it names only the two PDFs, because everything else is reachable through them. In a larger project — the one in <a href="10-scaling-up.html" class="quarto-xref"><span>Chapter 10</span></a> has sixteen figures and tables — it is common to list every product explicitly instead:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>rule <span class="bu">all</span>:</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span>:</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>        <span class="co">"build/paper.pdf"</span>,</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>        <span class="co">"out/figure1.pdf"</span>,</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>        <span class="co">"out/figure2.pdf"</span>,</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>        ...</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This is slightly redundant, and it is what you want anyway. It gives you one place to read off what the project produces, and it means <code>snakemake</code> still builds a figure you have temporarily commented out of the manuscript while you rearrange the results section.</p>
-</section>
-<section id="try-it" class="level2" data-number="6.5">
-<h2 data-number="6.5" class="anchored" data-anchor-id="try-it"><span class="header-section-number">6.5</span> Try it</h2>
+<section id="try-it" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="try-it"><span class="header-section-number">6.3</span> Try it</h2>
 <ol type="1">
 <li>Change the color palette in <code>scripts/setup.R</code> and run <code>snakemake -n</code>; then do the same to <code>R/gen_data.R</code>. Count the jobs each time, and explain the difference.</li>
 <li>Add a <code>figure2</code> rule showing coverage against <code>rho</code> instead of <code>n</code>, and add it to <code>rule all</code>.</li>

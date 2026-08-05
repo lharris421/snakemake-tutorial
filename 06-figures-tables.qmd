@@ -96,84 +96,15 @@ scripts/setup.R          sourced by figure.R and table.R
 ```
 
 so that the two kinds of change cost what they should. Editing a hex code plans
-five jobs --- the figure, the table and the two PDFs --- and leaves the grid alone.
+four jobs --- the figure, the table and the two PDFs --- and leaves the grid alone.
 Editing `R/one_rep.R` plans all twenty-three, because the results really are wrong
-now. Had both lived in one `setup.R`, the color change would have rerun eighteen
+now. Had both lived in one `setup.R`, the color change would have rerun eighteen unnecessary
 simulations, since Snakemake cannot tell which half of a file you touched.
 
-The `R/` directory is the layout an R package uses, which is where this ends up
-once the functions are the contribution rather than the scaffolding.
+The `R/` directory is the layout an R package uses.
 [IowaBiostat/project-workflow](https://github.com/IowaBiostat/project-workflow)
-is a talk and a small example project on exactly that, with `R/`, `man/`,
-`scripts/` and a Snakefile, worth cloning and pulling apart.
+is a talk and a small example project that goes into this further and is worth giving a read.
 :::
-
-## Tables
-
-Tables are the same idea with a different output format: the script writes a LaTeX
-fragment that the manuscript `\input`s.
-
-```{r}
-#| echo: false
-#| output: asis
-embed_file("examples/04-manuscript/scripts/table.R", from = "^## escape = FALSE",
-           to = "^  add_header_above", filename = "scripts/table.R (excerpt)")
-```
-
-which produces:
-
-```{r}
-#| echo: false
-#| output: asis
-embed_file("transcripts/table1.tex", lang = "latex",
-           filename = "out/table1.tex")
-```
-
-Points worth noting:
-
-- The file contains a **fragment**, not a document --- no `\documentclass`, no
-  `\begin{document}`. It is meant to be `\input` into something else.
-- The **caption and label live with the numbers**, not in the manuscript. That way
-  `\ref{tab:coverage}` resolves and the caption cannot describe a table that the
-  code no longer produces.
-- `escape = FALSE` lets `$n$` through as math. The cost is that everything else in
-  the table must then be valid LaTeX --- a `%` or `_` in a variable name will break
-  the build, which is a reasonable trade when you control the contents.
-
-Writing `.tex` rather than pasting numbers into the manuscript by hand is the entire
-argument of this book, applied to tables. A number in your paper should be
-traceable to the code that computed it, and the only way to guarantee that is for
-no human hand to touch it in between.
-
-## rule all as the manifest
-
-With figures and tables in place, `rule all` becomes the list of everything the
-paper is made of:
-
-```{r}
-#| echo: false
-#| output: asis
-embed_file("examples/04-manuscript/Snakefile", from = "^rule all:", to = '^        "build/submission.pdf"',
-           filename = "Snakefile (excerpt)")
-```
-
-Here it names only the two PDFs, because everything else is reachable through them.
-In a larger project --- the one in @sec-scaling has sixteen figures and tables ---
-it is common to list every product explicitly instead:
-
-```python
-rule all:
-    input:
-        "build/paper.pdf",
-        "out/figure1.pdf",
-        "out/figure2.pdf",
-        ...
-```
-
-This is slightly redundant, and it is what you want anyway. It gives you one place
-to read off what the project produces, and it means `snakemake` still builds a
-figure you have temporarily commented out of the manuscript while you rearrange
-the results section.
 
 ## Try it
 
