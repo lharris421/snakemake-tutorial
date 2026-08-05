@@ -27,13 +27,13 @@ localrule sim_split:
     jobid: 3
     reason: Missing output files: rds/sim-split.rds
     resources: tmpdir=/var/folders/gz/hbrw64n97wb0vy5prhnxst400000gp/T
-wrote rds/sim-naive.rds -- coverage: 0.828 
 wrote rds/sim-split.rds -- coverage: 0.944 
-
-Finished jobid: 2 (Rule: sim_naive)
-1 of 4 steps (25%) done
+wrote rds/sim-naive.rds -- coverage: 0.828 
 
 Finished jobid: 3 (Rule: sim_split)
+1 of 4 steps (25%) done
+
+Finished jobid: 2 (Rule: sim_naive)
 2 of 4 steps (50%) done
 Select jobs to execute...
 Execute 1 jobs...

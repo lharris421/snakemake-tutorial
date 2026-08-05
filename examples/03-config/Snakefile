@@ -19,8 +19,7 @@ rule all:
 
 rule sim:
     input:
-        script = "code/sim.R",
-        setup = "code/setup.R"
+        script = "code/sim.R"
     output:
         "rds/{iterations}/sim/n{n}_rho{rho}_{method}.rds"
     shell:
@@ -34,7 +33,6 @@ rule sim:
 rule figure:
     input:
         script = "code/figure.R",
-        setup = "code/setup.R",
         rds = expand("rds/{iterations}/sim/n{n}_rho{rho}_{method}.rds",
                      iterations = ITER,
                      n = [50, 100, 400],

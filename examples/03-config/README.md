@@ -2,9 +2,9 @@
 
 Accompanies [chapter 4](../../04-config.qmd).
 
-The parameter grid, the number of iterations, the seed and the confidence level have
-moved out of the Snakefile and into `config.yaml`. The R scripts have moved into `code/`
-and share a `setup.R`.
+The iteration count has moved out of the R script and into `config.yaml`, where it
+also names the directory results are cached in. The R scripts have moved into
+`code/`.
 
 ```bash
 snakemake --cores 4                          # 200 iterations, ~10 seconds

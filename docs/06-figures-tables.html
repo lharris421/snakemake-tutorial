@@ -476,19 +476,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-filename="Snakefile (excerpt)"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>rule figure1:</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span>:</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>        script <span class="op">=</span> <span class="st">"code/figure.R"</span>,</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>        setup <span class="op">=</span> <span class="st">"code/setup.R"</span>,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>        rds <span class="op">=</span> expand(<span class="st">"rds/</span><span class="sc">{iterations}</span><span class="st">/sim/n</span><span class="sc">{n}</span><span class="st">_rho</span><span class="sc">{rho}</span><span class="st">_</span><span class="sc">{method}</span><span class="st">.rds"</span>,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                     iterations <span class="op">=</span> ITER,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>                     n <span class="op">=</span> [<span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">400</span>],</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>                     rho <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">50</span>, <span class="dv">80</span>],</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>                     method <span class="op">=</span> [<span class="st">"naive"</span>, <span class="st">"split"</span>])</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    output:</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        <span class="co">"out/figure1.pdf"</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    log:</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>        <span class="co">"logs/figure1.log"</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    shell:</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>        <span class="co">"Rscript {input.script} --out {output} "</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        <span class="co">"{input.rds} &gt; {log} 2&gt;&amp;1"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>        rds <span class="op">=</span> expand(<span class="st">"rds/</span><span class="sc">{iterations}</span><span class="st">/sim/n</span><span class="sc">{n}</span><span class="st">_rho</span><span class="sc">{rho}</span><span class="st">_</span><span class="sc">{method}</span><span class="st">.rds"</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>                     iterations <span class="op">=</span> ITER,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                     n <span class="op">=</span> [<span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">400</span>],</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>                     rho <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">50</span>, <span class="dv">80</span>],</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>                     method <span class="op">=</span> [<span class="st">"naive"</span>, <span class="st">"split"</span>])</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    output:</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>        <span class="co">"out/figure1.pdf"</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    log:</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        <span class="co">"logs/figure1.log"</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    shell:</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        <span class="co">"Rscript {input.script} --out {output} "</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>        <span class="co">"{input.rds} &gt; {log} 2&gt;&amp;1"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The <code>expand()</code> sits in the rule that needs it. <code>rule table1</code> next to it writes out the same call, because it happens to summarize the same grid — but it is free not to, and a supplementary figure covering only the large sample sizes would simply sweep less.</p>
 <p>The R script receives all eighteen filenames as trailing arguments and stacks them:</p>
@@ -532,19 +531,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Two conventions, though, that matter more inside a pipeline than outside one:</p>
 <p><strong>Write vector graphics to the size they will appear.</strong> <code>ggsave(..., width = 7, height = 3)</code> in inches, matching the text width of the document, means the figure is never rescaled by LaTeX and the fonts in it come out the size you chose. Resizing a figure by 60% in <code>\includegraphics</code> is how you end up with axis labels nobody can read.</p>
-<p><strong>Keep the appearance in <code>setup.R</code>.</strong> Colors and method labels live in one place:</p>
+<p><strong>Name the methods once, at the top of the script.</strong> The figure and the table both turn <code>naive</code> into something a reader sees:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
-<pre><strong>code/setup.R (excerpt)</strong></pre>
+<pre><strong>code/figure.R (excerpt)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" data-filename="code/setup.R (excerpt)"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>method_labels <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" data-filename="code/figure.R (excerpt)"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>method_labels <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"naive"</span> <span class="ot">=</span> <span class="st">"Naive"</span>,</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"split"</span> <span class="ot">=</span> <span class="st">"Sample splitting"</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"naive"</span> <span class="ot">=</span> <span class="st">"#d95f02"</span>, <span class="st">"split"</span> <span class="ot">=</span> <span class="st">"#1b9e77"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>so that “naive” is the same color in every figure and is spelled the same way in the table. This is a small thing that becomes a large thing at revision time.</p>
+<p>so that the spelling and the color are decided in one visible place rather than buried in a <code>ggplot</code> call. In a project with more than a couple of figures it is worth going further and putting these in a file the scripts share; here, where each script is short enough to read at a glance, keeping them self-contained is simpler.</p>
 </section>
 <section id="tables" class="level2" data-number="6.3">
 <h2 data-number="6.3" class="anchored" data-anchor-id="tables"><span class="header-section-number">6.3</span> Tables</h2>
@@ -620,7 +619,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="try-it" class="level2" data-number="6.5">
 <h2 data-number="6.5" class="anchored" data-anchor-id="try-it"><span class="header-section-number">6.5</span> Try it</h2>
 <ol type="1">
-<li>Change the color palette in <code>code/setup.R</code> and run <code>snakemake -n</code>. Does the table rebuild? Should it?</li>
+<li>Change the color palette in <code>code/figure.R</code> and run <code>snakemake -n</code>. Does the table rebuild? Should it?</li>
 <li>Add a <code>figure2</code> rule showing coverage against <code>rho</code> instead of <code>n</code>, and add it to <code>rule all</code>.</li>
 <li>Delete <code>out/table1.tex</code> and run <code>snakemake --cores 4</code>. How far back does Snakemake go?</li>
 </ol>

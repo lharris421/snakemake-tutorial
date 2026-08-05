@@ -68,17 +68,20 @@ never rescaled by LaTeX and the fonts in it come out the size you chose. Resizin
 figure by 60% in `\includegraphics` is how you end up with axis labels nobody can
 read.
 
-**Keep the appearance in `setup.R`.** Colors and method labels live in one place:
+**Name the methods once, at the top of the script.** The figure and the table both
+turn `naive` into something a reader sees:
 
 ```{r}
 #| echo: false
 #| output: asis
-embed_file("examples/04-manuscript/code/setup.R", from = "^method_labels",
-           to = "^colors", filename = "code/setup.R (excerpt)")
+embed_file("examples/04-manuscript/code/figure.R", from = "^method_labels",
+           to = "^colors", filename = "code/figure.R (excerpt)")
 ```
 
-so that "naive" is the same color in every figure and is spelled the same way in
-the table. This is a small thing that becomes a large thing at revision time.
+so that the spelling and the color are decided in one visible place rather than
+buried in a `ggplot` call. In a project with more than a couple of figures it is
+worth going further and putting these in a file the scripts share; here, where each
+script is short enough to read at a glance, keeping them self-contained is simpler.
 
 ## Tables
 
@@ -149,7 +152,7 @@ the results section.
 
 ## Try it
 
-1. Change the color palette in `code/setup.R` and run `snakemake -n`. Does the
+1. Change the color palette in `code/figure.R` and run `snakemake -n`. Does the
    table rebuild? Should it?
 2. Add a `figure2` rule showing coverage against `rho` instead of `n`, and add it
    to `rule all`.

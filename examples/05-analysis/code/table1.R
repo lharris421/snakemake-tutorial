@@ -5,7 +5,17 @@
 ## Baseline characteristics by arm, saved as a plain data frame.  The report
 ## formats it; this script decides what is in it.
 
-if (interactive()) source("setup.R") else source("code/setup.R")
+library(optparse)
+
+## Labels used in Table 1 and in the report, defined once so the two can never
+## disagree
+var_labels <- c(
+  age = "Age (years)",
+  sex = "Female",
+  bmi = "BMI (kg/m2)",
+  smoker = "Smoking status",
+  fev1_base = "Baseline FEV1 (L)"
+)
 
 option_list <- list(
   make_option("--in", type = "character", default = "rds/analysis.rds",

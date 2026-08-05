@@ -11,7 +11,6 @@ rule all:
 rule clean:
     input:
         script = "code/clean.R",
-        setup = "code/setup.R",
         data = "data/trial.csv"
     output:
         "rds/analysis.rds"
@@ -23,7 +22,6 @@ rule clean:
 rule model:
     input:
         script = "code/model.R",
-        setup = "code/setup.R",
         rds = "rds/analysis.rds"
     output:
         "rds/models.rds"
@@ -35,7 +33,6 @@ rule model:
 rule table1:
     input:
         script = "code/table1.R",
-        setup = "code/setup.R",
         rds = "rds/analysis.rds"
     output:
         "rds/table1.rds"
@@ -47,7 +44,6 @@ rule table1:
 rule figure1:
     input:
         script = "code/figure.R",
-        setup = "code/setup.R",
         rds = "rds/analysis.rds"
     output:
         "out/figure1.png"
@@ -61,7 +57,6 @@ rule figure1:
 rule report:
     input:
         qmd = "report.qmd",
-        setup = "code/setup.R",
         analysis = "rds/analysis.rds",
         models = "rds/models.rds",
         table1 = "rds/table1.rds",

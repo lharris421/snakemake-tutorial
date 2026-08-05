@@ -2,7 +2,12 @@
 ##
 ## Usage: Rscript code/figure.R --in rds/analysis.rds --out out/figure1.png
 
-if (interactive()) source("setup.R") else source("code/setup.R")
+suppressPackageStartupMessages({
+  library(optparse)
+  library(ggplot2)
+})
+
+arm_colors <- c("Placebo" = "#7570b3", "Treatment" = "#1b9e77")
 
 option_list <- list(
   make_option("--in", type = "character", default = "rds/analysis.rds",
