@@ -6,9 +6,9 @@ source("_common.R")
 ```
 
 The Snakefile in @sec-wildcards has the parameter grid written into it, and `sim.R`
-has 200 iterations and the seed written into it. Both are the wrong places. You will
-want 20 iterations while you are debugging and 1000 for the final results, and a
-coauthor will want to add a sample size without reading your Python.
+has 200 iterations written into it. Both are the wrong places. You will want 20
+iterations while you are debugging and 1000 for the final results, and a coauthor
+will want to add a sample size without reading your Python.
 
 Move to `examples/03-config`, which puts all of it in one file.
 
@@ -34,29 +34,6 @@ and everything in it is available as `config`, a dictionary --- `config["iterati
 is `200` and `config["n"]` is the list `[50, 100, 400]`. Use `config.get("key",
 default)` when a setting is optional.
 
-## Using config values in a rule
-
-Pull the settings out into plain Python variables at the top of the Snakefile, and
-use them in the shell command like any other placeholder:
-
-```{r}
-#| echo: false
-#| output: asis
-embed_file("examples/03-config/Snakefile", from = "^ITER  = ", to = "^LEVEL = ",
-           filename = "Snakefile (excerpt)")
-```
-
-```{r}
-#| echo: false
-#| output: asis
-embed_file("examples/03-config/Snakefile", from = "^rule sim:", to = '^        "--out',
-           filename = "Snakefile (excerpt)")
-```
-
-`{SEED}` and `{LEVEL}` are filled in from those variables, exactly as
-`{wildcards.n}` is filled in from the wildcard. Anything defined at the top of the
-Snakefile is available this way.
-
 ## Runs that don't overwrite each other {#sec-iterations-path}
 
 One setting is treated differently, and it is the most useful idea in this chapter.
@@ -73,9 +50,13 @@ embed_file("examples/03-config/Snakefile", from = "^## The iteration count",
 ```{r}
 #| echo: false
 #| output: asis
-embed_file("examples/03-config/Snakefile", from = "^    output:", to = "^        \"rds/",
+embed_file("examples/03-config/Snakefile", from = "^rule sim:", to = '^        "--out',
            filename = "Snakefile (excerpt)")
 ```
+
+`{ITER}` never appears in that rule: the count arrives as the wildcard
+`{wildcards.iterations}`, read back out of the filename that was asked for, just
+like `{wildcards.n}`.
 
 The reason is that 20 iterations and 1000 iterations are not a right answer and a
 wrong one. They are a quick check and a final result, and there is no reason they
@@ -182,10 +163,10 @@ that rule regardless. See @sec-debugging.
 A useful test: **if changing it changes the results, it belongs in the config; if
 changing it changes what the code does, it belongs in the code.**
 
-Iteration counts, seeds, grids, confidence levels, file locations --- config. The
-definition of the estimator --- code. The temptation, once you have a config file,
-is to make everything configurable, and you end up with a 200-line YAML file harder
-to read than the code it configures. The config here has seven settings and covers
+Iteration counts, grids, file locations --- config. The definition of the
+estimator --- code. The temptation, once you have a config file, is to make
+everything configurable, and you end up with a 200-line YAML file harder to read
+than the code it configures. The config here has four settings and covers
 everything a reader of the paper would plausibly want to change.
 
 ## Keeping the config with the results

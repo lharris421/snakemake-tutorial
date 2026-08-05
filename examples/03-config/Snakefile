@@ -3,9 +3,7 @@ configfile: "config.yaml"
 ## The iteration count names the directory the results go in, so a 20-iteration
 ## smoke run and a 1000-iteration final run sit side by side instead of
 ## overwriting each other.  ITER picks which of them the figure is built from.
-ITER  = config["iterations"]
-SEED  = config["seed"]
-LEVEL = config["level"]
+ITER = config["iterations"]
 
 ## Wildcards match greedily by default; these constraints keep {n} from
 ## swallowing part of the filename when a rule could match more than one way
@@ -31,8 +29,6 @@ rule sim:
         "--rho {wildcards.rho} "
         "--method {wildcards.method} "
         "--iterations {wildcards.iterations} "
-        "--seed {SEED} "
-        "--level {LEVEL} "
         "--out {output}"
 
 rule figure:
@@ -45,4 +41,4 @@ rule figure:
     output:
         "out/figure1.pdf"
     shell:
-        "Rscript {input.script} --out {output} --level {LEVEL} {input.rds}"
+        "Rscript {input.script} --out {output} {input.rds}"

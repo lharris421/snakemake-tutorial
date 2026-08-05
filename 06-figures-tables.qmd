@@ -45,11 +45,11 @@ embed_file("examples/04-manuscript/code/figure.R", from = "^parsed <- parse_args
 the named flags, so the script can be called as
 
 ```bash
-Rscript code/figure.R --out out/figure1.pdf --level 0.95 rds/sim/*.rds
+Rscript code/figure.R --out out/figure1.pdf rds/200/sim/*.rds
 ```
 
 An alternative worth knowing about: instead of passing filenames, the script could
-glob `rds/sim/` itself. Do not do this. A glob picks up whatever happens to be
+glob `rds/200/sim/` itself. Do not do this. A glob picks up whatever happens to be
 lying in the directory, including results from a parameter grid you abandoned last
 month, and it hides the dependency from Snakemake, which will then happily build
 your figure without running the simulations.

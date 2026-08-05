@@ -493,7 +493,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    log:</span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        <span class="co">"logs/figure1.log"</span></span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    shell:</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        <span class="co">"Rscript {input.script} --out {output} --level {LEVEL} "</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        <span class="co">"Rscript {input.script} --out {output} "</span></span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        <span class="co">"{input.rds} &gt; {log} 2&gt;&amp;1"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Pulling the <code>expand()</code> out into a variable named <code>SIMS</code> is worth doing as soon as more than one rule needs the same list. The figure and the table both summarize the whole grid, and defining that list once means they cannot drift apart.</p>
@@ -510,8 +510,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(infiles, readRDS))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><code>positional_arguments = TRUE</code> tells <code>optparse</code> to accept bare arguments alongside the named flags, so the script can be called as</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> code/figure.R <span class="at">--out</span> out/figure1.pdf <span class="at">--level</span> 0.95 rds/sim/<span class="pp">*</span>.rds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>An alternative worth knowing about: instead of passing filenames, the script could glob <code>rds/sim/</code> itself. Do not do this. A glob picks up whatever happens to be lying in the directory, including results from a parameter grid you abandoned last month, and it hides the dependency from Snakemake, which will then happily build your figure without running the simulations.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> code/figure.R <span class="at">--out</span> out/figure1.pdf rds/200/sim/<span class="pp">*</span>.rds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>An alternative worth knowing about: instead of passing filenames, the script could glob <code>rds/200/sim/</code> itself. Do not do this. A glob picks up whatever happens to be lying in the directory, including results from a parameter grid you abandoned last month, and it hides the dependency from Snakemake, which will then happily build your figure without running the simulations.</p>
 </section>
 <section id="figures" class="level2" data-number="6.2">
 <h2 data-number="6.2" class="anchored" data-anchor-id="figures"><span class="header-section-number">6.2</span> Figures</h2>
