@@ -77,6 +77,7 @@ rule manuscript:
     input:
         tex = "{doc}.tex",
         shared = ["main.tex", "preamble.tex"],
+        config = "config.yaml",
         figure = "out/figure1.pdf",
         table = "out/table1.tex"
     output:

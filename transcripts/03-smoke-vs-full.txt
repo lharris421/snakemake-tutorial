@@ -1,10 +1,10 @@
 $ snakemake --cores 4 --config iterations=20
 
-real	0m4.892s
-user	0m9.460s
-sys	0m1.024s
+real	0m4.923s
+user	0m9.337s
+sys	0m0.910s
 $ snakemake --cores 4
 
-real	0m11.046s
-user	0m31.454s
-sys	0m1.225s
+real	0m10.801s
+user	0m30.634s
+sys	0m1.114s

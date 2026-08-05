@@ -36,6 +36,35 @@ Notice how little is in there. A config is for settings that apply to the projec
 as a whole --- `iterations` means the same thing to every rule that computes
 anything.
 
+## The config is an input {#sec-config-input}
+
+One more line is worth adding before going further. `config.yaml` decides what the
+numbers are, so anything built from those numbers depends on it --- and saying so
+is a matter of listing it, exactly like a script:
+
+```{r}
+#| echo: false
+#| output: asis
+embed_file("examples/03-config/Snakefile", from = "^rule figure:", to = "^        config = ",
+           filename = "Snakefile (excerpt)")
+```
+
+Now the figure carries a recorded dependency on the settings that produced it. Edit
+`config.yaml` --- even to add a comment --- and Snakemake reports `Updated input
+files: config.yaml` and rebuilds it, for the same reason it does when `figure.R`
+changes: the contents no longer match what was recorded.
+
+Note where the line is *not* listed. `rule sim` does not take `config.yaml` as an
+input, deliberately, because otherwise any edit to the config would invalidate
+every simulation on disk --- and in a real project that is days of compute thrown
+away because somebody reworded a comment. Put it on the rules that assemble your
+products, not on the ones that do the expensive work.
+
+This matters most at the far end of a pipeline. @sec-manuscript lists `config.yaml`
+among the manuscript's inputs, so the compiled PDF is tied to the configuration
+that produced the numbers in it; the real project in @sec-scaling does the same.
+Commit the config, and the paper you built last March can be rebuilt from the tag.
+
 ## Runs that don't overwrite each other {#sec-iterations-path}
 
 This one setting is treated differently, and it is the most useful idea in this chapter.
@@ -159,14 +188,6 @@ code. The temptation, once you have a config file, is to make everything
 configurable, and you end up with a 200-line YAML file harder to read than the code
 it configures. The config here has one setting, and it is the one that genuinely
 applies to everything.
-
-## Keeping the config with the results
-
-One habit worth adopting: since `config.yaml` determines what the numbers are, it is
-part of the manuscript's provenance. @sec-manuscript lists it as an input to the
-manuscript rule for that reason, and so does the real project these examples are
-modeled on. Commit it, and the paper you compiled last March can be rebuilt from
-the tag.
 
 ## Try it
 

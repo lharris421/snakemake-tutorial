@@ -5,16 +5,11 @@
 source("_common.R")
 ```
 
-Simulation studies are the easiest parallel problem there is: a thousand independent
-replications, no communication between them. The reason to mention this in a
-Snakemake tutorial is that once your work is expressed as a DAG, you get the
+Once your work is expressed as a DAG, you get the
 parallelism for free --- Snakemake already knows which jobs do not depend on each
 other.
 
 ## --cores
-
-`--cores N` is a promise about the whole machine, not a setting per rule: Snakemake
-will keep up to `N` cores busy, starting whatever jobs are runnable.
 
 ```bash
 snakemake --cores 4
@@ -22,10 +17,10 @@ snakemake --cores 4
 
 With eighteen independent simulations and four cores, four run, and as each
 finishes another starts, until all eighteen are done and the figure can go. There is
-nothing to configure --- the ordering falls out of the graph.
+nothing to configure --- the ordering falls out of the DAG.
 
 `--cores all` uses every core you have. On a laptop you are also using for other
-things, leave one or two free; on a shared server, be a good citizen and pick a
+things, leave one or two free; on a shared server, be a good citizen and pick a reasonable
 number.
 
 ::: {.callout-note}
