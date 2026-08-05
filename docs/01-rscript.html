@@ -434,11 +434,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#rscript" id="toc-rscript" class="nav-link active" data-scroll-target="#rscript"><span class="header-section-number">1.1</span> Rscript</a></li>
-  <li><a href="#taking-arguments" id="toc-taking-arguments" class="nav-link" data-scroll-target="#taking-arguments"><span class="header-section-number">1.2</span> Taking arguments</a></li>
-  <li><a href="#optparse" id="toc-optparse" class="nav-link" data-scroll-target="#optparse"><span class="header-section-number">1.3</span> optparse</a></li>
-  <li><a href="#one-script-one-output-file" id="toc-one-script-one-output-file" class="nav-link" data-scroll-target="#one-script-one-output-file"><span class="header-section-number">1.4</span> One script, one output file</a></li>
-  <li><a href="#where-the-results-go" id="toc-where-the-results-go" class="nav-link" data-scroll-target="#where-the-results-go"><span class="header-section-number">1.5</span> Where the results go</a></li>
+  <li><a href="#interactive-work-is-not-reproducible" id="toc-interactive-work-is-not-reproducible" class="nav-link active" data-scroll-target="#interactive-work-is-not-reproducible"><span class="header-section-number">1.1</span> Interactive work is not reproducible</a></li>
+  <li><a href="#rscript" id="toc-rscript" class="nav-link" data-scroll-target="#rscript"><span class="header-section-number">1.2</span> Rscript</a></li>
+  <li><a href="#taking-arguments" id="toc-taking-arguments" class="nav-link" data-scroll-target="#taking-arguments"><span class="header-section-number">1.3</span> Taking arguments</a></li>
+  <li><a href="#optparse" id="toc-optparse" class="nav-link" data-scroll-target="#optparse"><span class="header-section-number">1.4</span> optparse</a></li>
+  <li><a href="#one-script-one-output-file" id="toc-one-script-one-output-file" class="nav-link" data-scroll-target="#one-script-one-output-file"><span class="header-section-number">1.5</span> One script, one output file</a></li>
+  <li><a href="#where-the-results-go" id="toc-where-the-results-go" class="nav-link" data-scroll-target="#where-the-results-go"><span class="header-section-number">1.6</span> Where the results go</a></li>
   </ul>
 </nav>
     </div>
@@ -467,16 +468,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <p>Snakemake does not run R code. It runs <em>commands</em>, and it decides when to run them. So before any of it is useful, your analysis has to be something you can start from a terminal without clicking anything — and, ideally, something you can point at different parameter values without editing the file.</p>
 <p>This chapter has nothing to do with Snakemake. If you already write scripts that take arguments and save their output to a file you name, skip to <a href="02-first-snakefile.html" class="quarto-xref"><span>Chapter 2</span></a>.</p>
-<section id="rscript" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="rscript"><span class="header-section-number">1.1</span> Rscript</h2>
+<section id="interactive-work-is-not-reproducible" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="interactive-work-is-not-reproducible"><span class="header-section-number">1.1</span> Interactive work is not reproducible</h2>
+<p>It is worth being blunt about this once, because everything else in the book follows from it.</p>
+<p>Whatever is in your R session right now is the product of a history nobody has, including you. Objects created by code you have since edited or deleted. A package loaded by hand in March. A working directory you changed at some point. A seed set before an experiment you abandoned. The console records what you <em>typed</em>, not what you <em>ran</em>, and certainly not in what order — and if you saved the workspace on exit, all of that invisible state came back with you the next morning.</p>
+<p>The practical consequence is that “it works” is not a claim you can check. A number in your session may or may not be what the current version of your code produces. There is no way to find out except to start a clean session and run the code from the top — which is exactly what running a script does.</p>
+<p>None of this is an argument against working interactively. Interactive is how you figure out what the code should be; it is the right tool for exploring a dataset, staring at a model, and getting a plot to look right. The rule is narrower than that: <strong>nothing may exist only in your session.</strong> Once a piece of analysis is real, it belongs in a file that runs top to bottom, in a fresh session, and writes its output somewhere you named.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Don’t save your workspace
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Turn off the <code>.RData</code> prompt — in RStudio, <em>Tools → Global Options → General</em>, set “Save workspace to .RData on exit” to <em>Never</em> and clear “Restore .RData into workspace at startup”. Per project, the same two settings are <code>SaveWorkspace: No</code> and <code>RestoreWorkspace: No</code> in the <code>.Rproj</code> file; this repository’s has both.</p>
+<p>It feels like losing something. What you lose is the illusion that your results survive a restart, and finding that out early is much cheaper than finding it out the week a paper is due.</p>
+</div>
+</div>
+<p>Snakemake is the machinery that makes the rule livable: it reruns from a clean session only the parts that are actually out of date, so insisting on scripts stops costing you the thing interactive work was buying.</p>
+</section>
+<section id="rscript" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="rscript"><span class="header-section-number">1.2</span> Rscript</h2>
 <p><code>Rscript</code> runs an R file top to bottom and exits:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> sim.R</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Two things change when your code runs this way rather than in RStudio.</p>
 <p>The first is that the working directory is wherever your terminal is, not wherever the file is. If <code>sim.R</code> says <code>readRDS("results/thing.rds")</code>, that path is resolved relative to the directory you were sitting in when you typed the command. Pick a convention and hold to it; the one used throughout this book is <strong>always run from the project root</strong>, so every path in every script is relative to the top of the project. Snakemake follows the same convention by default, which is convenient.</p>
 <p>The second is that nothing prints unless you ask. Auto-printing at the top level is an interactive feature, so <code>head(d)</code> on its own line produces no output under <code>Rscript</code>; you need <code>print(head(d))</code> or <code>cat()</code>. This matters more than it sounds like it should, because those prints become your log file in <a href="05-parallel-and-logs.html" class="quarto-xref"><span>Chapter 5</span></a>.</p>
 </section>
-<section id="taking-arguments" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="taking-arguments"><span class="header-section-number">1.2</span> Taking arguments</h2>
+<section id="taking-arguments" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="taking-arguments"><span class="header-section-number">1.3</span> Taking arguments</h2>
 <p>A script that hard-codes <code>n &lt;- 100</code> can only ever do one thing. To run the same code at three sample sizes you would have to edit the file between runs, which is exactly the kind of manual step we are trying to eliminate. Instead, read the values from the command line.</p>
 <p>The base R way is <code>commandArgs()</code>, which hands you the arguments as a character vector:</p>
 <div class="code-with-filename">
@@ -491,8 +514,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> sim.R naive results/sim-naive.rds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This is fine for two arguments. It gets bad quickly: the arguments are positional, so you have to remember the order, everything arrives as a character string that you have to convert yourself, and there is no way to give something a default.</p>
 </section>
-<section id="optparse" class="level2" data-number="1.3">
-<h2 data-number="1.3" class="anchored" data-anchor-id="optparse"><span class="header-section-number">1.3</span> optparse</h2>
+<section id="optparse" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="optparse"><span class="header-section-number">1.4</span> optparse</h2>
 <p>The <a href="https://cran.r-project.org/package=optparse"><code>optparse</code></a> package gives you named flags with types and defaults, which is what the rest of this book uses:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
@@ -527,8 +550,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="one-script-one-output-file" class="level2" data-number="1.4">
-<h2 data-number="1.4" class="anchored" data-anchor-id="one-script-one-output-file"><span class="header-section-number">1.4</span> One script, one output file</h2>
+<section id="one-script-one-output-file" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="one-script-one-output-file"><span class="header-section-number">1.5</span> One script, one output file</h2>
 <p>The last convention, and the one Snakemake actually requires: <strong>a script should write to a path it was told, not a path it invented.</strong></p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
@@ -541,8 +564,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Note the <code>dir.create()</code>. Snakemake creates the directories for a rule’s declared outputs before running it, but scripts that also work when you run them by hand shouldn’t count on that.</p>
 <p>This is what makes a script composable. <code>sim.R</code> does not know it is part of a pipeline; it knows how to turn a set of parameters into one file. The Snakefile in the next chapter is nothing more than a list of which parameters go with which filename.</p>
 </section>
-<section id="where-the-results-go" class="level2" data-number="1.5">
-<h2 data-number="1.5" class="anchored" data-anchor-id="where-the-results-go"><span class="header-section-number">1.5</span> Where the results go</h2>
+<section id="where-the-results-go" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="where-the-results-go"><span class="header-section-number">1.6</span> Where the results go</h2>
 <p>Two decisions that will save you pain later:</p>
 <p><strong>Results are files, and files are named for what produced them.</strong> A file called <code>n400_rho80_split.rds</code> tells you the sample size, the correlation, and the method. A file called <code>results2_final.rds</code> tells you nothing, and in six months neither will you.</p>
 <p><strong>Results are regenerable, so they don’t go in git.</strong> Commit the code and the inputs; let the outputs be rebuilt — which is a claim you can only make honestly once the pipeline is complete.</p>

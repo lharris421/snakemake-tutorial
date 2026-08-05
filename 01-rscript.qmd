@@ -14,6 +14,47 @@ This chapter has nothing to do with Snakemake. If you already write scripts that
 take arguments and save their output to a file you name, skip to
 @sec-first-snakefile.
 
+## Interactive work is not reproducible
+
+It is worth being blunt about this once, because everything else in the book
+follows from it.
+
+Whatever is in your R session right now is the product of a history nobody has,
+including you. Objects created by code you have since edited or deleted. A package
+loaded by hand in March. A working directory you changed at some point. A seed set
+before an experiment you abandoned. The console records what you *typed*, not what
+you *ran*, and certainly not in what order --- and if you saved the workspace on
+exit, all of that invisible state came back with you the next morning.
+
+The practical consequence is that "it works" is not a claim you can check. A number
+in your session may or may not be what the current version of your code produces.
+There is no way to find out except to start a clean session and run the code from
+the top --- which is exactly what running a script does.
+
+None of this is an argument against working interactively. Interactive is how you
+figure out what the code should be; it is the right tool for exploring a dataset,
+staring at a model, and getting a plot to look right. The rule is narrower than
+that: **nothing may exist only in your session.** Once a piece of analysis is real,
+it belongs in a file that runs top to bottom, in a fresh session, and writes its
+output somewhere you named.
+
+::: {.callout-tip}
+## Don't save your workspace
+
+Turn off the `.RData` prompt --- in RStudio, *Tools → Global Options → General*,
+set "Save workspace to .RData on exit" to *Never* and clear "Restore .RData into
+workspace at startup". Per project, the same two settings are `SaveWorkspace: No`
+and `RestoreWorkspace: No` in the `.Rproj` file; this repository's has both.
+
+It feels like losing something. What you lose is the illusion that your results
+survive a restart, and finding that out early is much cheaper than finding it out
+the week a paper is due.
+:::
+
+Snakemake is the machinery that makes the rule livable: it reruns from a clean
+session only the parts that are actually out of date, so insisting on scripts stops
+costing you the thing interactive work was buying.
+
 ## Rscript
 
 `Rscript` runs an R file top to bottom and exits:
