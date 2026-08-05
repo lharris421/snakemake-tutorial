@@ -435,8 +435,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#config.yaml" id="toc-config.yaml" class="nav-link active" data-scroll-target="#config.yaml"><span class="header-section-number">4.1</span> config.yaml</a></li>
-  <li><a href="#params" id="toc-params" class="nav-link" data-scroll-target="#params"><span class="header-section-number">4.2</span> params</a></li>
-  <li><a href="#sec-params-or-filename" id="toc-sec-params-or-filename" class="nav-link" data-scroll-target="#sec-params-or-filename"><span class="header-section-number">4.3</span> params or filename?</a></li>
+  <li><a href="#getting-config-values-into-a-command" id="toc-getting-config-values-into-a-command" class="nav-link" data-scroll-target="#getting-config-values-into-a-command"><span class="header-section-number">4.2</span> Getting config values into a command</a></li>
+  <li><a href="#sec-params-or-filename" id="toc-sec-params-or-filename" class="nav-link" data-scroll-target="#sec-params-or-filename"><span class="header-section-number">4.3</span> Path or command?</a></li>
   <li><a href="#wildcard_constraints" id="toc-wildcard_constraints" class="nav-link" data-scroll-target="#wildcard_constraints"><span class="header-section-number">4.4</span> wildcard_constraints</a></li>
   <li><a href="#overriding-from-the-command-line" id="toc-overriding-from-the-command-line" class="nav-link" data-scroll-target="#overriding-from-the-command-line"><span class="header-section-number">4.5</span> Overriding from the command line</a></li>
   <li><a href="#where-to-draw-the-line" id="toc-where-to-draw-the-line" class="nav-link" data-scroll-target="#where-to-draw-the-line"><span class="header-section-number">4.6</span> Where to draw the line</a></li>
@@ -497,73 +497,94 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>and everything in it is available as <code>config</code>, a dictionary — <code>config["iterations"]</code> is <code>200</code> and <code>config["n"]</code> is the list <code>[50, 100, 400]</code>. Use <code>config.get("key", default)</code> when a setting is optional.</p>
 </section>
-<section id="params" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="params"><span class="header-section-number">4.2</span> params</h2>
-<p>Values from the config reach a shell command through <code>params</code>:</p>
+<section id="getting-config-values-into-a-command" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="getting-config-values-into-a-command"><span class="header-section-number">4.2</span> Getting config values into a command</h2>
+<p>Pull the settings out into plain Python variables at the top of the Snakefile, and use them in the shell command like any other placeholder:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>Snakefile (excerpt)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-filename="Snakefile (excerpt)"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>rule sim:</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span>:</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>        script <span class="op">=</span> <span class="st">"code/sim.R"</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        setup <span class="op">=</span> <span class="st">"code/setup.R"</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    output:</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="co">"rds/{iterations}/sim/n{n}_rho{rho}_{method}.rds"</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    params:</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        seed <span class="op">=</span> config[<span class="st">"seed"</span>],</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        level <span class="op">=</span> config[<span class="st">"level"</span>]</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    shell:</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        <span class="co">"Rscript {input.script} "</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--n {wildcards.n} "</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--rho {wildcards.rho} "</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--method {wildcards.method} "</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--iterations {wildcards.iterations} "</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--seed {params.seed} "</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--level {params.level} "</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--out {output}"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-filename="Snakefile (excerpt)"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>ITER  <span class="op">=</span> config[<span class="st">"iterations"</span>]</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>SEED  <span class="op">=</span> config[<span class="st">"seed"</span>]</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>LEVEL <span class="op">=</span> config[<span class="st">"level"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>You could write <code>config["seed"]</code> straight into the command with a Python f-string and it would work. Declaring it in <code>params</code> is better for one specific reason: Snakemake records the params it used alongside each output, so changing one marks the affected files stale, exactly as changing an input file does. Values smuggled into the command another way are invisible to that machinery.</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Snakefile (excerpt)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" data-filename="Snakefile (excerpt)"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>rule sim:</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span>:</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>        script <span class="op">=</span> <span class="st">"code/sim.R"</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        setup <span class="op">=</span> <span class="st">"code/setup.R"</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    output:</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        <span class="co">"rds/{iterations}/sim/n{n}_rho{rho}_{method}.rds"</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    shell:</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        <span class="co">"Rscript {input.script} "</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--n {wildcards.n} "</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--rho {wildcards.rho} "</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--method {wildcards.method} "</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--iterations {wildcards.iterations} "</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--seed {SEED} "</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--level {LEVEL} "</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--out {output}"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><code>{SEED}</code> and <code>{LEVEL}</code> are filled in from those variables, exactly as <code>{wildcards.n}</code> is filled in from the wildcard. Anything defined at the top of the Snakefile is available this way.</p>
 </section>
 <section id="sec-params-or-filename" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="sec-params-or-filename"><span class="header-section-number">4.3</span> params or filename?</h2>
-<p>Notice that <code>seed</code> and <code>level</code> are params but <code>iterations</code> is not — it is a wildcard, and it names a directory. That is the most consequential decision in this chapter, and it is worth being deliberate about.</p>
-<p>Every setting that affects a result has to be visible to Snakemake somehow. There are exactly two places to put it, and the choice is not about taste:</p>
-<p><strong>In the output path</strong> — when different values are different results, both of which you might want to keep. Running 20 iterations and running 1000 does not make one of them wrong; they are a quick check and a final answer, and there is no reason they should not sit on disk together.</p>
-<p><strong>In <code>params:</code></strong> — when there is only one right value, so changing it means the existing file was simply <em>wrong</em> and should be replaced. The seed is like this. You do not want <code>seed-1234</code> and <code>seed-9999</code> versions of everything; you want the results, from the seed the paper reports.</p>
-<p><strong>In neither</strong> is a bug. Snakemake cannot see the change, nothing reruns, and your results are quietly stale — the failure mode of <a href="09-debugging.html" class="quarto-xref"><span>Chapter 9</span></a>.</p>
+<h2 data-number="4.3" class="anchored" data-anchor-id="sec-params-or-filename"><span class="header-section-number">4.3</span> Path or command?</h2>
+<p>Notice that <code>seed</code> and <code>level</code> go into the command while <code>iterations</code> names a directory. That is the most consequential decision in this chapter.</p>
+<p><strong>Put it in the output path</strong> when different values are different results, both of which you might want to keep. Running 20 iterations and running 1000 does not make one of them wrong; they are a quick check and a final answer, and there is no reason they should not sit on disk together.</p>
+<p><strong>Put it in the command</strong> when there is only one right value, so a change means the existing file was simply <em>wrong</em>. The seed is like this. You do not want <code>seed-1234</code> and <code>seed-9999</code> copies of everything; you want the results, from the seed the paper reports.</p>
 <p>So <code>iterations</code> goes in the path:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>Snakefile (excerpt)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" data-filename="Snakefile (excerpt)"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">## The iteration count names the directory the results go in, so a 20-iteration</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">## smoke run and a 1000-iteration final run sit side by side instead of</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">## overwriting each other.  ITER picks which of them the figure is built from.</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>ITER <span class="op">=</span> config[<span class="st">"iterations"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" data-filename="Snakefile (excerpt)"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">## The iteration count names the directory the results go in, so a 20-iteration</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">## smoke run and a 1000-iteration final run sit side by side instead of</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">## overwriting each other.  ITER picks which of them the figure is built from.</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>ITER  <span class="op">=</span> config[<span class="st">"iterations"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>and the smoke run and the real run coexist:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> find rds <span class="at">-name</span> <span class="st">'*.rds'</span> <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-d</span>/ <span class="at">-f1-2</span> <span class="kw">|</span> <span class="fu">sort</span> <span class="kw">|</span> <span class="fu">uniq</span> <span class="at">-c</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="ex">18</span> rds/20</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="ex">18</span> rds/200</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">--cores</span> 4 <span class="at">--config</span> iterations=20</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">-n</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="ex">Job</span> stats:</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="ex">job</span>       count</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="ex">------</span>  <span class="at">-------</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="ex">all</span>           1</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="ex">figure</span>        1</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="ex">total</span>         2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Eighteen results at 20 iterations, eighteen at 200, and going back to the config’s default rebuilds only the figure — the 200-iteration simulations were still there and still valid. Had <code>iterations</code> been a <code>params</code> value, the second run would have overwritten the first, and switching back would have meant recomputing all eighteen.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> find rds <span class="at">-name</span> <span class="st">'*.rds'</span> <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-d</span>/ <span class="at">-f1-2</span> <span class="kw">|</span> <span class="fu">sort</span> <span class="kw">|</span> <span class="fu">uniq</span> <span class="at">-c</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="ex">18</span> rds/20</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="ex">18</span> rds/200</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">--cores</span> 4 <span class="at">--config</span> iterations=20</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">-n</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="ex">Job</span> stats:</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="ex">job</span>       count</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="ex">------</span>  <span class="at">-------</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="ex">all</span>           1</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="ex">figure</span>        1</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="ex">total</span>         2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Eighteen results at 20 iterations, eighteen at 200, and going back to the config’s default rebuilds only the figure — the 200-iteration simulations were still there and still valid. Had <code>iterations</code> been passed in the command like the seed, the second run would have overwritten the first, and switching back would have meant recomputing all eighteen.</p>
 <p><code>ITER = config["iterations"]</code> is what selects which of them the figure is built from, so the config still controls the answer; it just no longer destroys the alternative. <a href="10-scaling-up.html" class="quarto-xref"><span>Chapter 10</span></a> shows the same pattern at the scale where it matters, where the recomputation being avoided is measured in days.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Snakemake does not watch the values in your command
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>There is a price for the simplicity above, and it is worth knowing exactly what it is. Change <code>seed</code> in <code>config.yaml</code> and run again:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">--cores</span> 4 <span class="at">--config</span> seed=99</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>Nothing to be done (all requested files are present and up to date).</code></pre>
+<p>Nothing reruns. Snakemake records the shell command as it is <em>written</em> — <code>"--seed {SEED} "</code> — not as it is <em>expanded</em>, so a different <code>SEED</code> looks identical to the last run. The same is true of <code>level</code>. Your results are now from seed 1234 while the config says 99.</p>
+<p>Snakemake does offer a mechanism that closes this: declare the value in a <code>params:</code> block instead of a global, and it is recorded alongside the output, so changing it reports <code>Params have changed since last execution: before: 1234 now: 9999</code> and rebuilds. The reason this book does not use it — and neither does the project in <a href="10-scaling-up.html" class="quarto-xref"><span>Chapter 10</span></a> — is that these particular settings are chosen once at the start of a project and then left alone; carrying a <code>params:</code> block on every rule to guard against an edit you make once is a poor trade.</p>
+<p>Know which bargain you have taken. If a setting is one you expect to change while the project is live, either put it in the path so the variants coexist, or declare it in <code>params:</code> so Snakemake notices. If you change one of these by hand, force the rebuild yourself with <code>snakemake -R sim</code> (<a href="09-debugging.html" class="quarto-xref"><span>Chapter 9</span></a>).</p>
+</div>
+</div>
 <p>The grid comes from the config too, so <code>expand()</code> reads:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>Snakefile (excerpt)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" data-filename="Snakefile (excerpt)"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>        rds <span class="op">=</span> expand(<span class="st">"rds/</span><span class="sc">{iterations}</span><span class="st">/sim/n</span><span class="sc">{n}</span><span class="st">_rho</span><span class="sc">{rho}</span><span class="st">_</span><span class="sc">{method}</span><span class="st">.rds"</span>,</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                     iterations<span class="op">=</span>ITER, n<span class="op">=</span>config[<span class="st">"n"</span>], rho<span class="op">=</span>config[<span class="st">"rho"</span>],</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                     method<span class="op">=</span>config[<span class="st">"methods"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" data-filename="Snakefile (excerpt)"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>        rds <span class="op">=</span> expand(<span class="st">"rds/</span><span class="sc">{iterations}</span><span class="st">/sim/n</span><span class="sc">{n}</span><span class="st">_rho</span><span class="sc">{rho}</span><span class="st">_</span><span class="sc">{method}</span><span class="st">.rds"</span>,</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                     iterations<span class="op">=</span>ITER, n<span class="op">=</span>config[<span class="st">"n"</span>], rho<span class="op">=</span>config[<span class="st">"rho"</span>],</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                     method<span class="op">=</span>config[<span class="st">"methods"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Adding a fourth sample size is now a two-character edit to <code>config.yaml</code>.</p>
 </section>
@@ -574,11 +595,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-with-filename-file">
 <pre><strong>Snakefile (excerpt)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" data-filename="Snakefile (excerpt)"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>wildcard_constraints:</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    iterations <span class="op">=</span> <span class="vs">r"</span><span class="dv">\d</span><span class="op">+</span><span class="vs">"</span>,</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="vs">r"</span><span class="dv">\d</span><span class="op">+</span><span class="vs">"</span>,</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    rho <span class="op">=</span> <span class="vs">r"</span><span class="dv">\d</span><span class="op">+</span><span class="vs">"</span>,</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    method <span class="op">=</span> <span class="st">"[a-z]+"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10" data-filename="Snakefile (excerpt)"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>wildcard_constraints:</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    iterations <span class="op">=</span> <span class="vs">r"</span><span class="dv">\d</span><span class="op">+</span><span class="vs">"</span>,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="vs">r"</span><span class="dv">\d</span><span class="op">+</span><span class="vs">"</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    rho <span class="op">=</span> <span class="vs">r"</span><span class="dv">\d</span><span class="op">+</span><span class="vs">"</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    method <span class="op">=</span> <span class="st">"[a-z]+"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><code>r"\d+"</code> is a regular expression matching one or more digits; the <code>r</code> prefix marks a raw string, so the backslash reaches the regex intact. Declared at the top level they apply to every rule, and they can also be attached to a single rule, as <a href="07-manuscript.html" class="quarto-xref"><span>Chapter 7</span></a> does.</p>
 <p>Two reasons to bother:</p>
@@ -588,18 +609,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="overriding-from-the-command-line" class="level2" data-number="4.5">
 <h2 data-number="4.5" class="anchored" data-anchor-id="overriding-from-the-command-line"><span class="header-section-number">4.5</span> Overriding from the command line</h2>
 <p>Any config value can be replaced for a single run with <code>--config</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">--cores</span> 4 <span class="at">--config</span> iterations=20</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">--cores</span> 4 <span class="at">--config</span> iterations=20</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>which is the fastest way to check that a pipeline is wired up before committing to the real thing:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">--cores</span> 4 <span class="at">--config</span> iterations=20</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="ex">real</span>    0m4.881s</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="ex">user</span>    0m9.324s</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="ex">sys</span> 0m0.995s</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">--cores</span> 4</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="ex">real</span>    0m10.657s</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="ex">user</span>    0m30.863s</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="ex">sys</span> 0m1.099s</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">--cores</span> 4 <span class="at">--config</span> iterations=20</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="ex">real</span>    0m4.855s</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="ex">user</span>    0m9.250s</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="ex">sys</span> 0m0.947s</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">--cores</span> 4</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="ex">real</span>    0m10.725s</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="ex">user</span>    0m30.695s</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="ex">sys</span> 0m1.164s</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Five seconds against eleven, for a grid that would take considerably longer at the iteration counts of a real paper.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -614,7 +635,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Which of the cases in <a href="#sec-params-or-filename" class="quarto-xref"><span>Section 4.3</span></a> a setting falls into decides what overriding it does, and they behave quite differently:</p>
 <ul>
 <li><strong><code>--config iterations=20</code></strong> asks for <em>different files</em>. Eighteen new simulations run; the old ones are left alone.</li>
-<li><strong><code>--config seed=99</code></strong> changes a <code>params</code> value. The eighteen existing files are marked stale and rebuilt in place.</li>
+<li><strong><code>--config seed=99</code></strong> changes a value that only appears inside the shell command, which Snakemake does not track. Nothing reruns at all — see the warning above.</li>
 <li><strong>Dropping a sample size from the grid</strong> changes only the list inside <code>expand()</code>. No simulation reruns — the remaining results are still perfectly valid — but the figure does, with the reason <code>Set of input files has changed since last execution</code>, because it is now summarizing twelve files instead of eighteen.</li>
 </ul>
 <p>Note that <code>--config</code> wants one <code>key=value</code> per setting and will not take a list on the command line (<code>--config n=[50,100]</code> is a parse error on 9.13). Change the grid in <code>config.yaml</code>, or point <code>--configfile</code> at a second YAML file whose values override the first.</p>

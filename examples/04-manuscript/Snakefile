@@ -3,7 +3,9 @@ configfile: "config.yaml"
 ## The iteration count names the directory the results go in, so a 20-iteration
 ## smoke run and a 1000-iteration final run sit side by side instead of
 ## overwriting each other.  ITER picks which of them the paper is built from.
-ITER = config["iterations"]
+ITER  = config["iterations"]
+SEED  = config["seed"]
+LEVEL = config["level"]
 
 wildcard_constraints:
     iterations = r"\d+",
@@ -32,17 +34,14 @@ rule sim:
         "logs/{iterations}/sim/n{n}_rho{rho}_{method}.log"
     benchmark:
         "benchmarks/{iterations}/sim/n{n}_rho{rho}_{method}.tsv"
-    params:
-        seed = config["seed"],
-        level = config["level"]
     shell:
         "Rscript {input.script} "
         "--n {wildcards.n} "
         "--rho {wildcards.rho} "
         "--method {wildcards.method} "
         "--iterations {wildcards.iterations} "
-        "--seed {params.seed} "
-        "--level {params.level} "
+        "--seed {SEED} "
+        "--level {LEVEL} "
         "--out {output} > {log} 2>&1"
 
 rule figure1:
@@ -54,10 +53,8 @@ rule figure1:
         "out/figure1.pdf"
     log:
         "logs/figure1.log"
-    params:
-        level = config["level"]
     shell:
-        "Rscript {input.script} --out {output} --level {params.level} "
+        "Rscript {input.script} --out {output} --level {LEVEL} "
         "{input.rds} > {log} 2>&1"
 
 rule table1:
@@ -69,10 +66,8 @@ rule table1:
         "out/table1.tex"
     log:
         "logs/table1.log"
-    params:
-        level = config["level"]
     shell:
-        "Rscript {input.script} --out {output} --level {params.level} "
+        "Rscript {input.script} --out {output} --level {LEVEL} "
         "{input.rds} > {log} 2>&1"
 
 ## The manuscript depends on the figure and the table, which depend on the

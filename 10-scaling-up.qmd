@@ -119,9 +119,9 @@ rds/1000/original/laplace_autoregressive_0_100_101_gaussian_100_pipep.rds
 
 so the 20-iteration smoke test and the 1000-iteration final run coexist, and
 switching between them is a config edit rather than an act of destruction. This is
-the rule from @sec-params-or-filename at the scale where it earns its keep: had
-`iterations` been a `params` value, a smoke test would cost you two days of
-compute to undo.
+the rule from @sec-params-or-filename at the scale where it earns its keep: were
+the iteration count merely passed to the script rather than naming the directory,
+a smoke test would cost you two days of compute to undo.
 
 ### Sharing the folder
 

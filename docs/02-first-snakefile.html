@@ -585,7 +585,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input:</span> figure.R, rds/sim-naive.rds, rds/sim-split.rds</span>
 <span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="ex">output:</span> out/figure1.pdf</span>
 <span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    <span class="ex">jobid:</span> 1</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Missing output files: out/figure1.pdf<span class="kw">;</span> <span class="ex">Input</span> files updated by another job: rds/sim-split.rds, rds/sim-naive.rds</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Missing output files: out/figure1.pdf<span class="kw">;</span> <span class="ex">Input</span> files updated by another job: rds/sim-naive.rds, rds/sim-split.rds</span>
 <span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    <span class="ex">resources:</span> tmpdir=<span class="op">&lt;</span>TBD<span class="op">&gt;</span></span>
 <span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="ex">rule</span> all:</span>
@@ -640,13 +640,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    <span class="ex">jobid:</span> 3</span>
 <span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Missing output files: rds/sim-split.rds</span>
 <span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    <span class="ex">resources:</span> tmpdir=/var/folders/gz/hbrw64n97wb0vy5prhnxst400000gp/T</span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="ex">wrote</span> rds/sim-naive.rds <span class="at">--</span> coverage: 0.828 </span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="ex">wrote</span> rds/sim-split.rds <span class="at">--</span> coverage: 0.944 </span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="ex">wrote</span> rds/sim-split.rds <span class="at">--</span> coverage: 0.944 </span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="ex">wrote</span> rds/sim-naive.rds <span class="at">--</span> coverage: 0.828 </span>
 <span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="ex">Finished</span> jobid: 2 <span class="er">(</span><span class="ex">Rule:</span> sim_naive<span class="kw">)</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="ex">Finished</span> jobid: 3 <span class="er">(</span><span class="ex">Rule:</span> sim_split<span class="kw">)</span></span>
 <span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="ex">1</span> of 4 steps <span class="er">(</span><span class="ex">25%</span><span class="kw">)</span> <span class="cf">done</span></span>
 <span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="ex">Finished</span> jobid: 3 <span class="er">(</span><span class="ex">Rule:</span> sim_split<span class="kw">)</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="ex">Finished</span> jobid: 2 <span class="er">(</span><span class="ex">Rule:</span> sim_naive<span class="kw">)</span></span>
 <span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="ex">2</span> of 4 steps <span class="er">(</span><span class="ex">50%</span><span class="kw">)</span> <span class="cf">done</span></span>
 <span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="ex">Select</span> jobs to execute...</span>
 <span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a><span class="ex">Execute</span> 1 jobs...</span>
@@ -655,7 +655,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input:</span> figure.R, rds/sim-naive.rds, rds/sim-split.rds</span>
 <span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>    <span class="ex">output:</span> out/figure1.pdf</span>
 <span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>    <span class="ex">jobid:</span> 1</span>
-<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Missing output files: out/figure1.pdf<span class="kw">;</span> <span class="ex">Input</span> files updated by another job: rds/sim-split.rds, rds/sim-naive.rds</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Missing output files: out/figure1.pdf<span class="kw">;</span> <span class="ex">Input</span> files updated by another job: rds/sim-naive.rds, rds/sim-split.rds</span>
 <span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>    <span class="ex">resources:</span> tmpdir=/var/folders/gz/hbrw64n97wb0vy5prhnxst400000gp/T</span>
 <span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a><span class="ex">wrote</span> out/figure1.pdf </span>
 <span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a></span>
