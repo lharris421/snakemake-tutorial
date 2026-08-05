@@ -528,7 +528,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"wrote"</span>, opt<span class="sc">$</span>out, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Two conventions, though, that matter more inside a pipeline than outside one:</p>
-<p><strong>Write vector graphics to the size they will appear.</strong> <code>ggsave(..., width = 7, height = 3)</code> in inches, matching the text width of the document, means the figure is never rescaled by LaTeX and the fonts in it come out the size you chose. Resizing a figure by 60% in <code>\includegraphics</code> is how you end up with axis labels nobody can read.</p>
 <p><strong>Keep the appearance in one place.</strong> The figure and the table both turn <code>naive</code> into something a reader sees, so the label and the color are decided once, in <code>scripts/setup.R</code>, which the scripts that draw things source:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
@@ -563,7 +562,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>R/one_rep.R</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>scripts/setup.R          sourced by figure.R and table.R</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>so that the two kinds of change cost what they should. Editing a hex code plans four jobs — the figure, the table and the two PDFs — and leaves the grid alone. Editing <code>R/one_rep.R</code> plans all twenty-three, because the results really are wrong now. Had both lived in one <code>setup.R</code>, the color change would have rerun eighteen unnecessary simulations, since Snakemake cannot tell which half of a file you touched.</p>
+<p>so that the two kinds of change cost what they should. Editing a hex code plans four jobs — the figure, the table and the two PDFs — and leaves the grid alone. Editing <code>R/one_rep.R</code> plans all twenty-two, because the results really are wrong now. Had both lived in one <code>setup.R</code>, the color change would have rerun eighteen unnecessary simulations, since Snakemake cannot tell which half of a file you touched.</p>
 <p>The <code>R/</code> directory is the layout an R package uses. <a href="https://github.com/IowaBiostat/project-workflow">IowaBiostat/project-workflow</a> is a talk and a small example project that goes into this further and is worth giving a read.</p>
 </div>
 </div>

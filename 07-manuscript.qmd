@@ -27,13 +27,9 @@ times as it takes for references and citations to settle. Snakemake's contributi
 is the `input:` block: the PDF depends on the figure and the table, which depend on
 the simulations, which depend on the code. One command now walks the entire chain.
 
-The wildcard `{doc}` builds either document with the same rule, constrained to the
-two names that exist. `wildcard_constraints` is attached to this rule rather than
-declared at the top of the file, since it is only meaningful here.
-
-## Separating layout from content
-
-Both documents contain the same words. Neither contains any of them:
+`paper.tex` itself is only a wrapper --- a document class, a preamble, and
+`\input{main.tex}` --- so that the prose lives in one file and the formatting in
+another:
 
 ```{r}
 #| echo: false
@@ -41,23 +37,21 @@ Both documents contain the same words. Neither contains any of them:
 embed_file("examples/04-manuscript/paper.tex", filename = "paper.tex")
 ```
 
-```{r}
-#| echo: false
-#| output: asis
-embed_file("examples/04-manuscript/submission.tex", filename = "submission.tex")
-```
+::: {.callout-note}
+## Journal versions, arXiv, supplements
 
-The prose is in `main.tex`, which both wrappers `\input`. This costs you nothing on
-the first draft and saves you a great deal on the fourth, when the paper is going
-to a second journal with a different class file, and again when you post it to
-arXiv. You change the wrapper. You never touch a sentence.
+A real paper is eventually built more than one way: a version for the journal, one
+for arXiv, one with the supplement bound in, one double-spaced for review. The
+separation above is what makes that cheap --- each variant is another wrapper
+around the same `main.tex`, and another rule producing its own PDF.
 
-Real projects extend this in the obvious way --- a wrapper per journal, one for
-arXiv, one for the version with the supplement bound in --- each a rule producing
-its own PDF, all sharing `main.tex`. The `man-avg-cov` project this example is
-modeled on has one for arXiv and one for Biometrics, the latter of which also
-splits the compiled PDF into a main document and a supplement with `qpdf`, because
-that journal requires them as separate uploads.
+Setting that up well is a LaTeX question rather than a Snakemake one, and
+[pbreheny/manuscript-template](https://github.com/pbreheny/manuscript-template)
+already answers it: a manuscript skeleton with the wrapper/content split, a
+supplement, an arXiv build, and a style guide worth reading on its own. The
+example here stays at one document so that the pipeline is the only thing you have
+to hold in your head.
+:::
 
 ## The cascade
 
@@ -70,9 +64,9 @@ and up to date. Now change one line in the simulation code:
 transcript("04-cascade.txt")
 ```
 
-Twenty-three jobs: eighteen simulations, the figure, the table, and both PDFs. In
-the right order, with no decisions from you, and --- the part that matters --- with
-no possibility of a version of the paper containing a figure from before the change.
+Twenty-two jobs: eighteen simulations, the figure, the table and the PDF. In the
+right order, with no decisions from you, and --- the part that matters --- with no
+possibility of a version of the paper containing a figure from before the change.
 
 Compare the alternative, which is remembering to run four things in order and being
 right about it every time, for the entire life of the project.
@@ -130,7 +124,7 @@ seconds. @sec-scaling covers the mechanics.
 
 1. Change the figure's y-axis label and run `snakemake --cores 4`. Which jobs run?
    Which do not, and why not?
-2. Add a `supplement.tex` wrapper that includes only the table, plus a rule to
+2. Add a `supplement.tex` wrapper that `\input`s only the table, plus a rule to
    build it, and add it to `rule all`.
 3. Introduce a deliberate LaTeX error in `main.tex` and run the build. Where does
    Snakemake tell you to look, and what is in that file?

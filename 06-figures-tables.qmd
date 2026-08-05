@@ -55,12 +55,6 @@ embed_file("examples/04-manuscript/scripts/figure.R", from = "^p <- ggplot",
 
 Two conventions, though, that matter more inside a pipeline than outside one:
 
-**Write vector graphics to the size they will appear.** `ggsave(..., width = 7,
-height = 3)` in inches, matching the text width of the document, means the figure is
-never rescaled by LaTeX and the fonts in it come out the size you chose. Resizing a
-figure by 60% in `\includegraphics` is how you end up with axis labels nobody can
-read.
-
 **Keep the appearance in one place.** The figure and the table both turn `naive`
 into something a reader sees, so the label and the color are decided once, in
 `scripts/setup.R`, which the scripts that draw things source:
@@ -97,7 +91,7 @@ scripts/setup.R          sourced by figure.R and table.R
 
 so that the two kinds of change cost what they should. Editing a hex code plans
 four jobs --- the figure, the table and the two PDFs --- and leaves the grid alone.
-Editing `R/one_rep.R` plans all twenty-three, because the results really are wrong
+Editing `R/one_rep.R` plans all twenty-two, because the results really are wrong
 now. Had both lived in one `setup.R`, the color change would have rerun eighteen unnecessary
 simulations, since Snakemake cannot tell which half of a file you touched.
 

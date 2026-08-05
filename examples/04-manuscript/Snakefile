@@ -15,8 +15,7 @@ wildcard_constraints:
 
 rule all:
     input:
-        "build/paper.pdf",
-        "build/submission.pdf"
+        "build/paper.pdf"
 
 rule sim:
     input:
@@ -75,17 +74,15 @@ rule table1:
 ## sim.R and `snakemake` rebuilds the PDF, through every step in between.
 rule manuscript:
     input:
-        tex = "{doc}.tex",
+        tex = "paper.tex",
         shared = ["main.tex", "preamble.tex"],
         config = "config.yaml",
         figure = "out/figure1.pdf",
         table = "out/table1.tex"
     output:
-        "build/{doc}.pdf"
+        "build/paper.pdf"
     log:
-        "logs/{doc}-latexmk.log"
-    wildcard_constraints:
-        doc = "paper|submission"
+        "logs/paper-latexmk.log"
     shell:
         "latexmk -pdf -interaction=nonstopmode -outdir=build {input.tex} "
         "> {log} 2>&1"

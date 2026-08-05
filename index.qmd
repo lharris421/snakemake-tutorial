@@ -62,9 +62,6 @@ flowchart LR
   F --> P[build/paper.pdf]
   T --> P
   M[main.tex] --> P
-  M --> R[build/submission.pdf]
-  F --> R
-  T --> R
 ```
 
 @sec-analysis then applies the same ideas to a piece of applied collaborative work --- raw

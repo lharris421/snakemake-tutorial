@@ -297,7 +297,7 @@ transcript("10-touch-forcerun.txt")
 ```
 
 From that point the project behaves normally: nothing to be done, and editing
-`scripts/sim.R` correctly plans all twenty-three jobs again. The cheap products ---
+`scripts/sim.R` correctly plans all twenty-two jobs again. The cheap products ---
 the figure, the table, the PDF --- get touched too, so if you would rather rebuild
 those from the results you were given, delete them afterwards and run `snakemake`
 as usual. It takes seconds and it means the paper on your disk was compiled by

@@ -435,11 +435,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#the-rule" id="toc-the-rule" class="nav-link active" data-scroll-target="#the-rule"><span class="header-section-number">7.1</span> The rule</a></li>
-  <li><a href="#separating-layout-from-content" id="toc-separating-layout-from-content" class="nav-link" data-scroll-target="#separating-layout-from-content"><span class="header-section-number">7.2</span> Separating layout from content</a></li>
-  <li><a href="#the-cascade" id="toc-the-cascade" class="nav-link" data-scroll-target="#the-cascade"><span class="header-section-number">7.3</span> The cascade</a></li>
-  <li><a href="#making-latex-quiet" id="toc-making-latex-quiet" class="nav-link" data-scroll-target="#making-latex-quiet"><span class="header-section-number">7.4</span> Making LaTeX quiet</a></li>
-  <li><a href="#what-goes-in-git" id="toc-what-goes-in-git" class="nav-link" data-scroll-target="#what-goes-in-git"><span class="header-section-number">7.5</span> What goes in git</a></li>
-  <li><a href="#try-it" id="toc-try-it" class="nav-link" data-scroll-target="#try-it"><span class="header-section-number">7.6</span> Try it</a></li>
+  <li><a href="#the-cascade" id="toc-the-cascade" class="nav-link" data-scroll-target="#the-cascade"><span class="header-section-number">7.2</span> The cascade</a></li>
+  <li><a href="#making-latex-quiet" id="toc-making-latex-quiet" class="nav-link" data-scroll-target="#making-latex-quiet"><span class="header-section-number">7.3</span> Making LaTeX quiet</a></li>
+  <li><a href="#what-goes-in-git" id="toc-what-goes-in-git" class="nav-link" data-scroll-target="#what-goes-in-git"><span class="header-section-number">7.4</span> What goes in git</a></li>
+  <li><a href="#try-it" id="toc-try-it" class="nav-link" data-scroll-target="#try-it"><span class="header-section-number">7.5</span> Try it</a></li>
   </ul>
 </nav>
     </div>
@@ -479,34 +478,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">## sim.R and `snakemake` rebuilds the PDF, through every step in between.</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>rule manuscript:</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span>:</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>        tex <span class="op">=</span> <span class="st">"</span><span class="sc">{doc}</span><span class="st">.tex"</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>        tex <span class="op">=</span> <span class="st">"paper.tex"</span>,</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        shared <span class="op">=</span> [<span class="st">"main.tex"</span>, <span class="st">"preamble.tex"</span>],</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        config <span class="op">=</span> <span class="st">"config.yaml"</span>,</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>        figure <span class="op">=</span> <span class="st">"out/figure1.pdf"</span>,</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>        table <span class="op">=</span> <span class="st">"out/table1.tex"</span></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    output:</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        <span class="co">"build/{doc}.pdf"</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        <span class="co">"build/paper.pdf"</span></span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    log:</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        <span class="co">"logs/{doc}-latexmk.log"</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    wildcard_constraints:</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        doc <span class="op">=</span> <span class="st">"paper|submission"</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    shell:</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>        <span class="co">"latexmk -pdf -interaction=nonstopmode -outdir=build {input.tex} "</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>        <span class="co">"&gt; {log} 2&gt;&amp;1"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        <span class="co">"logs/paper-latexmk.log"</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    shell:</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        <span class="co">"latexmk -pdf -interaction=nonstopmode -outdir=build {input.tex} "</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>        <span class="co">"&gt; {log} 2&gt;&amp;1"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><code>latexmk</code> is doing the LaTeX-specific work — running <code>pdflatex</code> and BibTeX as many times as it takes for references and citations to settle. Snakemake’s contribution is the <code>input:</code> block: the PDF depends on the figure and the table, which depend on the simulations, which depend on the code. One command now walks the entire chain.</p>
-<p>The wildcard <code>{doc}</code> builds either document with the same rule, constrained to the two names that exist. <code>wildcard_constraints</code> is attached to this rule rather than declared at the top of the file, since it is only meaningful here.</p>
-</section>
-<section id="separating-layout-from-content" class="level2" data-number="7.2">
-<h2 data-number="7.2" class="anchored" data-anchor-id="separating-layout-from-content"><span class="header-section-number">7.2</span> Separating layout from content</h2>
-<p>Both documents contain the same words. Neither contains any of them:</p>
+<p><code>paper.tex</code> itself is only a wrapper — a document class, a preamble, and <code>\input{main.tex}</code> — so that the prose lives in one file and the formatting in another:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>paper.tex</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-filename="paper.tex"><pre class="sourceCode latex code-with-copy"><code class="sourceCode latex"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">%% Layout wrapper: the journal-ready version.</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">%% All of the actual writing is in main.tex, which this file and submission.tex</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">%% share.  Changing formats never means editing prose.</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-filename="paper.tex"><pre class="sourceCode latex code-with-copy"><code class="sourceCode latex"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">%% Layout wrapper: document class, preamble, and the content.  All of the actual</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">%% writing is in main.tex, so that changing the formatting never means touching</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">%% prose -- and a second version of the paper is a second wrapper, not a copy.</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="bu">\documentclass</span>[11pt]{<span class="ex">article</span>}</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">\input</span>{preamble.tex}</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
@@ -515,42 +508,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">\input</span>{main.tex}</span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">document</span>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div class="code-with-filename">
-<div class="code-with-filename-file">
-<pre><strong>submission.tex</strong></pre>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-filename="submission.tex"><pre class="sourceCode latex code-with-copy"><code class="sourceCode latex"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">%% Layout wrapper: the double-spaced, larger-type version some journals require</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">%% for review.  Same content, different layout.</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">\documentclass</span>[12pt]{<span class="ex">article</span>}</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">\input</span>{preamble.tex}</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="kw">\begin</span>{<span class="ex">document</span>}</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">\doublespacing</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">\maketitle</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">\input</span>{main.tex}</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">document</span>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Journal versions, arXiv, supplements
 </div>
-<p>The prose is in <code>main.tex</code>, which both wrappers <code>\input</code>. This costs you nothing on the first draft and saves you a great deal on the fourth, when the paper is going to a second journal with a different class file, and again when you post it to arXiv. You change the wrapper. You never touch a sentence.</p>
-<p>Real projects extend this in the obvious way — a wrapper per journal, one for arXiv, one for the version with the supplement bound in — each a rule producing its own PDF, all sharing <code>main.tex</code>. The <code>man-avg-cov</code> project this example is modeled on has one for arXiv and one for Biometrics, the latter of which also splits the compiled PDF into a main document and a supplement with <code>qpdf</code>, because that journal requires them as separate uploads.</p>
+</div>
+<div class="callout-body-container callout-body">
+<p>A real paper is eventually built more than one way: a version for the journal, one for arXiv, one with the supplement bound in, one double-spaced for review. The separation above is what makes that cheap — each variant is another wrapper around the same <code>main.tex</code>, and another rule producing its own PDF.</p>
+<p>Setting that up well is a LaTeX question rather than a Snakemake one, and <a href="https://github.com/pbreheny/manuscript-template">pbreheny/manuscript-template</a> already answers it: a manuscript skeleton with the wrapper/content split, a supplement, an arXiv build, and a style guide worth reading on its own. The example here stays at one document so that the pipeline is the only thing you have to hold in your head.</p>
+</div>
+</div>
 </section>
-<section id="the-cascade" class="level2" data-number="7.3">
-<h2 data-number="7.3" class="anchored" data-anchor-id="the-cascade"><span class="header-section-number">7.3</span> The cascade</h2>
+<section id="the-cascade" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="the-cascade"><span class="header-section-number">7.2</span> The cascade</h2>
 <p>This is the payoff, so it is worth watching happen. Everything is currently built and up to date. Now change one line in the simulation code:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> echo <span class="st">'## a real edit'</span> <span class="op">&gt;&gt;</span> scripts/sim.R <span class="kw">&amp;&amp;</span> <span class="ex">snakemake</span> <span class="at">-n</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Job</span> stats:</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">job</span>           count</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="ex">----------</span>  <span class="at">-------</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="ex">all</span>               1</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="ex">figure1</span>           1</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="ex">manuscript</span>        2</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="ex">sim</span>              18</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="ex">table1</span>            1</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="ex">total</span>            23</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Twenty-three jobs: eighteen simulations, the figure, the table, and both PDFs. In the right order, with no decisions from you, and — the part that matters — with no possibility of a version of the paper containing a figure from before the change.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> echo <span class="st">'## a real edit'</span> <span class="op">&gt;&gt;</span> scripts/sim.R <span class="kw">&amp;&amp;</span> <span class="ex">snakemake</span> <span class="at">-n</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Job</span> stats:</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">job</span>           count</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="ex">----------</span>  <span class="at">-------</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="ex">all</span>               1</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="ex">figure1</span>           1</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="ex">manuscript</span>        1</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="ex">sim</span>              18</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="ex">table1</span>            1</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="ex">total</span>            22</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Twenty-two jobs: eighteen simulations, the figure, the table and the PDF. In the right order, with no decisions from you, and — the part that matters — with no possibility of a version of the paper containing a figure from before the change.</p>
 <p>Compare the alternative, which is remembering to run four things in order and being right about it every time, for the entire life of the project.</p>
 </section>
-<section id="making-latex-quiet" class="level2" data-number="7.4">
-<h2 data-number="7.4" class="anchored" data-anchor-id="making-latex-quiet"><span class="header-section-number">7.4</span> Making LaTeX quiet</h2>
+<section id="making-latex-quiet" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="making-latex-quiet"><span class="header-section-number">7.3</span> Making LaTeX quiet</h2>
 <p>Two flags in that rule are there for the sake of your terminal:</p>
 <p><code>-interaction=nonstopmode</code> stops LaTeX from halting at an error to ask you what to do. In a pipeline, an interactive prompt is a hang, not a question.</p>
 <p><code>&gt; {log} 2&gt;&amp;1</code> sends the several hundred lines LaTeX produces to <code>logs/paper-latexmk.log</code>. When the build fails, the error is in there, and <code>latexmk</code> also leaves the more readable <code>build/paper.log</code>.</p>
@@ -568,28 +558,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="what-goes-in-git" class="level2" data-number="7.5">
-<h2 data-number="7.5" class="anchored" data-anchor-id="what-goes-in-git"><span class="header-section-number">7.5</span> What goes in git</h2>
+<section id="what-goes-in-git" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="what-goes-in-git"><span class="header-section-number">7.4</span> What goes in git</h2>
 <p>The <code>.gitignore</code> for a project of this shape:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>.gitignore</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" data-filename=".gitignore"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>.snakemake/</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>rds/</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>out/</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>logs/</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>benchmarks/</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>build/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" data-filename=".gitignore"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>.snakemake/</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>rds/</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>out/</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>logs/</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>benchmarks/</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>build/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Same rule as <a href="02-first-snakefile.html#sec-shape" class="quarto-xref"><span>Section 2.8</span></a> — git is for source, not output — which puts the compiled PDF on the ignored side of the line along with everything else. It is produced by running <code>latexmk</code>, so it is output, however much it feels like the point of the project. Commit the code, the <code>.tex</code> files, and <code>config.yaml</code>; the claim that the rest is regenerable is now enforced by a program rather than by your recollection.</p>
 <p>The awkward case is a simulation that takes three days, which colleagues who clone the repository cannot rebuild over coffee. The answer is still not to commit it. Send them <code>rds/</code>, or keep it somewhere outside the repository that the Snakefile knows how to find; either way it travels beside the repository rather than inside it. This is the payoff for keeping <code>rds/</code> separate from <code>out/</code> — you hand over the expensive half on its own, and every figure, table and PDF rebuilds from it in seconds. <a href="10-scaling-up.html" class="quarto-xref"><span>Chapter 10</span></a> covers the mechanics.</p>
 </section>
-<section id="try-it" class="level2" data-number="7.6">
-<h2 data-number="7.6" class="anchored" data-anchor-id="try-it"><span class="header-section-number">7.6</span> Try it</h2>
+<section id="try-it" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="try-it"><span class="header-section-number">7.5</span> Try it</h2>
 <ol type="1">
 <li>Change the figure’s y-axis label and run <code>snakemake --cores 4</code>. Which jobs run? Which do not, and why not?</li>
-<li>Add a <code>supplement.tex</code> wrapper that includes only the table, plus a rule to build it, and add it to <code>rule all</code>.</li>
+<li>Add a <code>supplement.tex</code> wrapper that <code>\input</code>s only the table, plus a rule to build it, and add it to <code>rule all</code>.</li>
 <li>Introduce a deliberate LaTeX error in <code>main.tex</code> and run the build. Where does Snakemake tell you to look, and what is in that file?</li>
 </ol>
 

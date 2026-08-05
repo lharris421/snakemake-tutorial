@@ -161,7 +161,7 @@ transcript("04-cascade.txt")
 ```
 
 (That transcript comes from the larger example of @sec-manuscript, which is why
-there are 23 jobs rather than 4.)
+there are 22 jobs rather than 4.)
 
 Content is not the only trigger. Snakemake also stores the shell command and the
 parameters used for each output, so editing a rule's command --- not just the

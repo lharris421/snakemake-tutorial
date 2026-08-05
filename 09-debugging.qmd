@@ -201,7 +201,7 @@ snakemake --rulegraph | dot -Tpdf > rules.pdf  # the rule graph, one node per ru
 
 Both need [Graphviz](https://graphviz.org/) for `dot`. For a grid of any size, use
 `--rulegraph`: `--dag` draws a node per *job*, which for the example in
-@sec-manuscript means twenty-three of them.
+@sec-manuscript means twenty-two of them.
 
 Failing that, read `rule all` first. It tells you what the project is for, and
 everything else follows from it.

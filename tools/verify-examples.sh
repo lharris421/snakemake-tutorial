@@ -42,7 +42,7 @@ run 01-first-rules 2 rds/sim-naive.rds rds/sim-split.rds out/figure1.pdf
 run 02-wildcards 4 out/figure1.pdf rds/sim/n400_rho80_split.rds
 run 03-config 4 out/figure1.pdf rds/200/sim/n50_rho0_naive.rds
 run 04-manuscript 4 out/figure1.pdf out/table1.tex build/paper.pdf \
-  build/submission.pdf rds/200/sim/n50_rho0_naive.rds \
+  rds/200/sim/n50_rho0_naive.rds \
   logs/200/sim/n50_rho0_naive.log benchmarks/200/sim/n50_rho0_naive.tsv
 run 05-analysis 4 rds/analysis.rds rds/models.rds rds/table1.rds \
   out/figure1.png report.html
@@ -54,7 +54,7 @@ echo '## cascade check' >> scripts/sim.R
 planned=$(snakemake -n 2>&1 | awk '/^total/ {print $2; exit}')
 sed -i '' -e '/^## cascade check$/d' scripts/sim.R
 if [ "${planned:-0}" -ge 20 ]; then
-  printf '    ok       editing scripts/sim.R plans %s jobs, through to the PDFs\n' "$planned"
+  printf '    ok       editing scripts/sim.R plans %s jobs, through to the PDF\n' "$planned"
 else
   printf '    UNEXPECTED: editing scripts/sim.R planned only %s jobs\n' "${planned:-0}"; fail=1
 fi

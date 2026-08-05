@@ -4,7 +4,7 @@ job           count
 ----------  -------
 all               1
 figure1           1
-manuscript        2
+manuscript        1
 sim              18
 table1            1
-total            23
+total            22
