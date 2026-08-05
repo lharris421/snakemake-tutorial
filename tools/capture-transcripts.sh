@@ -19,8 +19,10 @@ ROOT=$(pwd)
 OUT="$ROOT/transcripts"
 mkdir -p "$OUT"
 
-clean() {  # remove everything a run regenerates
-  rm -rf .snakemake results logs benchmarks build report.html
+clean() {  # remove everything a run regenerates, including this example's
+           # slice of the central results folder
+  rm -rf .snakemake out logs benchmarks build report.html
+  rm -rf "$ROOT/results/$(basename "$PWD")"
 }
 
 filter() {
@@ -43,8 +45,8 @@ clean
 { say "snakemake --cores 2"; snakemake --cores 2 2>&1 | filter; } > "$OUT/01-run.txt"
 { say "snakemake --cores 2"; snakemake --cores 2 2>&1 | filter; } > "$OUT/01-up-to-date.txt"
 {
-  say "rm results/figure1.pdf"
-  rm results/figure1.pdf
+  say "rm out/figure1.pdf"
+  rm out/figure1.pdf
   say "snakemake --cores 2"
   snakemake --cores 2 2>&1 | filter
 } > "$OUT/01-rebuild-figure.txt"
@@ -56,8 +58,8 @@ clean
 { say "snakemake -n"; snakemake -n 2>&1 | filter | first_stats; } \
   > "$OUT/02-job-stats.txt"
 {
-  say "snakemake --cores 1 results/sim/n50_rho0_naive.rds"
-  snakemake --cores 1 results/sim/n50_rho0_naive.rds 2>&1 | filter
+  say "snakemake --cores 1 ../../results/02-wildcards/sim/n50_rho0_naive.rds"
+  snakemake --cores 1 ../../results/02-wildcards/sim/n50_rho0_naive.rds 2>&1 | filter
 } > "$OUT/02-one-target.txt"
 { say "snakemake --cores 4"; snakemake --cores 4 2>&1 | filter | tail -20; } \
   > "$OUT/02-run-tail.txt"
@@ -91,8 +93,8 @@ snakemake --cores 4 > /dev/null 2>&1
 } > "$OUT/04-cascade.txt"
 
 {
-  say "snakemake -n results/figure1.pdf"
-  snakemake -n results/figure1.pdf 2>&1 | filter |
+  say "snakemake -n out/figure1.pdf"
+  snakemake -n out/figure1.pdf 2>&1 | filter |
     sed -n '/^rule figure1:/,/^$/p' | head -7
 } > "$OUT/04-reason.txt"
 
@@ -107,7 +109,7 @@ snakemake --cores 4 > /dev/null 2>&1
 
 # The book shows this generated file, and results/ is not committed, so keep a
 # copy next to the transcripts for the same reason
-cp results/table1.tex "$OUT/table1.tex"
+cp out/table1.tex "$OUT/table1.tex"
 
 ## ---------------------------------------------------------------- example 05
 cd "$ROOT/examples/05-analysis"
@@ -121,15 +123,15 @@ clean
 ## ---------------------------------------------------- errors, for chapter 09
 cd "$ROOT/examples/02-wildcards"
 {
-  say "snakemake --cores 1 results/coverage-summary.csv"
-  snakemake --cores 1 results/coverage-summary.csv 2>&1 | filter | head -8
+  say "snakemake --cores 1 out/coverage-summary.csv"
+  snakemake --cores 1 out/coverage-summary.csv 2>&1 | filter | head -8
 } > "$OUT/09-missing-rule.txt"
 
 {
-  say "snakemake --cores 1 results/sim/n50_rho0_bayes.rds"
-  snakemake --cores 1 results/sim/n50_rho0_bayes.rds 2>&1 | filter | tail -14
+  say "snakemake --cores 1 ../../results/02-wildcards/sim/n50_rho0_bayes.rds"
+  snakemake --cores 1 ../../results/02-wildcards/sim/n50_rho0_bayes.rds 2>&1 | filter | tail -14
 } > "$OUT/09-job-failed.txt"
-rm -f results/sim/n50_rho0_bayes.rds
+rm -f ../../results/02-wildcards/sim/n50_rho0_bayes.rds
 
 cd "$ROOT/examples/04-manuscript"
 {

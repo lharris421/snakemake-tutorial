@@ -8,7 +8,7 @@ their content through `main.tex`.
 
 ```bash
 snakemake --cores 4            # ~15 seconds, ends with build/paper.pdf
-snakemake --cores 4 results/figure1.pdf   # just the figure
+snakemake --cores 4 out/figure1.pdf       # just the figure
 ```
 
 Then edit `code/sim.R` and run `snakemake --cores 4` again: the simulations, the
@@ -21,7 +21,8 @@ is the easy option) plus the R packages `optparse`, `ggplot2`, `tidyr` and `kabl
 | Directory | Contents |
 |---|---|
 | `code/` | R scripts, all sourcing `code/setup.R` |
-| `results/` | figures, tables and simulation output (regenerable) |
+| `../../results/04-manuscript/` | simulation output, in the folder shared by every example |
+| `out/` | the figure and the table, rebuilt from it in seconds |
 | `logs/` | one log per job, so a failure is easy to find |
 | `benchmarks/` | runtime and memory per simulation |
 | `build/` | compiled PDFs |

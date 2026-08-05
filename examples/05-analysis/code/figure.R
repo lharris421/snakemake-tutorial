@@ -1,13 +1,13 @@
-## results/analysis.rds -> results/figure1.png
+## ../../results/05-analysis/analysis.rds -> out/figure1.png
 ##
-## Usage: Rscript code/figure.R --in results/analysis.rds --out results/figure1.png
+## Usage: Rscript code/figure.R --in ../../results/05-analysis/analysis.rds --out out/figure1.png
 
 if (interactive()) source("setup.R") else source("code/setup.R")
 
 option_list <- list(
-  make_option("--in", type = "character", default = "results/analysis.rds",
+  make_option("--in", type = "character", default = "../../results/05-analysis/analysis.rds",
               dest = "infile"),
-  make_option("--out", type = "character", default = "results/figure1.png")
+  make_option("--out", type = "character", default = "out/figure1.png")
 )
 opt <- parse_args(OptionParser(option_list = option_list))
 

@@ -1,7 +1,7 @@
 ## One cell of the simulation grid.
 ##
-## Usage: Rscript code/sim.R --n 100 --rho 50 --method naive \
-##          --iterations 200 --out results/sim/n100_rho50_naive.rds
+## Usage: Rscript code/sim.R --n 100 --rho 50 --method naive --iterations 200 \
+##          --out ../../results/03-config/sim/n100_rho50_naive.rds
 
 ## Run from the project root by Snakemake; run from code/ when you are poking at
 ## it interactively in RStudio
@@ -14,7 +14,7 @@ option_list <- list(
   make_option("--iterations", type = "integer", default = 200),
   make_option("--seed", type = "double", default = 1234),
   make_option("--level", type = "double", default = 0.95),
-  make_option("--out", type = "character", default = "results/sim.rds")
+  make_option("--out", type = "character", default = "../../results/03-config/sim.rds")
 )
 opt <- parse_args(OptionParser(option_list = option_list))
 

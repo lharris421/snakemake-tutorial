@@ -1,7 +1,7 @@
 ## Coverage of confidence intervals after stepwise selection.
 ##
 ## Usage:  Rscript sim.R <method> <output file>
-## e.g.:   Rscript sim.R naive results/sim-naive.rds
+## e.g.:   Rscript sim.R naive ../../results/01-first-rules/sim-naive.rds
 
 args <- commandArgs(trailingOnly = TRUE)
 method <- args[1]

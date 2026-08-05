@@ -13,9 +13,9 @@ execute:
 #| include: false
 source("code/setup.R")
 library(knitr)
-analysis <- readRDS("results/analysis.rds")
-tab1 <- readRDS("results/table1.rds")
-models <- readRDS("results/models.rds")
+analysis <- readRDS(file.path(results_dir, "analysis.rds"))
+tab1 <- readRDS(file.path(results_dir, "table1.rds"))
+models <- readRDS(file.path(results_dir, "models.rds"))
 eff <- models$effects
 ```
 
@@ -40,7 +40,7 @@ kable(tab1, col.names = c("Characteristic",
 
 ## Change in FEV1
 
-![](results/figure1.png)
+![](out/figure1.png)
 
 ## Treatment effect
 

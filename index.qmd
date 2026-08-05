@@ -50,9 +50,9 @@ By the end the pipeline looks like this:
 ```{mermaid}
 %%| fig-align: center
 flowchart LR
-  C[code/sim.R] --> S1[18 simulation<br/>result files]
-  S1 --> F[results/figure1.pdf]
-  S1 --> T[results/table1.tex]
+  C[code/sim.R] --> S1["18 simulation result files<br/>(central results folder)"]
+  S1 --> F[out/figure1.pdf]
+  S1 --> T[out/table1.tex]
   F --> P[build/paper.pdf]
   T --> P
   M[main.tex] --> P

@@ -74,7 +74,7 @@ inputs.** Every example in this book does.
 |---|---|
 | `snakemake -R sim` | rerun rule `sim` and everything downstream |
 | `snakemake --forcerun sim` | same thing, spelled out |
-| `snakemake -f results/figure1.pdf` | rebuild just that file |
+| `snakemake -f out/figure1.pdf` | rebuild just that file |
 | `snakemake -F` | force everything, from scratch |
 | `snakemake --delete-all-output` | delete everything the workflow produced |
 
@@ -197,6 +197,7 @@ everything else follows from it.
 3. **Smoke-test with a small config.** `--config iterations=20` finds broken
    plumbing without simulating anything.
 4. **Give every rule a log.** Debugging a parallel run without logs is guesswork.
-5. **Delete `results/` occasionally and rebuild from scratch.** It is the only way
+5. **Delete everything the workflow produced and rebuild from scratch, occasionally.**
+   It is the only way
    to know the pipeline still works end to end --- and the thing you are implicitly
    promising anyone who reads your paper.

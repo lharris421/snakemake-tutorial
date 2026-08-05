@@ -12,9 +12,9 @@ into a figure --- and a file called `Snakefile`.
 By hand, building the figure means running three commands in the right order:
 
 ```bash
-Rscript sim.R naive results/sim-naive.rds
-Rscript sim.R split results/sim-split.rds
-Rscript figure.R results/figure1.pdf results/sim-naive.rds results/sim-split.rds
+Rscript sim.R naive ../../results/01-first-rules/sim-naive.rds
+Rscript sim.R split ../../results/01-first-rules/sim-split.rds
+Rscript figure.R out/figure1.pdf ../../results/01-first-rules/sim-*.rds
 ```
 
 That is not hard. It is just something you have to remember, and remember *again*
@@ -32,8 +32,8 @@ file I produce, and here is the command that gets from one to the other.
 embed_file("examples/01-first-rules/Snakefile")
 ```
 
-Read `rule sim_naive` as a sentence: *to make `results/sim-naive.rds`, given
-`sim.R`, run `Rscript sim.R naive results/sim-naive.rds`.*
+Read `rule sim_naive` as a sentence: *to make `sim-naive.rds` in the results
+folder, given `sim.R`, run `Rscript sim.R naive` with that path.*
 
 A few mechanics:
 
@@ -70,9 +70,9 @@ that `rule figure` needs files that `rule sim_naive` and `rule sim_split` produc
 ```{mermaid}
 %%| fig-align: center
 flowchart LR
-  A[sim.R] --> B[results/sim-naive.rds]
-  A --> C[results/sim-split.rds]
-  D[figure.R] --> E[results/figure1.pdf]
+  A[sim.R] --> B["results/01-first-rules/<br/>sim-naive.rds"]
+  A --> C["results/01-first-rules/<br/>sim-split.rds"]
+  D[figure.R] --> E[out/figure1.pdf]
   B --> E
   C --> E
   E --> F([rule all])
@@ -175,7 +175,7 @@ You can also name a target directly, which is invaluable when you are developing
 and want to check one piece:
 
 ```bash
-snakemake --cores 1 results/sim-naive.rds
+snakemake --cores 1 ../../results/01-first-rules/sim-naive.rds
 ```
 
 Snakemake finds the rule that can produce that file, builds whatever it needs, and
@@ -184,8 +184,8 @@ for that rule's outputs.
 
 ## Try it
 
-1. Delete `results/` entirely and rebuild. Time it.
+1. Delete `out/` and `../../results/01-first-rules/` and rebuild. Time it.
 2. Change the `n <- 100` line in `sim.R` to `n <- 200` and run `snakemake -n`.
    Which jobs are planned, and why?
-3. Add a line to `rule all` asking for `results/nonexistent.rds` and run
+3. Add a line to `rule all` asking for `out/nonexistent.rds` and run
    `snakemake -n`. Read the error carefully --- you will see it again.

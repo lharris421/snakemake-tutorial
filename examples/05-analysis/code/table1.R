@@ -1,6 +1,7 @@
-## results/analysis.rds -> results/table1.rds
+## ../../results/05-analysis/analysis.rds -> ../../results/05-analysis/table1.rds
 ##
-## Usage: Rscript code/table1.R --in results/analysis.rds --out results/table1.rds
+## Usage: Rscript code/table1.R --in ../../results/05-analysis/analysis.rds \
+##          --out ../../results/05-analysis/table1.rds
 ##
 ## Baseline characteristics by arm, saved as a plain data frame.  The report
 ## formats it; this script decides what is in it.
@@ -8,9 +9,9 @@
 if (interactive()) source("setup.R") else source("code/setup.R")
 
 option_list <- list(
-  make_option("--in", type = "character", default = "results/analysis.rds",
+  make_option("--in", type = "character", default = "../../results/05-analysis/analysis.rds",
               dest = "infile"),
-  make_option("--out", type = "character", default = "results/table1.rds")
+  make_option("--out", type = "character", default = "../../results/05-analysis/table1.rds")
 )
 opt <- parse_args(OptionParser(option_list = option_list))
 

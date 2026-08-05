@@ -1,6 +1,7 @@
-## results/analysis.rds -> results/models.rds
+## ../../results/05-analysis/analysis.rds -> ../../results/05-analysis/models.rds
 ##
-## Usage: Rscript code/model.R --in results/analysis.rds --out results/models.rds
+## Usage: Rscript code/model.R --in ../../results/05-analysis/analysis.rds \
+##          --out ../../results/05-analysis/models.rds
 ##
 ## One model per named specification.  Adding a sensitivity analysis means adding
 ## an entry to this list, not editing the report.
@@ -8,9 +9,9 @@
 if (interactive()) source("setup.R") else source("code/setup.R")
 
 option_list <- list(
-  make_option("--in", type = "character", default = "results/analysis.rds",
+  make_option("--in", type = "character", default = "../../results/05-analysis/analysis.rds",
               dest = "infile"),
-  make_option("--out", type = "character", default = "results/models.rds")
+  make_option("--out", type = "character", default = "../../results/05-analysis/models.rds")
 )
 opt <- parse_args(OptionParser(option_list = option_list))
 

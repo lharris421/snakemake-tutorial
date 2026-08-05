@@ -438,7 +438,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#two-repositories" id="toc-two-repositories" class="nav-link active" data-scroll-target="#two-repositories"><span class="header-section-number">10.1</span> Two repositories</a></li>
   <li><a href="#pointing-at-the-other-repository" id="toc-pointing-at-the-other-repository" class="nav-link" data-scroll-target="#pointing-at-the-other-repository"><span class="header-section-number">10.2</span> Pointing at the other repository</a></li>
-  <li><a href="#results-outside-the-repository" id="toc-results-outside-the-repository" class="nav-link" data-scroll-target="#results-outside-the-repository"><span class="header-section-number">10.3</span> Results outside the repository</a></li>
+  <li><a href="#results-outside-the-repository" id="toc-results-outside-the-repository" class="nav-link" data-scroll-target="#results-outside-the-repository"><span class="header-section-number">10.3</span> Results outside the repository</a>
+  <ul class="collapse">
+  <li><a href="#sharing-the-folder" id="toc-sharing-the-folder" class="nav-link" data-scroll-target="#sharing-the-folder"><span class="header-section-number">10.3.1</span> Sharing the folder</a></li>
+  </ul></li>
   <li><a href="#chained-rules" id="toc-chained-rules" class="nav-link" data-scroll-target="#chained-rules"><span class="header-section-number">10.4</span> Chained rules</a></li>
   <li><a href="#optional-expensive-pieces" id="toc-optional-expensive-pieces" class="nav-link" data-scroll-target="#optional-expensive-pieces"><span class="header-section-number">10.5</span> Optional expensive pieces</a></li>
   <li><a href="#what-this-buys-you" id="toc-what-this-buys-you" class="nav-link" data-scroll-target="#what-this-buys-you"><span class="header-section-number">10.6</span> What this buys you</a></li>
@@ -545,12 +548,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="results-outside-the-repository" class="level2" data-number="10.3">
 <h2 data-number="10.3" class="anchored" data-anchor-id="results-outside-the-repository"><span class="header-section-number">10.3</span> Results outside the repository</h2>
-<p>Notice that the <code>.rds</code> files in that layout live in the <em>methods</em> repository, not the manuscript’s. This is deliberate, and it is the main structural difference from the toy example.</p>
-<p>A simulation that takes two days to run is not a build artifact in the way a figure is. You do not want it deleted when you clean the manuscript directory, you want it shared between the paper and the talk and the grant renewal, and you do not want it in git. Keeping the cache in one place outside the manuscript — keyed by parameters, so a run for <code>n = 400</code> is never confused with a run for <code>n = 100</code> — gets you all three.</p>
+<p>Notice that the <code>.rds</code> files in that layout live in the <em>methods</em> repository, not the manuscript’s. This is the same idea as the <code>results/</code> folder the examples in this book have been writing to since <a href="01-rscript.html" class="quarto-xref"><span>Chapter 1</span></a>, moved one step further out: at this scale the results are shared by several manuscripts, so they belong with neither of them in particular.</p>
+<p>A simulation that takes two days to run is not a build artifact in the way a figure is. You do not want it deleted when you clean the manuscript directory, you want it shared between the paper and the talk and the grant renewal, and you do not want it in git. Keeping the cache in one place — keyed by parameters, so a run for <code>n = 400</code> is never confused with a run for <code>n = 100</code> — gets you all three.</p>
 <p>The iteration count is part of the path for the same reason:</p>
 <pre><code>rds/1000/original/laplace_autoregressive_0_100_101_gaussian_100_pipep.rds
     ^^^^</code></pre>
 <p>so the 20-iteration smoke test and the 1000-iteration final run coexist, and switching between them is a config edit rather than an act of destruction.</p>
+<section id="sharing-the-folder" class="level3" data-number="10.3.1">
+<h3 data-number="10.3.1" class="anchored" data-anchor-id="sharing-the-folder"><span class="header-section-number">10.3.1</span> Sharing the folder</h3>
+<p>Once every result is under one roof, sharing the project’s output is a matter of sharing one directory. Which raises the question of how.</p>
+<p>Email and Dropbox both work and both go wrong in the same way: somebody edits a file you were about to overwrite, and the loser never finds out. Git is the tool you would reach for, except that git is bad at exactly this kind of content. A few hundred megabytes of <code>.rds</code> files will bloat the repository permanently, diff and merge do nothing useful on serialized objects, and results derived from protected health information have no business on GitHub at all.</p>
+<p><a href="https://github.com/pbreheny/dat"><code>dat</code></a> is built for this gap. It gives a directory a git-style push/pull workflow backed by S3, without keeping version history:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> results</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">dat</span> init</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ex">dat</span> push</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>and on a collaborator’s machine:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">dat</span> clone jsmith7.snakemake.tutorial results</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">dat</span> pull</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The part that makes it more than a wrapper around <code>rsync</code> is that it detects conflicts: if someone has modified a file you are about to overwrite, it says so rather than silently clobbering their work. It hashes file contents, so pushing a directory where one of 400 simulations changed transfers one file. And <code>dat status</code> will tell you whether you are in sync without touching the network.</p>
+<p>The pairing is natural. Git holds the code, which is small, textual, and wants history. <code>dat</code> holds the results, which are large, binary, and only ever want to be <em>current</em>. Both are one command to push, and a collaborator with both has your entire project.</p>
+</section>
 </section>
 <section id="chained-rules" class="level2" data-number="10.4">
 <h2 data-number="10.4" class="anchored" data-anchor-id="chained-rules"><span class="header-section-number">10.4</span> Chained rules</h2>
@@ -559,15 +576,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-with-filename-file">
 <pre><strong>Snakefile</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" data-filename="Snakefile"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>rule fit_gam:</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span>:</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        script <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>LOC<span class="sc">}</span><span class="ss">scripts/fit_gam.R"</span>,</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        rds    <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>LOC<span class="sc">}</span><span class="ss">rds/</span><span class="sc">{</span>ITER<span class="sc">}</span><span class="ss">/original/</span><span class="ch">{{</span><span class="ss">distribution</span><span class="ch">}}</span><span class="ss">_</span><span class="ch">{{</span><span class="ss">n</span><span class="ch">}}</span><span class="ss">_</span><span class="ch">{{</span><span class="ss">method</span><span class="ch">}}</span><span class="ss">.rds"</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    output:</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"</span><span class="sc">{</span>LOC<span class="sc">}</span><span class="ss">rds/</span><span class="sc">{</span>ITER<span class="sc">}</span><span class="ss">/gam/</span><span class="ch">{{</span><span class="ss">distribution</span><span class="ch">}}</span><span class="ss">_</span><span class="ch">{{</span><span class="ss">n</span><span class="ch">}}</span><span class="ss">_</span><span class="ch">{{</span><span class="ss">method</span><span class="ch">}}</span><span class="ss">.rds"</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    shell:</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        <span class="co">"Rscript {input.script} --n {wildcards.n} --method {wildcards.method} "</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--loc {LOC}"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" data-filename="Snakefile"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>rule fit_gam:</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span>:</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>        script <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>LOC<span class="sc">}</span><span class="ss">scripts/fit_gam.R"</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>        rds    <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>LOC<span class="sc">}</span><span class="ss">rds/</span><span class="sc">{</span>ITER<span class="sc">}</span><span class="ss">/original/</span><span class="ch">{{</span><span class="ss">distribution</span><span class="ch">}}</span><span class="ss">_</span><span class="ch">{{</span><span class="ss">n</span><span class="ch">}}</span><span class="ss">_</span><span class="ch">{{</span><span class="ss">method</span><span class="ch">}}</span><span class="ss">.rds"</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    output:</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"</span><span class="sc">{</span>LOC<span class="sc">}</span><span class="ss">rds/</span><span class="sc">{</span>ITER<span class="sc">}</span><span class="ss">/gam/</span><span class="ch">{{</span><span class="ss">distribution</span><span class="ch">}}</span><span class="ss">_</span><span class="ch">{{</span><span class="ss">n</span><span class="ch">}}</span><span class="ss">_</span><span class="ch">{{</span><span class="ss">method</span><span class="ch">}}</span><span class="ss">.rds"</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    shell:</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        <span class="co">"Rscript {input.script} --n {wildcards.n} --method {wildcards.method} "</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--loc {LOC}"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The smoothing step reads the simulation output and writes its own file, so re-tuning the smoother does not rerun the simulation. Every stage you can afford to separate is a stage you will not have to repeat — and in a project where the first stage takes a day, that is the difference between iterating on a figure in minutes and iterating on it overnight.</p>
 </section>
@@ -578,21 +595,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-with-filename-file">
 <pre><strong>config.yaml</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" data-filename="config.yaml"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">desparsified</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span><span class="co">   # adds hours; needed only for the final version</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" data-filename="config.yaml"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">desparsified</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span><span class="co">   # adds hours; needed only for the final version</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>Snakefile</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" data-filename="Snakefile"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>DESPARSIFIED <span class="op">=</span> config.get(<span class="st">"desparsified"</span>, <span class="va">False</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>rule figure5:</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span>:</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>        rds <span class="op">=</span> expand(</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>            <span class="ss">f"</span><span class="sc">{</span>LOC<span class="sc">}</span><span class="ss">rds/</span><span class="sc">{</span>ITER<span class="sc">}</span><span class="ss">/gam/laplace_</span><span class="ch">{{</span><span class="ss">method</span><span class="ch">}}</span><span class="ss">.rds"</span>,</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>            method <span class="op">=</span> [<span class="st">"pipep"</span>, <span class="st">"selectiveinferenceS"</span>] <span class="op">+</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>                     ([<span class="st">"desparsified"</span>] <span class="cf">if</span> DESPARSIFIED <span class="cf">else</span> [])</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" data-filename="Snakefile"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>DESPARSIFIED <span class="op">=</span> config.get(<span class="st">"desparsified"</span>, <span class="va">False</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>rule figure5:</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span>:</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>        rds <span class="op">=</span> expand(</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>            <span class="ss">f"</span><span class="sc">{</span>LOC<span class="sc">}</span><span class="ss">rds/</span><span class="sc">{</span>ITER<span class="sc">}</span><span class="ss">/gam/laplace_</span><span class="ch">{{</span><span class="ss">method</span><span class="ch">}}</span><span class="ss">.rds"</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>            method <span class="op">=</span> [<span class="st">"pipep"</span>, <span class="st">"selectiveinferenceS"</span>] <span class="op">+</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>                     ([<span class="st">"desparsified"</span>] <span class="cf">if</span> DESPARSIFIED <span class="cf">else</span> [])</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>        )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The list of inputs is computed by Python, so a flag in the config changes which jobs exist at all. The figure script gets the same flag and adjusts its legend accordingly. Someone reproducing your results gets something in an hour by default, and everything if they are willing to wait.</p>
 </section>

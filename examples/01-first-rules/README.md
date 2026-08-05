@@ -9,5 +9,6 @@ snakemake -n          # dry run: what would be done?
 snakemake --cores 2   # do it
 ```
 
-Everything is written to `results/`, which is regenerable and not checked in.
-Delete it and run `snakemake --cores 2` again to rebuild from scratch.
+Simulation output goes to the shared `results/01-first-rules/` folder at the top of
+the repository; the figure is written to `out/` here. Both are regenerable and
+neither is checked in --- delete them and run `snakemake --cores 2` again.

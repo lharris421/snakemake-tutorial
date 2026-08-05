@@ -25,11 +25,11 @@ Rscript sim.R
 Two things change when your code runs this way rather than in RStudio.
 
 The first is that the working directory is wherever your terminal is, not wherever
-the file is. If `sim.R` says `readRDS("results/thing.rds")`, that path is resolved
+the file is. If `sim.R` says `readRDS("out/thing.rds")`, that path is resolved
 relative to the directory you were sitting in when you typed the command. Pick a
 convention and hold to it; the one used throughout this book is **always run from
 the project root**, so every path in every script is relative to the top of the
-project. Snakemake follows the same convention by default, which is convenient.
+project. Snakemake follows the same convention by default.
 
 The second is that nothing prints unless you ask. Auto-printing at the top level
 is an interactive feature, so `head(d)` on its own line produces no output under
@@ -56,7 +56,7 @@ embed_file("examples/01-first-rules/sim.R", from = "^args <- commandArgs",
 and is then called like this:
 
 ```bash
-Rscript sim.R naive results/sim-naive.rds
+Rscript sim.R naive ../../results/01-first-rules/sim-naive.rds
 ```
 
 This is fine for two arguments. It gets bad quickly: the arguments are positional,
@@ -78,7 +78,8 @@ embed_file("examples/02-wildcards/sim.R", from = "^library\\(optparse\\)",
 Now the script is called with named arguments in any order:
 
 ```bash
-Rscript sim.R --n 400 --rho 80 --method split --out results/sim/n400_rho80_split.rds
+Rscript sim.R --n 400 --rho 80 --method split \
+  --out ../../results/02-wildcards/sim/n400_rho80_split.rds
 ```
 
 and `opt` is a list: `opt$n` is an integer, `opt$method` is a string. Anything you
@@ -117,14 +118,39 @@ filename.
 
 ## Where the results go
 
-Two decisions that will save you pain later:
+Three decisions that will save you pain later:
 
 **Results are files, and files are named for what produced them.** A file called
 `n400_rho80_split.rds` tells you the sample size, the correlation, and the method.
-A file called `results2_final.rds` tells you nothing, and in six months neither
-will you.
+A file called `results2_final.rds` tells you nothing.
 
 **Results are regenerable, so they don't go in git.** Commit the code and the
-inputs; let the outputs be rebuilt. Every example in this book has a `results/`
-directory that is safe to delete at any moment --- which is a claim you can only
-make honestly once the pipeline is complete.
+inputs; let the outputs be rebuilt --- which is a claim you can only make honestly
+once the pipeline is complete.
+
+**All the results go in one place.** Every example in this book writes its
+simulation output to a single shared folder, `results/`, at the top of the
+repository:
+
+```{.default filename="the layout"}
+snakemake-tutorial/
+  results/                 <- every example's computed results
+    01-first-rules/
+    02-wildcards/
+    ...
+  examples/
+    01-first-rules/
+      sim.R  figure.R  Snakefile
+      out/                 <- figures and tables, rebuilt in seconds
+```
+
+The split is between things that are expensive to compute and things that are
+derived from them. The `.rds` files are the expensive part, so they go in the
+shared folder; a figure that takes two seconds to redraw stays next to the code
+that draws it, in `out/`.
+
+Why bother, when each example could keep its own results next door? Because one
+folder is a thing you can hand to somebody. Back it up, sync it, put it on a
+shared drive, and a collaborator has every result the project has ever computed
+without also getting your working directory. @sec-scaling comes back to this once
+the pipeline is big enough for it to matter.

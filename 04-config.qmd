@@ -145,4 +145,5 @@ the tag.
    What does Snakemake rerun, and why?
 2. Add `1000` to the `n` list in `config.yaml` and run `snakemake -n`.
 3. Delete the `wildcard_constraints` block and ask for
-   `results/sim/n50_rho0_na_ive.rds`. What happens, and what did `{method}` match?
+   `../../results/03-config/sim/n50_rho0_na_ive.rds`. What happens, and what did
+   `{method}` match?

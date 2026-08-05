@@ -29,9 +29,19 @@ from "main /docs" to "GitHub Actions" and can stop committing `docs/`.
 index.qmd, 01-*.qmd … 10-*.qmd   the chapters
 _common.R                        embed_file() / transcript() helpers
 examples/                        five complete, runnable projects
+results/                         every example's computed results (not in git)
 transcripts/                     terminal output, captured from real runs
 tools/capture-transcripts.sh     regenerates transcripts/
 ```
+
+Simulation output from all five examples lands in the single `results/` folder, one
+subdirectory per example, so there is one directory to back up, sync or hand to a
+collaborator — with [`dat`](https://github.com/pbreheny/dat), say. Cheap derived
+artifacts (figures, tables, PDFs, logs) stay next to the example that builds them,
+in its `out/`, `build/` and `logs/`. To put the results somewhere else entirely —
+`~/dat/snakemake-tutorial`, a shared drive — change `results-loc` in the example's
+`config.yaml` (examples 01 and 02 predate the config chapter and set `RESULTS` at
+the top of the Snakefile instead).
 
 Every code block in the book is read from a file in `examples/` at render time, and
 every terminal transcript is captured from an actual run. Nothing in the text is

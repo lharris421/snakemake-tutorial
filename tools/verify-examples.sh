@@ -21,7 +21,8 @@ run() {  # run <dir> <cores> <expected files...>
   local dir=$1 cores=$2; shift 2
   printf '\n== %s\n' "$dir"
   cd "$ROOT/examples/$dir" || { fail=1; return; }
-  rm -rf .snakemake results logs benchmarks build report.html
+  rm -rf .snakemake out logs benchmarks build report.html
+  rm -rf "$ROOT/results/$dir"
 
   local t0=$SECONDS
   if ! snakemake --cores "$cores" > /tmp/verify-$$.log 2>&1; then
@@ -38,13 +39,16 @@ run() {  # run <dir> <cores> <expected files...>
   fi
 }
 
-run 01-first-rules 2 results/sim-naive.rds results/sim-split.rds results/figure1.pdf
-run 02-wildcards 4 results/figure1.pdf results/sim/n400_rho80_split.rds
-run 03-config 4 results/figure1.pdf results/sim/n50_rho0_naive.rds
-run 04-manuscript 4 results/figure1.pdf results/table1.tex build/paper.pdf \
-  build/submission.pdf logs/sim/n50_rho0_naive.log benchmarks/sim/n50_rho0_naive.tsv
-run 05-analysis 4 results/analysis.rds results/models.rds results/table1.rds \
-  results/figure1.png report.html
+run 01-first-rules 2 ../../results/01-first-rules/sim-naive.rds \
+  ../../results/01-first-rules/sim-split.rds out/figure1.pdf
+run 02-wildcards 4 out/figure1.pdf ../../results/02-wildcards/sim/n400_rho80_split.rds
+run 03-config 4 out/figure1.pdf ../../results/03-config/sim/n50_rho0_naive.rds
+run 04-manuscript 4 out/figure1.pdf out/table1.tex build/paper.pdf \
+  build/submission.pdf logs/sim/n50_rho0_naive.log benchmarks/sim/n50_rho0_naive.tsv \
+  ../../results/04-manuscript/sim/n50_rho0_naive.rds
+run 05-analysis 4 ../../results/05-analysis/analysis.rds \
+  ../../results/05-analysis/models.rds ../../results/05-analysis/table1.rds \
+  out/figure1.png report.html
 
 ## The claim chapter 7 makes: editing the simulation rebuilds the PDF
 printf '\n== 04-manuscript: the cascade\n'

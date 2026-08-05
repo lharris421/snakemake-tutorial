@@ -5,6 +5,12 @@ iterations: 200
 seed: 1234
 level: 0.95
 
+# Where simulation results are cached.  One folder for every example in this
+# book, so there is a single directory to back up or share; point it somewhere
+# outside the repository (say "~/dat/snakemake-tutorial") if you would rather
+# keep results away from code entirely.
+results-loc: "../../results"
+
 # The parameter grid
 n: [50, 100, 400]
 rho: [0, 50, 80]      # as a percent
