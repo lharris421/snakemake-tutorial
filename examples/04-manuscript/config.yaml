@@ -1,7 +1,4 @@
-# Settings that apply to the whole project, not to any one rule.  Drop
-# `iterations` to 20 for a fast run that checks the plumbing; put it back to 200
-# for results you would show anyone.
-#
-# The parameter grids are not here: each rule sweeps its own, so they live beside
-# the rule that uses them.
+# Settings that apply to the whole project.  Drop `iterations` to 20 for a fast
+# run that checks the plumbing; put it back to 200 for results you would show
+# anyone.
 iterations: 200

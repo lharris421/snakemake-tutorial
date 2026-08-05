@@ -33,9 +33,8 @@ and everything in it is available as `config`, a dictionary: `config["iterations
 is `200`. Use `config.get("key", default)` when a setting is optional.
 
 Notice how little is in there. A config is for settings that apply to the project
-as a whole, and `iterations` qualifies --- it means the same thing to every rule
-that computes anything. Most of what you might reflexively put in a config does
-not qualify, which is the subject of the next-but-one section.
+as a whole --- `iterations` means the same thing to every rule that computes
+anything.
 
 ## Runs that don't overwrite each other {#sec-iterations-path}
 
@@ -83,9 +82,7 @@ so the config still controls the answer; it just no longer destroys the
 alternative. @sec-scaling shows the same pattern at the scale where it matters,
 where the recomputation being avoided is measured in days.
 
-## Grids belong to rules, not to the config {#sec-config-scope}
-
-The parameter grid stayed in the Snakefile, next to the rule that consumes it:
+The figure rule collects the set `ITER` points at:
 
 ```{r}
 #| echo: false
@@ -94,22 +91,8 @@ embed_file("examples/03-config/Snakefile", from = "        rds = expand",
            to = "                     method = ", filename = "Snakefile (excerpt)")
 ```
 
-It is tempting to hoist `n`, `rho` and `methods` into `config.yaml` alongside
-`iterations`, and for a project with one figure it makes no difference. It stops
-working as soon as there are two. A figure comparing methods at large sample sizes
-and a table summarizing small ones sweep different grids; a supplementary figure
-adds a correlation level the main one does not. Once `config["n"]` is shared by
-every rule, either they all move together or you start inventing names like `n_fig2`
---- at which point the config is doing the Snakefile's job badly.
-
-The distinction is scope. `iterations` is **rule-agnostic**: it means the same
-thing everywhere, and if you halve it for a smoke test you halve it for everything.
-A grid is **rule-specific**: it is part of what a particular figure is *of*. Put
-the first in the config and leave the second beside the rule.
-
-The real project of @sec-scaling does exactly this. Its config holds five global
-settings and not one grid; of its sixteen figure and table rules, twelve carry
-their own `expand()`, each sweeping whatever that particular figure is about.
+The grid itself stays in the Snakefile beside the rule that sweeps it, since
+another rule may well want a different one.
 
 ## wildcard_constraints
 
@@ -185,10 +168,10 @@ A useful test: **if changing it changes the results, it belongs in the config; i
 changing it changes what the code does, it belongs in the code.**
 
 Iteration counts and file locations --- config. The definition of the estimator ---
-code. Grids --- the Snakefile, beside the rule, as above. The temptation, once you
-have a config file, is to make everything configurable, and you end up with a
-200-line YAML file harder to read than the code it configures. The config here has
-one setting, and it is the one that genuinely applies to everything.
+code. The temptation, once you have a config file, is to make everything
+configurable, and you end up with a 200-line YAML file harder to read than the code
+it configures. The config here has one setting, and it is the one that genuinely
+applies to everything.
 
 ## Keeping the config with the results
 
