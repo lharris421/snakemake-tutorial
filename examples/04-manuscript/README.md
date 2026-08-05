@@ -20,7 +20,8 @@ is the easy option) plus the R packages `optparse`, `ggplot2`, `tidyr` and `kabl
 
 | Directory | Contents |
 |---|---|
-| `code/` | R scripts, all sourcing `code/setup.R` |
+| `R/` | the simulation functions, one per file |
+| `code/` | the scripts the rules call; `setup.R` holds labels and colors |
 | `rds/` | simulation output: the expensive part |
 | `out/` | the figure and the table, rebuilt from it in seconds |
 | `logs/` | one log per job, so a failure is easy to find |

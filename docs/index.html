@@ -490,6 +490,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Where did it come from? Which script made it? Was that script the current version of the script, or the one from before you fixed the bug in the data-generating function? If a reviewer asks you to change the sample sizes from 50, 100 and 400 to 50, 100, 400 and 1000, how many things do you have to remember to rerun, and in what order, before the number in the abstract is right again?</p>
 <p>Most of us answer these questions with memory and discipline. Both work fine until the project gets big, or a coauthor touches it, or you come back to it after eight months. This tutorial is about answering them with a file instead.</p>
 <p>A <em>workflow manager</em> is a program that you tell, once, which files depend on which other files and what command turns one into the other. After that it will build anything you ask for, run only what is actually out of date, and refuse to let a figure in your manuscript be older than the code that made it (unless you explicitly override it which isn’t easy to do). This tutorial focuses on one particular workflow manager: <a href="https://snakemake.readthedocs.io/">Snakemake</a>.</p>
+<div class="callout callout-style-simple callout-none no-icon callout-empty-content">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+
+</div>
+</div>
+</div>
 <section id="who-this-is-for" class="level2">
 <h2 class="anchored" data-anchor-id="who-this-is-for">Who this is for</h2>
 <p>Statisticians and biostatisticians who write R, run simulations, and produce manuscripts or analysis reports. You should be comfortable in R. You do <strong>not</strong> need to know Python (Snakemake is written in Python, and its files are Python, but you will need about five minutes’ worth of it, all of which is explained), and you do not need to have used <code>make</code> or any other build tool.</p>

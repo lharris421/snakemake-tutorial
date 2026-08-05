@@ -6,7 +6,9 @@
 ## dropped, how sex is coded -- is made here and nowhere else.  Downstream
 ## scripts read the .rds and never touch the raw file.
 
-if (interactive()) source("setup.R") else source("code/setup.R")
+library(optparse)
+
+arm_levels <- c("Placebo", "Treatment")
 
 option_list <- list(
   make_option("--in", type = "character", default = "data/trial.csv",

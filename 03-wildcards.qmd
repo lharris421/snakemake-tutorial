@@ -61,8 +61,6 @@ two minutes of thought up front:
   Snakemake will believe both are up to date.
 - **Use a separator that cannot appear in a value.** These examples use `_` between
   fields and stick to digits and lowercase letters within a field.
-- **Keep it parseable in the other direction too.** You will eventually want to read
-  `n400_rho80_split.rds` back into columns in R.
 
 The scheme here is `n{n}_rho{rho}_{method}.rds`, with `rho` as a percentage so that
 it stays an integer --- `rho50` rather than `rho0.5`, because a decimal point in a

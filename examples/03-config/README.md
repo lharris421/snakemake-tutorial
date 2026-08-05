@@ -3,9 +3,10 @@
 Accompanies [chapter 4](../../04-config.qmd).
 
 The iteration count has moved out of the R script and into `config.yaml`, where it
-also names the directory results are cached in. The R scripts have moved into
-`code/` and share a `setup.R`, which every rule that uses one of them lists as an
-input.
+also names the directory results are cached in. The simulation functions have moved
+to `R/`, one per file, and the labels and colors the figure needs into
+`code/setup.R` --- each listed as an input by the rules that actually depend on it,
+so tweaking a color does not rerun the grid.
 
 ```bash
 snakemake --cores 4                          # 200 iterations, ~10 seconds

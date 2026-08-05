@@ -3,9 +3,11 @@
 ## Usage: Rscript code/sim.R --n 100 --rho 50 --method naive \
 ##          --iterations 200 --out rds/sim/n100_rho50_naive.rds
 
-## Run from the project root by Snakemake; run from code/ when you are poking at
-## it interactively in RStudio
-if (interactive()) source("setup.R") else source("code/setup.R")
+library(optparse)
+
+## Project functions, one per file in R/
+R_DIR <- if (interactive()) "../R" else "R"
+for (f in list.files(R_DIR, pattern = "[.]R$", full.names = TRUE)) source(f)
 
 option_list <- list(
   make_option("--n", type = "integer", default = 100),

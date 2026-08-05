@@ -19,6 +19,10 @@ anything you ask for, run only what is actually out of date, and refuse to let a
 figure in your manuscript be older than the code that made it (unless you explicitly override it which isn't easy to do).
 This tutorial focuses on one particular workflow manager: [Snakemake](https://snakemake.readthedocs.io/).
 
+::: {.callout}
+
+:::
+
 ## Who this is for
 
 Statisticians and biostatisticians who write R, run simulations, and produce

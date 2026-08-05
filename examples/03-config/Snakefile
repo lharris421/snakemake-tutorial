@@ -1,3 +1,5 @@
+import glob
+
 configfile: "config.yaml"
 
 ## The iteration count names the directory the results go in, so a 20-iteration
@@ -20,7 +22,7 @@ rule all:
 rule sim:
     input:
         script = "code/sim.R",
-        setup = "code/setup.R"
+        functions = glob.glob("R/*.R")
     output:
         "rds/{iterations}/sim/n{n}_rho{rho}_{method}.rds"
     shell:
