@@ -76,11 +76,59 @@ rule distribution_results:
         "--loc {LOC}"
 ```
 
-Two things to notice. The `f` prefix makes a Python f-string, where `{LOC}` is
-substituted immediately; wildcards, which must survive to be matched later, are
-written `{{n}}` to escape them. And `--loc {LOC}` passes the location to the R
-script too, so that it can find the package and write its results in the right
-place.
+Note `--loc {LOC}` in the shell command: it passes the location to the R script
+too, so that it can find the package and write its results in the right place.
+
+### When you need an f-string, and when you must not {#sec-fstrings}
+
+This is the first rule in the book whose paths are f-strings, and the reason is
+worth understanding, because getting it wrong fails quietly.
+
+**In `input:`, `output:`, `log:` and `benchmark:`, braces mean wildcards.**
+Snakemake reads those strings as patterns, so a plain `"{LOC}/rds/x.rds"` does not
+insert your variable --- it declares a wildcard *named* `LOC`, which matches
+anything at all:
+
+```{.default filename="what a plain string does"}
+rule a:
+    output: "{LOC}/out.txt"
+
+$ snakemake -n data/out.txt        →  wildcards: LOC=data
+$ snakemake -n anything/out.txt    →  wildcards: LOC=anything
+```
+
+It appears to work, because asking for the path you had in mind matches. It is
+also matching a thousand paths you did not intend.
+
+The `f` prefix is how you say "substitute this now": Python replaces `{LOC}` before
+Snakemake ever sees the string. The price is that Python then wants to substitute
+*everything* in braces, so the genuine wildcards have to be escaped by doubling
+them --- `{{n}}` reaches Snakemake as `{n}`. That is the whole reason for the
+awkward-looking `f"{LOC}rds/{ITER}/original/{{distribution}}_{{n}}.rds"`.
+
+**In `shell:`, the opposite holds --- do not use an f-string.** Snakemake resolves
+that string itself, and its namespace already includes the Snakefile's globals
+along with `input`, `output` and `wildcards`. A plain string gets you both:
+
+```{.default filename="plain string in shell:"}
+shell: "echo {SEED} > {output}"       →  echo 1234 > out.txt
+```
+
+Add an `f` and Python resolves `{output}` at parse time, before the job exists,
+substituting an internal object:
+
+```{.default filename="f-string in shell: -- broken"}
+shell: f"echo {SEED} > {output}"
+   →  echo 1234 > <snakemake.ioutils.rule_items_proxy.RuleItemProxy object at 0x…>
+```
+
+No error is raised. The rule parses, the job is scheduled, and the command writes
+to a file with that name.
+
+So: f-strings for paths that embed a Python value, plain strings for `shell:`. If
+your results live inside the project --- as they do everywhere else in this book
+--- there is nothing to interpolate into the paths and the question does not
+arise, which is why this is the first rule that needs it.
 
 If your collaborators will not maintain a config file, you can look the path up by
 username instead:
