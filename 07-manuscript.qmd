@@ -111,10 +111,12 @@ benchmarks/
 build/
 ```
 
-Everything ignored is regenerable, and the claim that it is regenerable is now
-enforced by a program rather than by your recollection. Commit the code, the
-`.tex` files, and `config.yaml` --- and note that the compiled PDF is on the
-ignored side of that line too. It is an output like any other.
+Same rule as @sec-shape --- git is for source, not output --- which puts the
+compiled PDF on the ignored side of the line along with everything else. It is
+produced by running `latexmk`, so it is output, however much it feels like the
+point of the project. Commit the code, the `.tex` files, and `config.yaml`; the
+claim that the rest is regenerable is now enforced by a program rather than by
+your recollection.
 
 The awkward case is a simulation that takes three days, which colleagues who clone
 the repository cannot rebuild over coffee. The answer is still not to commit it.
