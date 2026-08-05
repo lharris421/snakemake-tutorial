@@ -1,8 +1,8 @@
 ## Coverage table, written as a LaTeX fragment for \input{} into the manuscript.
 ##
-## Usage: Rscript code/table.R --out out/table1.tex <rds files ...>
+## Usage: Rscript scripts/table.R --out out/table1.tex <rds files ...>
 
-if (interactive()) source("setup.R") else source("code/setup.R")
+if (interactive()) source("setup.R") else source("scripts/setup.R")
 
 suppressPackageStartupMessages({
   library(tidyr)

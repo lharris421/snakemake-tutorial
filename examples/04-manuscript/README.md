@@ -11,7 +11,7 @@ snakemake --cores 4            # ~15 seconds, ends with build/paper.pdf
 snakemake --cores 4 out/figure1.pdf   # just the figure
 ```
 
-Then edit `code/sim.R` and run `snakemake --cores 4` again: the simulations, the
+Then edit `scripts/sim.R` and run `snakemake --cores 4` again: the simulations, the
 figure, the table and both PDFs all rebuild, in order. That cascade is the argument
 for the whole approach.
 
@@ -21,7 +21,7 @@ is the easy option) plus the R packages `optparse`, `ggplot2`, `tidyr` and `kabl
 | Directory | Contents |
 |---|---|
 | `R/` | the simulation functions, one per file |
-| `code/` | the scripts the rules call; `setup.R` holds labels and colors |
+| `scripts/` | the scripts the rules call; `setup.R` holds labels and colors |
 | `rds/` | simulation output: the expensive part |
 | `out/` | the figure and the table, rebuilt from it in seconds |
 | `logs/` | one log per job, so a failure is easy to find |

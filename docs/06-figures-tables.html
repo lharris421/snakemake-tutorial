@@ -468,15 +468,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Everything so far has produced <code>.rds</code> files, which nobody reads. This chapter turns them into the two things a paper is actually made of. Move to <code>examples/04-manuscript</code>, which is the complete version of the simulation study.</p>
 <section id="the-aggregating-rule" class="level2" data-number="6.1">
 <h2 data-number="6.1" class="anchored" data-anchor-id="the-aggregating-rule"><span class="header-section-number">6.1</span> The aggregating rule</h2>
-<p>A figure rule looks like any other rule; what distinguishes it is that its input is the whole grid rather than one cell:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>Snakefile (excerpt)</strong></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-filename="Snakefile (excerpt)"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>rule figure1:</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span>:</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>        script <span class="op">=</span> <span class="st">"code/figure.R"</span>,</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>        setup <span class="op">=</span> <span class="st">"code/setup.R"</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>        script <span class="op">=</span> <span class="st">"scripts/figure.R"</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>        setup <span class="op">=</span> <span class="st">"scripts/setup.R"</span>,</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>        rds <span class="op">=</span> expand(<span class="st">"rds/</span><span class="sc">{iterations}</span><span class="st">/sim/n</span><span class="sc">{n}</span><span class="st">_rho</span><span class="sc">{rho}</span><span class="st">_</span><span class="sc">{method}</span><span class="st">.rds"</span>,</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                     iterations <span class="op">=</span> ITER,</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>                     n <span class="op">=</span> [<span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">400</span>],</span>
@@ -495,9 +494,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The R script receives all eighteen filenames as trailing arguments and stacks them:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
-<pre><strong>code/figure.R (excerpt)</strong></pre>
+<pre><strong>scripts/figure.R (excerpt)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-filename="code/figure.R (excerpt)"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>parsed <span class="ot">&lt;-</span> <span class="fu">parse_args</span>(<span class="fu">OptionParser</span>(<span class="at">option_list =</span> option_list),</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-filename="scripts/figure.R (excerpt)"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>parsed <span class="ot">&lt;-</span> <span class="fu">parse_args</span>(<span class="fu">OptionParser</span>(<span class="at">option_list =</span> option_list),</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">positional_arguments =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>opt <span class="ot">&lt;-</span> parsed<span class="sc">$</span>options</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>infiles <span class="ot">&lt;-</span> parsed<span class="sc">$</span>args</span>
@@ -505,16 +504,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(infiles, readRDS))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><code>positional_arguments = TRUE</code> tells <code>optparse</code> to accept bare arguments alongside the named flags, so the script can be called as</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> code/figure.R <span class="at">--out</span> out/figure1.pdf rds/200/sim/<span class="pp">*</span>.rds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> scripts/figure.R <span class="at">--out</span> out/figure1.pdf rds/200/sim/<span class="pp">*</span>.rds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="figures" class="level2" data-number="6.2">
 <h2 data-number="6.2" class="anchored" data-anchor-id="figures"><span class="header-section-number">6.2</span> Figures</h2>
 <p>Nothing about the plotting code is Snakemake-specific — it is the <code>ggsave()</code> call you would write anyway:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
-<pre><strong>code/figure.R (excerpt)</strong></pre>
+<pre><strong>scripts/figure.R (excerpt)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" data-filename="code/figure.R (excerpt)"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(cov, <span class="fu">aes</span>(n, covered, <span class="at">color =</span> method, <span class="at">group =</span> method)) <span class="sc">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" data-filename="scripts/figure.R (excerpt)"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(cov, <span class="fu">aes</span>(n, covered, <span class="at">color =</span> method, <span class="at">group =</span> method)) <span class="sc">+</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> opt<span class="sc">$</span>level, <span class="at">linetype =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
@@ -532,12 +531,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Two conventions, though, that matter more inside a pipeline than outside one:</p>
 <p><strong>Write vector graphics to the size they will appear.</strong> <code>ggsave(..., width = 7, height = 3)</code> in inches, matching the text width of the document, means the figure is never rescaled by LaTeX and the fonts in it come out the size you chose. Resizing a figure by 60% in <code>\includegraphics</code> is how you end up with axis labels nobody can read.</p>
-<p><strong>Keep the appearance in one place.</strong> The figure and the table both turn <code>naive</code> into something a reader sees, so the label and the color are decided once, in <code>code/setup.R</code>, which the scripts that draw things source:</p>
+<p><strong>Keep the appearance in one place.</strong> The figure and the table both turn <code>naive</code> into something a reader sees, so the label and the color are decided once, in <code>scripts/setup.R</code>, which the scripts that draw things source:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
-<pre><strong>code/setup.R (excerpt)</strong></pre>
+<pre><strong>scripts/setup.R (excerpt)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" data-filename="code/setup.R (excerpt)"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>method_labels <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" data-filename="scripts/setup.R (excerpt)"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>method_labels <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"naive"</span> <span class="ot">=</span> <span class="st">"Naive"</span>,</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"split"</span> <span class="ot">=</span> <span class="st">"Sample splitting"</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>)</span>
@@ -555,16 +554,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Snakemake has no way to know that <code>figure.R</code> reads another file, so <code>code/setup.R</code> is listed in the <code>input:</code> of the rules whose scripts source it. An undeclared dependency is the one failure mode Snakemake cannot warn you about: change a color and the figure that uses it stays quietly stale (<a href="09-debugging.html" class="quarto-xref"><span>Chapter 9</span></a>). Declare it wherever changing it could change an output.</p>
-<p>Which is an argument for keeping such files narrow. <code>setup.R</code> here holds <em>only</em> presentation — labels, colors, the plotting packages — and the simulation rules do not list it at all. The simulation functions live somewhere else entirely, one per file:</p>
+<p>Snakemake has no way to know that <code>figure.R</code> reads another file, so <code>scripts/setup.R</code> is listed in the <code>input:</code> of the rules whose scripts source it. An undeclared dependency is the one failure mode Snakemake cannot warn you about: change a color and the figure that uses it stays quietly stale (<a href="09-debugging.html" class="quarto-xref"><span>Chapter 9</span></a>). Declare it wherever changing it could change an output.</p>
+<p>Which is an argument for keeping such files narrow. <code>setup.R</code> here holds <em>only</em> presentation — labels, colors, the plotting packages — and the simulation rules do not use <code>setup.R</code>. The simulation functions live somewhere else entirely, one per file:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>examples/04-manuscript</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" data-filename="examples/04-manuscript"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>R/gen_data.R          sourced by code/sim.R      -&gt; an input to rule sim</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" data-filename="examples/04-manuscript"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>R/gen_data.R          sourced by scripts/sim.R      -&gt; an input to rule sim</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>R/select_forward.R</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>R/one_rep.R</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>code/setup.R          sourced by figure.R and table.R</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>scripts/setup.R          sourced by figure.R and table.R</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>so that the two kinds of change cost what they should. Editing a hex code plans five jobs — the figure, the table and the two PDFs — and leaves the grid alone. Editing <code>R/one_rep.R</code> plans all twenty-three, because the results really are wrong now. Had both lived in one <code>setup.R</code>, the color change would have rerun eighteen simulations, since Snakemake cannot tell which half of a file you touched.</p>
 <p>The <code>R/</code> directory is the layout an R package uses, which is where this ends up once the functions are the contribution rather than the scaffolding. <a href="https://github.com/IowaBiostat/project-workflow">IowaBiostat/project-workflow</a> is a talk and a small example project on exactly that, with <code>R/</code>, <code>man/</code>, <code>scripts/</code> and a Snakefile, worth cloning and pulling apart.</p>
@@ -576,9 +575,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Tables are the same idea with a different output format: the script writes a LaTeX fragment that the manuscript <code>\input</code>s.</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
-<pre><strong>code/table.R (excerpt)</strong></pre>
+<pre><strong>scripts/table.R (excerpt)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" data-filename="code/table.R (excerpt)"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## escape = FALSE so that "$n$" reaches LaTeX as math rather than as literal</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" data-filename="scripts/table.R (excerpt)"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## escape = FALSE so that "$n$" reaches LaTeX as math rather than as literal</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="do">## dollar signs; the price is that anything else in the table must be valid LaTeX</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">kbl</span>(wide, <span class="at">format =</span> <span class="st">"latex"</span>, <span class="at">booktabs =</span> <span class="cn">TRUE</span>, <span class="at">digits =</span> <span class="dv">3</span>, <span class="at">linesep =</span> <span class="st">""</span>,</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">escape =</span> <span class="cn">FALSE</span>,</span>
@@ -645,7 +644,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="try-it" class="level2" data-number="6.5">
 <h2 data-number="6.5" class="anchored" data-anchor-id="try-it"><span class="header-section-number">6.5</span> Try it</h2>
 <ol type="1">
-<li>Change the color palette in <code>code/setup.R</code> and run <code>snakemake -n</code>; then do the same to <code>R/gen_data.R</code>. Count the jobs each time, and explain the difference.</li>
+<li>Change the color palette in <code>scripts/setup.R</code> and run <code>snakemake -n</code>; then do the same to <code>R/gen_data.R</code>. Count the jobs each time, and explain the difference.</li>
 <li>Add a <code>figure2</code> rule showing coverage against <code>rho</code> instead of <code>n</code>, and add it to <code>rule all</code>.</li>
 <li>Delete <code>out/table1.tex</code> and run <code>snakemake --cores 4</code>. How far back does Snakemake go?</li>
 </ol>

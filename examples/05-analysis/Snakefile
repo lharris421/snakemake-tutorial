@@ -10,7 +10,7 @@ rule all:
 
 rule clean:
     input:
-        script = "code/clean.R",
+        script = "scripts/clean.R",
         data = "data/trial.csv"
     output:
         "rds/analysis.rds"
@@ -21,7 +21,7 @@ rule clean:
 
 rule model:
     input:
-        script = "code/model.R",
+        script = "scripts/model.R",
         rds = "rds/analysis.rds"
     output:
         "rds/models.rds"
@@ -32,8 +32,8 @@ rule model:
 
 rule table1:
     input:
-        script = "code/table1.R",
-        setup = "code/setup.R",
+        script = "scripts/table1.R",
+        setup = "scripts/setup.R",
         rds = "rds/analysis.rds"
     output:
         "rds/table1.rds"
@@ -44,8 +44,8 @@ rule table1:
 
 rule figure1:
     input:
-        script = "code/figure.R",
-        setup = "code/setup.R",
+        script = "scripts/figure.R",
+        setup = "scripts/setup.R",
         rds = "rds/analysis.rds"
     output:
         "out/figure1.png"

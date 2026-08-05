@@ -515,9 +515,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="8.3" class="anchored" data-anchor-id="cleaning-once"><span class="header-section-number">8.3</span> Cleaning once</h2>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
-<pre><strong>code/clean.R (excerpt)</strong></pre>
+<pre><strong>scripts/clean.R (excerpt)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-filename="code/clean.R (excerpt)"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(opt<span class="sc">$</span>infile, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-filename="scripts/clean.R (excerpt)"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(opt<span class="sc">$</span>infile, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>log_step <span class="ot">&lt;-</span> <span class="cf">function</span>(d, msg) {</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"%-45s n = %d</span><span class="sc">\n</span><span class="st">"</span>, msg, <span class="fu">nrow</span>(d)))</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">invisible</span>(d)</span>
@@ -612,9 +612,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="8.5" class="anchored" data-anchor-id="models-as-data"><span class="header-section-number">8.5</span> Models as data</h2>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
-<pre><strong>code/model.R (excerpt)</strong></pre>
+<pre><strong>scripts/model.R (excerpt)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" data-filename="code/model.R (excerpt)"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>specs <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" data-filename="scripts/model.R (excerpt)"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>specs <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">unadjusted =</span> change <span class="sc">~</span> arm,</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">adjusted   =</span> change <span class="sc">~</span> arm <span class="sc">+</span> age <span class="sc">+</span> sex <span class="sc">+</span> fev1_base,</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">full       =</span> change <span class="sc">~</span> arm <span class="sc">+</span> age <span class="sc">+</span> sex <span class="sc">+</span> bmi <span class="sc">+</span> smoker <span class="sc">+</span> fev1_base</span>

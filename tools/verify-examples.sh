@@ -50,13 +50,13 @@ run 05-analysis 4 rds/analysis.rds rds/models.rds rds/table1.rds \
 ## The claim chapter 7 makes: editing the simulation rebuilds the PDF
 printf '\n== 04-manuscript: the cascade\n'
 cd "$ROOT/examples/04-manuscript"
-echo '## cascade check' >> code/sim.R
+echo '## cascade check' >> scripts/sim.R
 planned=$(snakemake -n 2>&1 | awk '/^total/ {print $2; exit}')
-sed -i '' -e '/^## cascade check$/d' code/sim.R
+sed -i '' -e '/^## cascade check$/d' scripts/sim.R
 if [ "${planned:-0}" -ge 20 ]; then
-  printf '    ok       editing code/sim.R plans %s jobs, through to the PDFs\n' "$planned"
+  printf '    ok       editing scripts/sim.R plans %s jobs, through to the PDFs\n' "$planned"
 else
-  printf '    UNEXPECTED: editing code/sim.R planned only %s jobs\n' "${planned:-0}"; fail=1
+  printf '    UNEXPECTED: editing scripts/sim.R planned only %s jobs\n' "${planned:-0}"; fail=1
 fi
 snakemake --cores 4 > /dev/null 2>&1
 

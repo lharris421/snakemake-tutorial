@@ -11,9 +11,6 @@ them into the two things a paper is actually made of. Move to
 
 ## The aggregating rule
 
-A figure rule looks like any other rule; what distinguishes it is that its input is
-the whole grid rather than one cell:
-
 ```{r}
 #| echo: false
 #| output: asis
@@ -33,15 +30,15 @@ The R script receives all eighteen filenames as trailing arguments and stacks th
 ```{r}
 #| echo: false
 #| output: asis
-embed_file("examples/04-manuscript/code/figure.R", from = "^parsed <- parse_args",
-           to = "^res <- do.call", filename = "code/figure.R (excerpt)")
+embed_file("examples/04-manuscript/scripts/figure.R", from = "^parsed <- parse_args",
+           to = "^res <- do.call", filename = "scripts/figure.R (excerpt)")
 ```
 
 `positional_arguments = TRUE` tells `optparse` to accept bare arguments alongside
 the named flags, so the script can be called as
 
 ```bash
-Rscript code/figure.R --out out/figure1.pdf rds/200/sim/*.rds
+Rscript scripts/figure.R --out out/figure1.pdf rds/200/sim/*.rds
 ```
 
 ## Figures
@@ -52,8 +49,8 @@ you would write anyway:
 ```{r}
 #| echo: false
 #| output: asis
-embed_file("examples/04-manuscript/code/figure.R", from = "^p <- ggplot",
-           to = "^cat\\(\"wrote", filename = "code/figure.R (excerpt)")
+embed_file("examples/04-manuscript/scripts/figure.R", from = "^p <- ggplot",
+           to = "^cat\\(\"wrote", filename = "scripts/figure.R (excerpt)")
 ```
 
 Two conventions, though, that matter more inside a pipeline than outside one:
@@ -66,13 +63,13 @@ read.
 
 **Keep the appearance in one place.** The figure and the table both turn `naive`
 into something a reader sees, so the label and the color are decided once, in
-`code/setup.R`, which the scripts that draw things source:
+`scripts/setup.R`, which the scripts that draw things source:
 
 ```{r}
 #| echo: false
 #| output: asis
-embed_file("examples/04-manuscript/code/setup.R", from = "^method_labels",
-           to = "^colors", filename = "code/setup.R (excerpt)")
+embed_file("examples/04-manuscript/scripts/setup.R", from = "^method_labels",
+           to = "^colors", filename = "scripts/setup.R (excerpt)")
 ```
 
 rather than being buried in two separate `ggplot` calls that can drift apart.
@@ -80,7 +77,7 @@ rather than being buried in two separate `ggplot` calls that can drift apart.
 ::: {.callout-note}
 ## Declare what a script sources --- and split it so that hurts less
 
-Snakemake has no way to know that `figure.R` reads another file, so `code/setup.R`
+Snakemake has no way to know that `figure.R` reads another file, so `scripts/setup.R`
 is listed in the `input:` of the rules whose scripts source it. An undeclared
 dependency is the one failure mode Snakemake cannot warn you about: change a color
 and the figure that uses it stays quietly stale (@sec-debugging). Declare it
@@ -88,14 +85,14 @@ wherever changing it could change an output.
 
 Which is an argument for keeping such files narrow. `setup.R` here holds *only*
 presentation --- labels, colors, the plotting packages --- and the simulation rules
-do not list it at all. The simulation functions live somewhere else entirely, one
+do not use `setup.R`. The simulation functions live somewhere else entirely, one
 per file:
 
 ```{.default filename="examples/04-manuscript"}
-R/gen_data.R          sourced by code/sim.R      -> an input to rule sim
+R/gen_data.R          sourced by scripts/sim.R      -> an input to rule sim
 R/select_forward.R
 R/one_rep.R
-code/setup.R          sourced by figure.R and table.R
+scripts/setup.R          sourced by figure.R and table.R
 ```
 
 so that the two kinds of change cost what they should. Editing a hex code plans
@@ -119,8 +116,8 @@ fragment that the manuscript `\input`s.
 ```{r}
 #| echo: false
 #| output: asis
-embed_file("examples/04-manuscript/code/table.R", from = "^## escape = FALSE",
-           to = "^  add_header_above", filename = "code/table.R (excerpt)")
+embed_file("examples/04-manuscript/scripts/table.R", from = "^## escape = FALSE",
+           to = "^  add_header_above", filename = "scripts/table.R (excerpt)")
 ```
 
 which produces:
@@ -180,7 +177,7 @@ the results section.
 
 ## Try it
 
-1. Change the color palette in `code/setup.R` and run `snakemake -n`; then do the
+1. Change the color palette in `scripts/setup.R` and run `snakemake -n`; then do the
    same to `R/gen_data.R`. Count the jobs each time, and explain the difference.
 2. Add a `figure2` rule showing coverage against `rho` instead of `n`, and add it
    to `rule all`.

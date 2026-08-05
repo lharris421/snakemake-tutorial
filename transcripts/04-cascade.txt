@@ -1,4 +1,4 @@
-$ echo '## a real edit' >> code/sim.R && snakemake -n
+$ echo '## a real edit' >> scripts/sim.R && snakemake -n
 Job stats:
 job           count
 ----------  -------

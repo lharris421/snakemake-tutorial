@@ -63,7 +63,7 @@ if you are sure, `--touch` (below) is the escape hatch.
 the command is part of the provenance.
 
 **Nothing reruns after you edit a script that is not listed as an input.** This one
-is silent and it is the dangerous one. If a rule calls `Rscript code/figure.R` but
+is silent and it is the dangerous one. If a rule calls `Rscript scripts/figure.R` but
 only lists `{input.rds}`, then editing `figure.R` changes nothing as far as
 Snakemake is concerned, and your figure quietly stays stale. **List your scripts as
 inputs.** Every example in this book does.

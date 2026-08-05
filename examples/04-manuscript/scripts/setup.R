@@ -1,4 +1,4 @@
-## Shared by every script in code/.  Anything used by more than one script --
+## Shared by every script in scripts/.  Anything used by more than one script --
 ## packages, simulation functions, plot labels, colors -- belongs here, so that
 ## a figure and the table it summarizes can never disagree about what "naive"
 ## means.

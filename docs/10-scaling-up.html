@@ -491,7 +491,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   subgraph M["manuscript repo"]
     S[Snakefile]
     T[main.tex]
-    C[code/figure1.R ...]
+    C[scripts/figure1.R ...]
   end
   subgraph R["methods repo (an R package)"]
     F[R/ -- the estimators]
@@ -654,7 +654,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="ex">23</span> of 23 steps <span class="er">(</span><span class="ex">100%</span><span class="kw">)</span> <span class="cf">done</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">-n</span></span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="ex">Nothing</span> to be done <span class="er">(</span><span class="ex">all</span> requested files are present and up to date<span class="kw">)</span><span class="bu">.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>From that point the project behaves normally: nothing to be done, and editing <code>code/sim.R</code> correctly plans all twenty-three jobs again. The cheap products — the figure, the table, the PDF — get touched too, so if you would rather rebuild those from the results you were given, delete them afterwards and run <code>snakemake</code> as usual. It takes seconds and it means the paper on your disk was compiled by your machine from the numbers you were sent.</p>
+<p>From that point the project behaves normally: nothing to be done, and editing <code>scripts/sim.R</code> correctly plans all twenty-three jobs again. The cheap products — the figure, the table, the PDF — get touched too, so if you would rather rebuild those from the results you were given, delete them afterwards and run <code>snakemake</code> as usual. It takes seconds and it means the paper on your disk was compiled by your machine from the numbers you were sent.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">

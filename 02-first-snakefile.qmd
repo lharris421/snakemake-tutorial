@@ -176,7 +176,7 @@ now --- but you can arrive at it by other routes, because several common tools
 preserve timestamps deliberately:
 
 ```bash
-cp -p old/sim.R code/sim.R      # -p preserves the original mtime
+cp -p old/sim.R scripts/sim.R      # -p preserves the original mtime
 rsync -a backup/ .              # -a implies -t
 tar xf archive.tar              # restores the archived mtimes
 ```
@@ -225,7 +225,7 @@ The layout that scales from these examples up to a real methods paper is:
 my-project/
   Snakefile          <- the map: every rule, in one file, at the root
   config.yaml        <- the settings (chapter 4)
-  code/              <- the scripts the rules call
+  scripts/              <- the scripts the rules call
   rds/               <- computed results
   out/               <- figures and tables
 ```

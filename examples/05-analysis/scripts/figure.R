@@ -1,8 +1,8 @@
 ## rds/analysis.rds -> out/figure1.png
 ##
-## Usage: Rscript code/figure.R --in rds/analysis.rds --out out/figure1.png
+## Usage: Rscript scripts/figure.R --in rds/analysis.rds --out out/figure1.png
 
-if (interactive()) source("setup.R") else source("code/setup.R")
+if (interactive()) source("setup.R") else source("scripts/setup.R")
 
 option_list <- list(
   make_option("--in", type = "character", default = "rds/analysis.rds",

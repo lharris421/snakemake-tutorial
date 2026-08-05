@@ -90,14 +90,14 @@ clean
 snakemake --cores 4 > /dev/null 2>&1
 
 {
-  say "touch code/sim.R && snakemake -n"
-  touch code/sim.R
+  say "touch scripts/sim.R && snakemake -n"
+  touch scripts/sim.R
   snakemake -n 2>&1 | filter | tail -3
 } > "$OUT/04-touch-is-not-enough.txt"
 
 {
-  say "echo '## a real edit' >> code/sim.R && snakemake -n"
-  echo '## a real edit' >> code/sim.R
+  say "echo '## a real edit' >> scripts/sim.R && snakemake -n"
+  echo '## a real edit' >> scripts/sim.R
   snakemake -n 2>&1 | filter | first_stats
 } > "$OUT/04-cascade.txt"
 
@@ -108,7 +108,7 @@ snakemake --cores 4 > /dev/null 2>&1
 } > "$OUT/04-reason.txt"
 
 # put sim.R back and rebuild so the checked-out example is consistent
-sed -i '' -e '/^## a real edit$/d' code/sim.R
+sed -i '' -e '/^## a real edit$/d' scripts/sim.R
 snakemake --cores 4 > /dev/null 2>&1
 
 { say "cat benchmarks/200/sim/n400_rho80_naive.tsv"; cat benchmarks/200/sim/n400_rho80_naive.tsv; } \

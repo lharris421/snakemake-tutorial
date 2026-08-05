@@ -54,8 +54,8 @@ lose should be an input to your pipeline and never an output of it.
 ```{r}
 #| echo: false
 #| output: asis
-embed_file("examples/05-analysis/code/clean.R", from = "^raw <- read.csv",
-           to = "^log_step\\(d, \"with a week 12", filename = "code/clean.R (excerpt)")
+embed_file("examples/05-analysis/scripts/clean.R", from = "^raw <- read.csv",
+           to = "^log_step\\(d, \"with a week 12", filename = "scripts/clean.R (excerpt)")
 ```
 
 Every decision about the data is in this one script, and it announces each one:
@@ -130,8 +130,8 @@ so the sentence and the table cannot disagree.
 ```{r}
 #| echo: false
 #| output: asis
-embed_file("examples/05-analysis/code/model.R", from = "^specs <- list",
-           to = "^\\}\\)\\)", filename = "code/model.R (excerpt)")
+embed_file("examples/05-analysis/scripts/model.R", from = "^specs <- list",
+           to = "^\\}\\)\\)", filename = "scripts/model.R (excerpt)")
 ```
 
 Two things worth copying here. The model specifications are a named list, so adding

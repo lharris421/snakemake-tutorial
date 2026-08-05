@@ -6,7 +6,7 @@
 ##   Rscript data/make-raw-data.R
 ##
 ## The messiness below (inconsistent sex coding, an impossible age, missing BMI,
-## a duplicated row) is deliberate: it is what code/clean.R has to deal with.
+## a duplicated row) is deliberate: it is what scripts/clean.R has to deal with.
 
 set.seed(20240115)
 n <- 200

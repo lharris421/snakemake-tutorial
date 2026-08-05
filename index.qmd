@@ -19,7 +19,9 @@ anything you ask for, run only what is actually out of date, and refuse to let a
 figure in your manuscript be older than the code that made it (unless you explicitly override it which isn't easy to do).
 This tutorial focuses on one particular workflow manager: [Snakemake](https://snakemake.readthedocs.io/).
 
-::: {.callout}
+::: {.callout-note}
+
+This tutorial reflects a combination of snakemake best practices any my own personal experiences. It also is also not comprehensive, certainly not in all that is possible with snakemake (which I have just begun to scratch the surface on) but even in what I have experimented with. It is meant to hit on what I see is an important foundation to get your creative juices flowing, so you can see how powerful snakemake is and imagine that how much further you can take it than what is introduced here.
 
 :::
 
@@ -54,7 +56,7 @@ By the end the pipeline looks like this:
 ```{mermaid}
 %%| fig-align: center
 flowchart LR
-  C[code/sim.R] --> S1[18 simulation<br/>result files]
+  C[scripts/sim.R] --> S1[18 simulation<br/>result files]
   S1 --> F[out/figure1.pdf]
   S1 --> T[out/table1.tex]
   F --> P[build/paper.pdf]

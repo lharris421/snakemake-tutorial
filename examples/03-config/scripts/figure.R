@@ -1,8 +1,8 @@
 ## Coverage against n, one panel per correlation level.
 ##
-## Usage: Rscript code/figure.R --out out/figure1.pdf <rds files ...>
+## Usage: Rscript scripts/figure.R --out out/figure1.pdf <rds files ...>
 
-if (interactive()) source("setup.R") else source("code/setup.R")
+if (interactive()) source("setup.R") else source("scripts/setup.R")
 
 option_list <- list(
   make_option("--out", type = "character", default = "out/figure1.pdf"),

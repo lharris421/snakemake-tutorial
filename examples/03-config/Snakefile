@@ -21,7 +21,7 @@ rule all:
 
 rule sim:
     input:
-        script = "code/sim.R",
+        script = "scripts/sim.R",
         functions = glob.glob("R/*.R")
     output:
         "rds/{iterations}/sim/n{n}_rho{rho}_{method}.rds"
@@ -35,8 +35,8 @@ rule sim:
 
 rule figure:
     input:
-        script = "code/figure.R",
-        setup = "code/setup.R",
+        script = "scripts/figure.R",
+        setup = "scripts/setup.R",
         rds = expand("rds/{iterations}/sim/n{n}_rho{rho}_{method}.rds",
                      iterations = ITER,
                      n = [50, 100, 400],

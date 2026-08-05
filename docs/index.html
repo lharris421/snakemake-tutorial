@@ -490,14 +490,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Where did it come from? Which script made it? Was that script the current version of the script, or the one from before you fixed the bug in the data-generating function? If a reviewer asks you to change the sample sizes from 50, 100 and 400 to 50, 100, 400 and 1000, how many things do you have to remember to rerun, and in what order, before the number in the abstract is right again?</p>
 <p>Most of us answer these questions with memory and discipline. Both work fine until the project gets big, or a coauthor touches it, or you come back to it after eight months. This tutorial is about answering them with a file instead.</p>
 <p>A <em>workflow manager</em> is a program that you tell, once, which files depend on which other files and what command turns one into the other. After that it will build anything you ask for, run only what is actually out of date, and refuse to let a figure in your manuscript be older than the code that made it (unless you explicitly override it which isn’t easy to do). This tutorial focuses on one particular workflow manager: <a href="https://snakemake.readthedocs.io/">Snakemake</a>.</p>
-<div class="callout callout-style-simple callout-none no-icon callout-empty-content">
-<div class="callout-body d-flex">
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
+<i class="callout-icon"></i>
 </div>
-<div class="callout-body-container">
-
+<div class="callout-title-container flex-fill">
+Note
 </div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This tutorial reflects a combination of snakemake best practices any my own personal experiences. It also is also not comprehensive, certainly not in all that is possible with snakemake (which I have just begun to scratch the surface on) but even in what I have experimented with. It is meant to hit on what I see is an important foundation to get your creative juices flowing, so you can see how powerful snakemake is and imagine that how much further you can take it than what is introduced here.</p>
 </div>
 </div>
 <section id="who-this-is-for" class="level2">
@@ -516,7 +519,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p></p><figure class="figure"><p></p>
 <div>
 <pre class="mermaid mermaid-js">flowchart LR
-  C[code/sim.R] --&gt; S1[18 simulation&lt;br/&gt;result files]
+  C[scripts/sim.R] --&gt; S1[18 simulation&lt;br/&gt;result files]
   S1 --&gt; F[out/figure1.pdf]
   S1 --&gt; T[out/table1.tex]
   F --&gt; P[build/paper.pdf]

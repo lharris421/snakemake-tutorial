@@ -12,10 +12,10 @@ snakemake --cores 4     # ends with report.html
 
 ```
 data/trial.csv     raw data (read-only, never modified)
-code/clean.R       -> rds/analysis.rds
-code/model.R       -> rds/models.rds
-code/table1.R      -> rds/table1.rds
-code/figure.R      -> out/figure1.png
+scripts/clean.R       -> rds/analysis.rds
+scripts/model.R       -> rds/models.rds
+scripts/table1.R      -> rds/table1.rds
+scripts/figure.R      -> out/figure1.png
 report.qmd         -> report.html
 ```
 

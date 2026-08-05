@@ -1,2 +1,2 @@
-$ touch code/sim.R && snakemake -n
+$ touch scripts/sim.R && snakemake -n
 Nothing to be done (all requested files are present and up to date).

@@ -1,6 +1,6 @@
 ## rds/analysis.rds -> rds/models.rds
 ##
-## Usage: Rscript code/model.R --in rds/analysis.rds --out rds/models.rds
+## Usage: Rscript scripts/model.R --in rds/analysis.rds --out rds/models.rds
 ##
 ## One model per named specification.  Adding a sensitivity analysis means adding
 ## an entry to this list, not editing the report.

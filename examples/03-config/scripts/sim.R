@@ -1,6 +1,6 @@
 ## One cell of the simulation grid.
 ##
-## Usage: Rscript code/sim.R --n 100 --rho 50 --method naive \
+## Usage: Rscript scripts/sim.R --n 100 --rho 50 --method naive \
 ##          --iterations 200 --out rds/sim/n100_rho50_naive.rds
 
 library(optparse)

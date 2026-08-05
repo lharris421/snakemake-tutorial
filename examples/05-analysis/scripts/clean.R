@@ -1,6 +1,6 @@
 ## data/trial.csv -> rds/analysis.rds
 ##
-## Usage: Rscript code/clean.R --in data/trial.csv --out rds/analysis.rds
+## Usage: Rscript scripts/clean.R --in data/trial.csv --out rds/analysis.rds
 ##
 ## Every decision about the data -- what counts as missing, which records are
 ## dropped, how sex is coded -- is made here and nowhere else.  Downstream
