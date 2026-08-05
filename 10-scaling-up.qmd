@@ -125,10 +125,34 @@ shell: f"echo {SEED} > {output}"
 No error is raised. The rule parses, the job is scheduled, and the command writes
 to a file with that name.
 
-So: f-strings for paths that embed a Python value, plain strings for `shell:`. If
-your results live inside the project --- as they do everywhere else in this book
---- there is nothing to interpolate into the paths and the question does not
-arise, which is why this is the first rule that needs it.
+So: f-strings for paths that embed a Python value, plain strings for `shell:`.
+
+It is worth seeing why no earlier chapter needed one, because it is the same
+mechanism seen from the other end. `expand()` is not a pattern --- it is an
+ordinary function that fills the braces in itself:
+
+```{.default filename="ordinary Python, no f-string"}
+expand("rds/{iterations}/sim/n{n}_rho{rho}_{method}.rds", iterations=200, n=[50, 100], ...)
+→  ['rds/200/sim/n50_rho0_naive.rds', 'rds/200/sim/n100_rho0_naive.rds', ...]
+```
+
+Those are finished filenames by the time Snakemake sees them, so the config value
+has already been baked in without Python interpolation ever being involved. When
+Snakemake then goes looking for a rule that can produce one, it matches it against
+`rule sim`'s output *pattern* and reads the value straight back out:
+
+```{.default}
+$ snakemake -n rds/200/sim/n50_rho0_naive.rds
+rule sim:
+    output: rds/200/sim/n50_rho0_naive.rds
+    wildcards: iterations=200, n=50, rho=0, method=naive
+```
+
+The value makes a round trip --- config, into a filename via `expand()`, back out
+as a wildcard --- and never has to be interpolated into a pattern. `LOC` here
+cannot take that route: it is not something any rule varies over, it is a fixed
+prefix on every path, so it has to go into the pattern directly. That is the case
+the f-string exists for.
 
 If your collaborators will not maintain a config file, you can look the path up by
 username instead:

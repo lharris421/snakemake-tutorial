@@ -38,7 +38,7 @@ anything.
 
 ## Runs that don't overwrite each other {#sec-iterations-path}
 
-One setting is treated differently, and it is the most useful idea in this chapter.
+This one setting is treated differently, and it is the most useful idea in this chapter.
 `iterations` is not passed to the script and forgotten --- it names the directory
 the results go in:
 
