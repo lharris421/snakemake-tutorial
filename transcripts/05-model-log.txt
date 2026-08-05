@@ -3,4 +3,4 @@ $ cat logs/model.log
 1 unadjusted    0.161 0.0876 0.234 2.41e-05 191
 2   adjusted    0.162 0.0875 0.236 2.79e-05 190
 3       full    0.176 0.0994 0.252 1.01e-05 178
-wrote results/models.rds 
+wrote rds/models.rds 

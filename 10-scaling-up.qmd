@@ -122,9 +122,10 @@ switching between them is a config edit rather than an act of destruction.
 
 ### Sharing the folder
 
-This is where the discipline of @sec-shape --- everything a project computes goes
-in one directory --- stops being tidiness and starts paying rent. Sharing a
-project's output is sharing one folder. The question is how.
+This is where the discipline of @sec-shape --- computed results in `rds/`, figures
+and tables in `out/` --- stops being tidiness and starts paying rent. What you
+share is `rds/`, on its own: it is the expensive half, and a collaborator who has
+it can regenerate every figure and table in seconds. The question is how.
 
 Email and Dropbox both work, and both fail the same way: somebody overwrites a file
 you were about to change, and the loser never finds out. Git is the tool you would
@@ -137,7 +138,7 @@ information have no business on GitHub at all.
 directory a git-style push/pull workflow backed by S3, without the version history:
 
 ```bash
-cd results
+cd rds
 dat init
 dat push
 ```
@@ -145,7 +146,7 @@ dat push
 and, on a collaborator's machine:
 
 ```bash
-dat clone jsmith7.res.lasso-confint results
+dat clone jsmith7.res.lasso-confint rds
 dat pull
 ```
 

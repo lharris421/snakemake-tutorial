@@ -7,7 +7,7 @@ wildcard_constraints:
 
 ## Everything the manuscript is built from, in one place.  If it is not reachable
 ## from here, `snakemake` will not make it.
-SIMS = expand("results/sim/n{n}_rho{rho}_{method}.rds",
+SIMS = expand("rds/sim/n{n}_rho{rho}_{method}.rds",
               n=config["n"], rho=config["rho"], method=config["methods"])
 
 rule all:
@@ -20,7 +20,7 @@ rule sim:
         script = "code/sim.R",
         setup = "code/setup.R"
     output:
-        "results/sim/n{n}_rho{rho}_{method}.rds"
+        "rds/sim/n{n}_rho{rho}_{method}.rds"
     log:
         "logs/sim/n{n}_rho{rho}_{method}.log"
     benchmark:
@@ -45,7 +45,7 @@ rule figure1:
         setup = "code/setup.R",
         rds = SIMS
     output:
-        "results/figure1.pdf"
+        "out/figure1.pdf"
     log:
         "logs/figure1.log"
     params:
@@ -60,7 +60,7 @@ rule table1:
         setup = "code/setup.R",
         rds = SIMS
     output:
-        "results/table1.tex"
+        "out/table1.tex"
     log:
         "logs/table1.log"
     params:
@@ -76,8 +76,8 @@ rule manuscript:
     input:
         tex = "{doc}.tex",
         shared = ["main.tex", "preamble.tex"],
-        figure = "results/figure1.pdf",
-        table = "results/table1.tex"
+        figure = "out/figure1.pdf",
+        table = "out/table1.tex"
     output:
         "build/{doc}.pdf"
     log:

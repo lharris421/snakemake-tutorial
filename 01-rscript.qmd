@@ -65,7 +65,7 @@ Rscript sim.R
 Two things change when your code runs this way rather than in RStudio.
 
 The first is that the working directory is wherever your terminal is, not wherever
-the file is. If `sim.R` says `readRDS("results/thing.rds")`, that path is resolved
+the file is. If `sim.R` says `readRDS("rds/thing.rds")`, that path is resolved
 relative to the directory you were sitting in when you typed the command. Pick a
 convention and hold to it; the one used throughout this book is **always run from
 the project root**, so every path in every script is relative to the top of the
@@ -96,7 +96,7 @@ embed_file("examples/01-first-rules/sim.R", from = "^args <- commandArgs",
 and is then called like this:
 
 ```bash
-Rscript sim.R naive results/sim-naive.rds
+Rscript sim.R naive rds/sim-naive.rds
 ```
 
 This is fine for two arguments. It gets bad quickly: the arguments are positional,
@@ -118,7 +118,7 @@ embed_file("examples/02-wildcards/sim.R", from = "^library\\(optparse\\)",
 Now the script is called with named arguments in any order:
 
 ```bash
-Rscript sim.R --n 400 --rho 80 --method split --out results/sim/n400_rho80_split.rds
+Rscript sim.R --n 400 --rho 80 --method split --out rds/sim/n400_rho80_split.rds
 ```
 
 and `opt` is a list: `opt$n` is an integer, `opt$method` is a string. Anything you
@@ -167,8 +167,9 @@ will you.
 **Results are regenerable, so they don't go in git.** Commit the code and the
 inputs; let the outputs be rebuilt.
 
-**Everything a project computes goes in one directory.** Every example in this
-book has a `results/` folder at its root, and nothing is written anywhere else.
-One directory to ignore in git, one to delete when you want to prove the pipeline
-still works, one to hand to a collaborator. @sec-shape says more about the layout
-once you have seen a Snakefile.
+**Computed results and finished products live in separate directories.** Every
+example in this book writes serialized results --- the expensive part --- to
+`rds/`, and figures and tables to `out/`. Nothing is written anywhere else. Two
+directories to ignore in git, and a clean line between the things that took an
+afternoon to compute and the things that can be redrawn in a second. @sec-shape
+says more about the layout once you have seen a Snakefile.

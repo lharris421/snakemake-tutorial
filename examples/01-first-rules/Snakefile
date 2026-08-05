@@ -1,12 +1,12 @@
 rule all:
     input:
-        "results/figure1.pdf"
+        "out/figure1.pdf"
 
 rule sim_naive:
     input:
         "sim.R"
     output:
-        "results/sim-naive.rds"
+        "rds/sim-naive.rds"
     shell:
         "Rscript sim.R naive {output}"
 
@@ -14,15 +14,15 @@ rule sim_split:
     input:
         "sim.R"
     output:
-        "results/sim-split.rds"
+        "rds/sim-split.rds"
     shell:
         "Rscript sim.R split {output}"
 
 rule figure:
     input:
         script = "figure.R",
-        rds = ["results/sim-naive.rds", "results/sim-split.rds"]
+        rds = ["rds/sim-naive.rds", "rds/sim-split.rds"]
     output:
-        "results/figure1.pdf"
+        "out/figure1.pdf"
     shell:
         "Rscript {input.script} {output} {input.rds}"

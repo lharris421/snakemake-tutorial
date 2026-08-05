@@ -7,7 +7,7 @@ source("_common.R")
 
 Here is the situation this chapter is about. You are using an editor that rebuilds
 your PDF every time you save, so the document always matches its LaTeX source. It
-does not match its *figures*: `results/figure1.pdf` was made by some script at some
+does not match its *figures*: `out/figure1.pdf` was made by some script at some
 point, and if you change the simulation nothing tells the manuscript about it. The
 document is only as current as the last time you remembered to rerun things.
 
@@ -104,7 +104,8 @@ The `.gitignore` for a project of this shape:
 
 ```{.default filename=".gitignore"}
 .snakemake/
-results/
+rds/
+out/
 logs/
 benchmarks/
 build/
@@ -116,8 +117,10 @@ enforced by a program rather than by your recollection. Commit the code, the
 
 There is one honest exception. If a simulation takes three days, colleagues who
 clone the repository cannot rebuild it over coffee, and it is reasonable to ship
-the `.rds` files --- or, better, to keep them somewhere outside the repository
-that the Snakefile knows how to find. @sec-scaling covers how the real project
+them `rds/` --- or, better, to keep it somewhere outside the repository that the
+Snakefile knows how to find. This is the payoff for keeping it separate from
+`out/`: you can hand over the expensive half on its own, and every figure and
+table rebuilds from it in seconds. @sec-scaling covers how the real project
 handles that.
 
 ## Try it

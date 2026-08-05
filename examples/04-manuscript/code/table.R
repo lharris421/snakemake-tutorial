@@ -1,6 +1,6 @@
 ## Coverage table, written as a LaTeX fragment for \input{} into the manuscript.
 ##
-## Usage: Rscript code/table.R --out results/table1.tex <rds files ...>
+## Usage: Rscript code/table.R --out out/table1.tex <rds files ...>
 
 if (interactive()) source("setup.R") else source("code/setup.R")
 
@@ -10,7 +10,7 @@ suppressPackageStartupMessages({
 })
 
 option_list <- list(
-  make_option("--out", type = "character", default = "results/table1.tex"),
+  make_option("--out", type = "character", default = "out/table1.tex"),
   make_option("--level", type = "double", default = 0.95)
 )
 parsed <- parse_args(OptionParser(option_list = option_list),

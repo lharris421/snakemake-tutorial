@@ -14,7 +14,7 @@ rule clean:
         setup = "code/setup.R",
         data = "data/trial.csv"
     output:
-        "results/analysis.rds"
+        "rds/analysis.rds"
     log:
         "logs/clean.log"
     shell:
@@ -24,9 +24,9 @@ rule model:
     input:
         script = "code/model.R",
         setup = "code/setup.R",
-        rds = "results/analysis.rds"
+        rds = "rds/analysis.rds"
     output:
-        "results/models.rds"
+        "rds/models.rds"
     log:
         "logs/model.log"
     shell:
@@ -36,9 +36,9 @@ rule table1:
     input:
         script = "code/table1.R",
         setup = "code/setup.R",
-        rds = "results/analysis.rds"
+        rds = "rds/analysis.rds"
     output:
-        "results/table1.rds"
+        "rds/table1.rds"
     log:
         "logs/table1.log"
     shell:
@@ -48,9 +48,9 @@ rule figure1:
     input:
         script = "code/figure.R",
         setup = "code/setup.R",
-        rds = "results/analysis.rds"
+        rds = "rds/analysis.rds"
     output:
-        "results/figure1.png"
+        "out/figure1.png"
     log:
         "logs/figure1.log"
     shell:
@@ -62,10 +62,10 @@ rule report:
     input:
         qmd = "report.qmd",
         setup = "code/setup.R",
-        analysis = "results/analysis.rds",
-        models = "results/models.rds",
-        table1 = "results/table1.rds",
-        figure1 = "results/figure1.png"
+        analysis = "rds/analysis.rds",
+        models = "rds/models.rds",
+        table1 = "rds/table1.rds",
+        figure1 = "out/figure1.png"
     output:
         "report.html"
     log:

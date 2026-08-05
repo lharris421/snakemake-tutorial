@@ -9,14 +9,14 @@ wildcard_constraints:
 
 rule all:
     input:
-        "results/figure1.pdf"
+        "out/figure1.pdf"
 
 rule sim:
     input:
         script = "code/sim.R",
         setup = "code/setup.R"
     output:
-        "results/sim/n{n}_rho{rho}_{method}.rds"
+        "rds/sim/n{n}_rho{rho}_{method}.rds"
     params:
         iterations = config["iterations"],
         seed = config["seed"],
@@ -35,10 +35,10 @@ rule figure:
     input:
         script = "code/figure.R",
         setup = "code/setup.R",
-        rds = expand("results/sim/n{n}_rho{rho}_{method}.rds",
+        rds = expand("rds/sim/n{n}_rho{rho}_{method}.rds",
                      n=config["n"], rho=config["rho"], method=config["methods"])
     output:
-        "results/figure1.pdf"
+        "out/figure1.pdf"
     params:
         level = config["level"]
     shell:

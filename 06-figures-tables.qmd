@@ -45,11 +45,11 @@ embed_file("examples/04-manuscript/code/figure.R", from = "^parsed <- parse_args
 the named flags, so the script can be called as
 
 ```bash
-Rscript code/figure.R --out results/figure1.pdf --level 0.95 results/sim/*.rds
+Rscript code/figure.R --out out/figure1.pdf --level 0.95 rds/sim/*.rds
 ```
 
 An alternative worth knowing about: instead of passing filenames, the script could
-glob `results/sim/` itself. Do not do this. A glob picks up whatever happens to be
+glob `rds/sim/` itself. Do not do this. A glob picks up whatever happens to be
 lying in the directory, including results from a parameter grid you abandoned last
 month, and it hides the dependency from Snakemake, which will then happily build
 your figure without running the simulations.
@@ -104,7 +104,7 @@ which produces:
 #| echo: false
 #| output: asis
 embed_file("transcripts/table1.tex", lang = "latex",
-           filename = "results/table1.tex")
+           filename = "out/table1.tex")
 ```
 
 Points worth noting:
@@ -143,8 +143,8 @@ it is common to list every product explicitly instead:
 rule all:
     input:
         "build/paper.pdf",
-        "results/figure1.pdf",
-        "results/figure2.pdf",
+        "out/figure1.pdf",
+        "out/figure2.pdf",
         ...
 ```
 
@@ -159,5 +159,5 @@ the results section.
    table rebuild? Should it?
 2. Add a `figure2` rule showing coverage against `rho` instead of `n`, and add it
    to `rule all`.
-3. Delete `results/table1.tex` and run `snakemake --cores 4`. How far back does
+3. Delete `out/table1.tex` and run `snakemake --cores 4`. How far back does
    Snakemake go?

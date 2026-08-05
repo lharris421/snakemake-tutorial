@@ -12,9 +12,9 @@ into a figure --- and a file called `Snakefile`.
 By hand, building the figure means running three commands in the right order:
 
 ```bash
-Rscript sim.R naive results/sim-naive.rds
-Rscript sim.R split results/sim-split.rds
-Rscript figure.R results/figure1.pdf results/sim-naive.rds results/sim-split.rds
+Rscript sim.R naive rds/sim-naive.rds
+Rscript sim.R split rds/sim-split.rds
+Rscript figure.R out/figure1.pdf rds/sim-naive.rds rds/sim-split.rds
 ```
 
 That is not hard. It is just something you have to remember, and remember *again*
@@ -32,8 +32,8 @@ file I produce, and here is the command that gets from one to the other.
 embed_file("examples/01-first-rules/Snakefile")
 ```
 
-Read `rule sim_naive` as a sentence: *to make `results/sim-naive.rds`, given
-`sim.R`, run `Rscript sim.R naive results/sim-naive.rds`.*
+Read `rule sim_naive` as a sentence: *to make `rds/sim-naive.rds`, given
+`sim.R`, run `Rscript sim.R naive rds/sim-naive.rds`.*
 
 A few mechanics:
 
@@ -69,9 +69,9 @@ that `rule figure` needs files that `rule sim_naive` and `rule sim_split` produc
 ```{mermaid}
 %%| fig-align: center
 flowchart LR
-  A[sim.R] --> B[results/sim-naive.rds]
-  A --> C[results/sim-split.rds]
-  D[figure.R] --> E[results/figure1.pdf]
+  A[sim.R] --> B[rds/sim-naive.rds]
+  A --> C[rds/sim-split.rds]
+  D[figure.R] --> E[out/figure1.pdf]
   B --> E
   C --> E
   E --> F([rule all])
@@ -201,7 +201,7 @@ You can also name a target directly, which is invaluable when you are developing
 and want to check one piece:
 
 ```bash
-snakemake --cores 1 results/sim-naive.rds
+snakemake --cores 1 rds/sim-naive.rds
 ```
 
 Snakemake finds the rule that can produce that file, builds whatever it needs, and
@@ -214,7 +214,7 @@ Before going further, it is worth being explicit about what a "project" is here,
 because every example in this book is one and your own work should be too.
 
 `examples/01-first-rules` is a complete, self-contained project. Copy that
-directory anywhere on your disk, run `git init` inside it, and everything still
+directory anywhere on your disk and everything still
 works --- it has no dependency on the rest of this repository. The same is true of
 each of the other four. They are laid out side by side for convenience, but each is
 a miniature of a real repository: one paper, one analysis, one thing.
@@ -226,10 +226,11 @@ my-project/
   Snakefile          <- the map: every rule, in one file, at the root
   config.yaml        <- the settings (chapter 4)
   code/              <- the scripts the rules call
-  results/           <- everything the pipeline computes
+  rds/               <- computed results
+  out/               <- figures and tables
 ```
 
-Two of those deserve to be stated as rules rather than suggestions.
+Three of those deserve to be stated as rules rather than suggestions.
 
 **One Snakefile, at the root.** Not one per subdirectory. The Snakefile is the
 only place that describes how the pieces of the project fit together, so a
@@ -239,20 +240,30 @@ does let you split rules across files with `include:`, and that is worth reachin
 for once a single file becomes genuinely unwieldy, but the default should be one
 file you can read top to bottom.
 
-**One results directory, at the root.** Everything the pipeline computes goes
-there --- simulation output, figures, tables --- and nothing else does. That gives
-you a single directory that is safe to delete, a single directory to put in
-`.gitignore`, and a single directory to hand to somebody. @sec-scaling picks up
-that last point, which turns out to matter more than it sounds like it should.
+**`rds/` holds what the pipeline computes.** Simulation output, fitted models,
+cleaned data --- the objects that took time to produce and that everything else is
+derived from. They are serialized R objects, hence the name; use whatever name you
+like, but use one directory.
 
-The corollary is that anything *not* in `results/` is either code, settings, or
-something a human wrote. That is a useful thing to be able to say about a
+**`out/` holds what a human looks at.** Figures and tables: the things that end up
+in the manuscript or the report.
+
+The reason to split these rather than pile everything into one `results/` folder is
+that the two halves behave completely differently. `rds/` is expensive, is reused
+across a paper and a talk and a grant renewal, and may take days to regenerate ---
+it is the thing worth backing up and worth sending to a coauthor. `out/` is cheap:
+delete it and `snakemake` puts it back in seconds, from the contents of `rds/`.
+Once they are separate directories you can treat them differently, and
+@sec-scaling does exactly that.
+
+The corollary is that anything *not* in `rds/` or `out/` is either code, settings,
+or something a human wrote. That is a useful thing to be able to say about a
 directory.
 
 ## Try it
 
-1. Delete `results/` entirely and rebuild. Time it.
+1. Delete `out/` and rebuild. Time it. Then delete `rds/` as well and compare.
 2. Change the `n <- 100` line in `sim.R` to `n <- 200` and run `snakemake -n`.
    Which jobs are planned, and why?
-3. Add a line to `rule all` asking for `results/nonexistent.rds` and run
+3. Add a line to `rule all` asking for `out/nonexistent.pdf` and run
    `snakemake -n`. Read the error carefully --- you will see it again.

@@ -1,4 +1,4 @@
-$ snakemake --cores 1 results/sim/n50_rho0_bayes.rds
+$ snakemake --cores 1 rds/sim/n50_rho0_bayes.rds
         (command exited with non-zero exit code)
 Shutting down, this might take some time.
 Exiting because a job execution failed. Look below for error messages
@@ -7,9 +7,9 @@ Error in rule sim:
     message: None
     jobid: 0
     input: sim.R
-    output: results/sim/n50_rho0_bayes.rds
+    output: rds/sim/n50_rho0_bayes.rds
     shell:
-        Rscript sim.R --n 50 --rho 0 --method bayes --out results/sim/n50_rho0_bayes.rds
+        Rscript sim.R --n 50 --rho 0 --method bayes --out rds/sim/n50_rho0_bayes.rds
         (command exited with non-zero exit code)
 WorkflowError:
 At least one job did not complete successfully.

@@ -41,8 +41,8 @@ typed by hand, so the tutorial cannot drift away from code that works.
 
 Each one is a complete, self-contained project — copy the directory anywhere, run
 `git init`, and it works. That is deliberate: each is a miniature of a real
-repository, with one Snakefile and one `results/` folder at its root, which is the
-layout the book argues for.
+repository, with one Snakefile at its root, `rds/` for computed results and `out/`
+for figures and tables --- the layout the book argues for.
 
 | | Chapter | Adds |
 |---|---|---|

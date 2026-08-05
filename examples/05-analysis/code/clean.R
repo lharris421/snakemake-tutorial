@@ -1,6 +1,6 @@
-## data/trial.csv -> results/analysis.rds
+## data/trial.csv -> rds/analysis.rds
 ##
-## Usage: Rscript code/clean.R --in data/trial.csv --out results/analysis.rds
+## Usage: Rscript code/clean.R --in data/trial.csv --out rds/analysis.rds
 ##
 ## Every decision about the data -- what counts as missing, which records are
 ## dropped, how sex is coded -- is made here and nowhere else.  Downstream
@@ -11,7 +11,7 @@ if (interactive()) source("setup.R") else source("code/setup.R")
 option_list <- list(
   make_option("--in", type = "character", default = "data/trial.csv",
               dest = "infile"),
-  make_option("--out", type = "character", default = "results/analysis.rds")
+  make_option("--out", type = "character", default = "rds/analysis.rds")
 )
 opt <- parse_args(OptionParser(option_list = option_list))
 
