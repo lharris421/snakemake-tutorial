@@ -4,7 +4,8 @@ Accompanies [chapter 4](../../04-config.qmd).
 
 The iteration count has moved out of the R script and into `config.yaml`, where it
 also names the directory results are cached in. The R scripts have moved into
-`code/`.
+`code/` and share a `setup.R`, which every rule that uses one of them lists as an
+input.
 
 ```bash
 snakemake --cores 4                          # 200 iterations, ~10 seconds

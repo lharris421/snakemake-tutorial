@@ -8,13 +8,6 @@ sim_naive        1
 sim_split        1
 total            4
 
-rule sim_naive:
-    input: sim.R
-    output: rds/sim-naive.rds
-    jobid: 2
-    reason: Missing output files: rds/sim-naive.rds
-    resources: tmpdir=<TBD>
-
 rule sim_split:
     input: sim.R
     output: rds/sim-split.rds
@@ -22,11 +15,18 @@ rule sim_split:
     reason: Missing output files: rds/sim-split.rds
     resources: tmpdir=<TBD>
 
+rule sim_naive:
+    input: sim.R
+    output: rds/sim-naive.rds
+    jobid: 2
+    reason: Missing output files: rds/sim-naive.rds
+    resources: tmpdir=<TBD>
+
 rule figure:
     input: figure.R, rds/sim-naive.rds, rds/sim-split.rds
     output: out/figure1.pdf
     jobid: 1
-    reason: Missing output files: out/figure1.pdf; Input files updated by another job: rds/sim-split.rds, rds/sim-naive.rds
+    reason: Missing output files: out/figure1.pdf; Input files updated by another job: rds/sim-naive.rds, rds/sim-split.rds
     resources: tmpdir=<TBD>
 
 rule all:

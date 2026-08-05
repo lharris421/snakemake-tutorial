@@ -11,6 +11,7 @@ execute:
 
 ```{r}
 #| include: false
+source("code/setup.R")
 library(knitr)
 analysis <- readRDS("rds/analysis.rds")
 tab1 <- readRDS("rds/table1.rds")

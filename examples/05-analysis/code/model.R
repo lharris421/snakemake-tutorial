@@ -5,7 +5,7 @@
 ## One model per named specification.  Adding a sensitivity analysis means adding
 ## an entry to this list, not editing the report.
 
-library(optparse)
+if (interactive()) source("setup.R") else source("code/setup.R")
 
 option_list <- list(
   make_option("--in", type = "character", default = "rds/analysis.rds",

@@ -26,6 +26,8 @@ the same call, because it happens to summarize the same grid --- but it is free 
 to, and a supplementary figure covering only the large sample sizes would simply
 sweep less.
 
+If multiple figures / tables
+
 The R script receives all eighteen filenames as trailing arguments and stacks them:
 
 ```{r}
@@ -68,40 +70,44 @@ never rescaled by LaTeX and the fonts in it come out the size you chose. Resizin
 figure by 60% in `\includegraphics` is how you end up with axis labels nobody can
 read.
 
-**Name the methods once, at the top of the script.** The figure and the table both
-turn `naive` into something a reader sees:
+**Keep the appearance in one place.** The figure and the table both turn `naive`
+into something a reader sees, so the label and the color are decided once, in
+`code/setup.R`, which every script in the project sources:
 
 ```{r}
 #| echo: false
 #| output: asis
-embed_file("examples/04-manuscript/code/figure.R", from = "^method_labels",
-           to = "^colors", filename = "code/figure.R (excerpt)")
+embed_file("examples/04-manuscript/code/setup.R", from = "^method_labels",
+           to = "^colors", filename = "code/setup.R (excerpt)")
 ```
 
-so that the spelling and the color are decided in one visible place rather than
-buried in a `ggplot` call.
+rather than being buried in two separate `ggplot` calls that can drift apart.
 
 ::: {.callout-note}
-## Shared code belongs in files of its own
+## A sourced file has to be declared
 
-Each script here is short enough to read top to bottom, so everything it needs sits
-at the top of it. A real project outgrows that in two directions: values used by
-more than one script --- labels, colors, the levels of a factor --- belong in a
-small script the others source, and **functions belong in an `R/` directory, one
-function per file**. That is the layout an R package uses, which is the point: a
-two-line `DESCRIPTION` is the whole distance between a directory of functions and
-something `devtools::load_all()` will load for you.
+Look at what that costs in the Snakefile: `code/setup.R` appears in the `input:`
+of every rule whose script sources it. That is not decoration. Snakemake has no
+way to know that `figure.R` reads another file, and an undeclared dependency is
+the one failure mode it cannot warn you about --- change a color, and the figure
+that uses it stays quietly stale (@sec-debugging).
 
-The part that is specific to this book: list whatever a script sources as an input
-to the rules that call it, or the dependency is invisible and editing a function
-leaves every result that used it silently stale (@sec-debugging).
+The rule of thumb is exactly that condition: **declare it wherever changing it
+could change an output.**
 
-Beyond that this is really a question about project organization rather than about
-Snakemake, and it has been answered better elsewhere ---
+It is worth knowing what you are buying, though. `setup.R` here holds the
+simulation functions as well as the plot colors, and it is therefore an input to
+`rule sim` too --- so editing one hex code marks all eighteen simulations stale
+and they run again. Snakemake cannot tell which half of the file you touched. On a
+grid that takes seconds this is invisible; on one that takes days it is a reason to
+split the file, so that each rule depends only on the part it actually uses.
+
+That splitting has a natural end point --- shared values in one script, functions
+in an `R/` directory one per file, which is the layout of an R package --- but it
+is a question about project organization rather than about Snakemake, and
 [IowaBiostat/project-workflow](https://github.com/IowaBiostat/project-workflow)
-is a talk and a small example project on exactly this, covering how `R/`, roxygen
-documentation, `devtools`, git and a Snakefile fit together. Its `example-project`
-is worth cloning and pulling apart.
+covers it properly: a talk plus a small example project with `R/`, `man/`,
+`scripts/` and a Snakefile, worth cloning and pulling apart.
 :::
 
 ## Tables
@@ -173,8 +179,8 @@ the results section.
 
 ## Try it
 
-1. Change the color palette in `code/figure.R` and run `snakemake -n`. Does the
-   table rebuild? Should it?
+1. Change the color palette in `code/setup.R` and run `snakemake -n`. How many
+   jobs are planned? Is that what you expected?
 2. Add a `figure2` rule showing coverage against `rho` instead of `n`, and add it
    to `rule all`.
 3. Delete `out/table1.tex` and run `snakemake --cores 4`. How far back does

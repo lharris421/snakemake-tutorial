@@ -2,14 +2,7 @@
 ##
 ## Usage: Rscript code/table.R --out out/table1.tex <rds files ...>
 
-library(optparse)
-
-method_labels <- c(
-  "naive" = "Naive",
-  "split" = "Sample splitting"
-)
-
-colors <- c("naive" = "#d95f02", "split" = "#1b9e77")
+if (interactive()) source("setup.R") else source("code/setup.R")
 
 suppressPackageStartupMessages({
   library(tidyr)

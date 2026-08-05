@@ -2,17 +2,7 @@
 ##
 ## Usage: Rscript code/figure.R --out out/figure1.pdf <rds files ...>
 
-suppressPackageStartupMessages({
-  library(optparse)
-  library(ggplot2)
-})
-
-method_labels <- c(
-  "naive" = "Naive",
-  "split" = "Sample splitting"
-)
-
-colors <- c("naive" = "#d95f02", "split" = "#1b9e77")
+if (interactive()) source("setup.R") else source("code/setup.R")
 
 option_list <- list(
   make_option("--out", type = "character", default = "out/figure1.pdf"),
