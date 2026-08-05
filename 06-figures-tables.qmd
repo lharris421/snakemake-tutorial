@@ -18,7 +18,7 @@ the whole grid rather than one cell:
 #| echo: false
 #| output: asis
 embed_file("examples/04-manuscript/Snakefile", from = "^## Everything the manuscript",
-           to = "^              n=config", filename = "Snakefile (excerpt)")
+           to = "^              method=config", filename = "Snakefile (excerpt)")
 ```
 
 ```{r}

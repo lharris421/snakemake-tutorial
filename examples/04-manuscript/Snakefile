@@ -1,14 +1,21 @@
 configfile: "config.yaml"
 
+## The iteration count names the directory the results go in, so a 20-iteration
+## smoke run and a 1000-iteration final run sit side by side instead of
+## overwriting each other.  ITER picks which of them the paper is built from.
+ITER = config["iterations"]
+
 wildcard_constraints:
+    iterations = r"\d+",
     n = r"\d+",
     rho = r"\d+",
     method = "[a-z]+"
 
 ## Everything the manuscript is built from, in one place.  If it is not reachable
 ## from here, `snakemake` will not make it.
-SIMS = expand("rds/sim/n{n}_rho{rho}_{method}.rds",
-              n=config["n"], rho=config["rho"], method=config["methods"])
+SIMS = expand("rds/{iterations}/sim/n{n}_rho{rho}_{method}.rds",
+              iterations=ITER, n=config["n"], rho=config["rho"],
+              method=config["methods"])
 
 rule all:
     input:
@@ -20,13 +27,12 @@ rule sim:
         script = "code/sim.R",
         setup = "code/setup.R"
     output:
-        "rds/sim/n{n}_rho{rho}_{method}.rds"
+        "rds/{iterations}/sim/n{n}_rho{rho}_{method}.rds"
     log:
-        "logs/sim/n{n}_rho{rho}_{method}.log"
+        "logs/{iterations}/sim/n{n}_rho{rho}_{method}.log"
     benchmark:
-        "benchmarks/sim/n{n}_rho{rho}_{method}.tsv"
+        "benchmarks/{iterations}/sim/n{n}_rho{rho}_{method}.tsv"
     params:
-        iterations = config["iterations"],
         seed = config["seed"],
         level = config["level"]
     shell:
@@ -34,7 +40,7 @@ rule sim:
         "--n {wildcards.n} "
         "--rho {wildcards.rho} "
         "--method {wildcards.method} "
-        "--iterations {params.iterations} "
+        "--iterations {wildcards.iterations} "
         "--seed {params.seed} "
         "--level {params.level} "
         "--out {output} > {log} 2>&1"

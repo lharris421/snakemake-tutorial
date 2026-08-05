@@ -69,9 +69,20 @@ clean
 {
   say "snakemake --cores 4 --config iterations=20"
   { time snakemake --cores 4 --config iterations=20 > /dev/null 2>&1 ; } 2>&1
-  say "snakemake --cores 4 --forcerun sim"
-  { time snakemake --cores 4 --forcerun sim > /dev/null 2>&1 ; } 2>&1
+  say "snakemake --cores 4"
+  { time snakemake --cores 4 > /dev/null 2>&1 ; } 2>&1
 } > "$OUT/03-smoke-vs-full.txt"
+
+## The two runs coexist rather than overwriting each other, and switching back
+## costs only the figure
+{
+  say "find rds -name '*.rds' | cut -d/ -f1-2 | sort | uniq -c"
+  find rds -name '*.rds' | cut -d/ -f1-2 | sort | uniq -c
+  say "snakemake --cores 4 --config iterations=20"
+  snakemake --cores 4 --config iterations=20 > /dev/null 2>&1
+  say "snakemake -n"
+  snakemake -n 2>&1 | filter | first_stats
+} > "$OUT/03-coexist.txt"
 
 ## ---------------------------------------------------------------- example 04
 cd "$ROOT/examples/04-manuscript"
@@ -100,9 +111,9 @@ snakemake --cores 4 > /dev/null 2>&1
 sed -i '' -e '/^## a real edit$/d' code/sim.R
 snakemake --cores 4 > /dev/null 2>&1
 
-{ say "cat benchmarks/sim/n400_rho80_naive.tsv"; cat benchmarks/sim/n400_rho80_naive.tsv; } \
+{ say "cat benchmarks/200/sim/n400_rho80_naive.tsv"; cat benchmarks/200/sim/n400_rho80_naive.tsv; } \
   > "$OUT/04-benchmark.txt"
-{ say "cat logs/sim/n400_rho80_naive.log"; cat logs/sim/n400_rho80_naive.log; } \
+{ say "cat logs/200/sim/n400_rho80_naive.log"; cat logs/200/sim/n400_rho80_naive.log; } \
   > "$OUT/04-log.txt"
 
 # The book shows this generated file, and out/ is not committed, so keep a

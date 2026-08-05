@@ -1,2 +1,2 @@
-$ cat logs/sim/n400_rho80_naive.log
-wrote rds/sim/n400_rho80_naive.rds -- coverage: 0.78 
+$ cat logs/200/sim/n400_rho80_naive.log
+wrote rds/200/sim/n400_rho80_naive.rds -- coverage: 0.78 

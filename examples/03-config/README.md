@@ -11,8 +11,10 @@ snakemake --cores 4                          # 200 iterations, ~10 seconds
 snakemake --cores 4 --config iterations=20   # smoke test, ~2 seconds
 ```
 
-Note that changing `iterations` on the command line does *not* trigger a rerun on its
-own — see chapter 9 on `--forcerun` for why, and what to do about it.
+The two runs do not collide: results are stored under `rds/<iterations>/`, so the
+20-iteration smoke test and the 200-iteration run sit side by side and switching
+between them costs only the figure. See chapter 4 on why `iterations` is part of
+the path while `seed` is a `params` value.
 
 This directory is a complete, self-contained project: copy it anywhere, run
 `git init`, and it works. That is how each example in this book is meant to be

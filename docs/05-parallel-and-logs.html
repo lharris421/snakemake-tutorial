@@ -502,29 +502,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>        script <span class="op">=</span> <span class="st">"code/sim.R"</span>,</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        setup <span class="op">=</span> <span class="st">"code/setup.R"</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    output:</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="co">"rds/sim/n{n}_rho{rho}_{method}.rds"</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="co">"rds/{iterations}/sim/n{n}_rho{rho}_{method}.rds"</span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    log:</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="co">"logs/sim/n{n}_rho{rho}_{method}.log"</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="co">"logs/{iterations}/sim/n{n}_rho{rho}_{method}.log"</span></span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    benchmark:</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        <span class="co">"benchmarks/sim/n{n}_rho{rho}_{method}.tsv"</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        <span class="co">"benchmarks/{iterations}/sim/n{n}_rho{rho}_{method}.tsv"</span></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    params:</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        iterations <span class="op">=</span> config[<span class="st">"iterations"</span>],</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        seed <span class="op">=</span> config[<span class="st">"seed"</span>],</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        level <span class="op">=</span> config[<span class="st">"level"</span>]</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    shell:</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        <span class="co">"Rscript {input.script} "</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--n {wildcards.n} "</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--rho {wildcards.rho} "</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--method {wildcards.method} "</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--iterations {params.iterations} "</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--seed {params.seed} "</span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--level {params.level} "</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--out {output} &gt; {log} 2&gt;&amp;1"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        seed <span class="op">=</span> config[<span class="st">"seed"</span>],</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        level <span class="op">=</span> config[<span class="st">"level"</span>]</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    shell:</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        <span class="co">"Rscript {input.script} "</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--n {wildcards.n} "</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--rho {wildcards.rho} "</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--method {wildcards.method} "</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--iterations {wildcards.iterations} "</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--seed {params.seed} "</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--level {params.level} "</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--out {output} &gt; {log} 2&gt;&amp;1"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Two details. The log file is <em>declared</em> by <code>log:</code> but nothing writes to it automatically — the redirection <code>&gt; {log} 2&gt;&amp;1</code> at the end of the shell command is what does it (<code>2&gt;&amp;1</code> catches errors as well as normal output). And the log path carries the same wildcards as the output, so each job gets its own file rather than eighteen jobs overwriting one.</p>
 <p>Anything the script prints lands there:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> cat logs/sim/n400_rho80_naive.log</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">wrote</span> rds/sim/n400_rho80_naive.rds <span class="at">--</span> coverage: 0.78 </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> cat logs/200/sim/n400_rho80_naive.log</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">wrote</span> rds/200/sim/n400_rho80_naive.rds <span class="at">--</span> coverage: 0.78 </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Which is worth designing for. A script that prints its parameters, its sample size after exclusions, and a summary of what it computed gives you a log directory that answers most questions without rerunning anything. <a href="08-analysis-pipeline.html" class="quarto-xref"><span>Chapter 8</span></a> leans on this heavily.</p>
 <p>Logs also survive failure. When a job dies, Snakemake tells you which log to read, and the R error message is sitting in it — as opposed to being lost in the scrollback of a parallel run.</p>
 <div class="callout callout-style-default callout-important callout-titled">
@@ -546,9 +545,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><code>benchmark:</code> records how long a job took and how much memory it used:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>rule sim:</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    benchmark: <span class="st">"benchmarks/sim/n</span><span class="sc">{n}</span><span class="st">_rho</span><span class="sc">{rho}</span><span class="st">_</span><span class="sc">{method}</span><span class="st">.tsv"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> cat benchmarks/sim/n400_rho80_naive.tsv</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> cat benchmarks/200/sim/n400_rho80_naive.tsv</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">s</span>   h:m:s   max_rss max_vms max_uss max_pss io_in   io_out  mean_load   cpu_time</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">1.88</span>    0:00:01 0   0   0   0   0.00    0.00    54.67   0</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">1.83</span>    0:00:01 0   0   0   0   0.00    0.00    56.34   0</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The first column is seconds. This is how you find out that one corner of your parameter grid takes forty times as long as the rest, which is worth knowing before you scale the whole grid up by a factor of ten.</p>
 <p>The memory columns come from <code>/proc</code> and are populated on Linux; on macOS they read zero, as above. Timing works everywhere.</p>
 </section>

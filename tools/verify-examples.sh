@@ -40,10 +40,10 @@ run() {  # run <dir> <cores> <expected files...>
 
 run 01-first-rules 2 rds/sim-naive.rds rds/sim-split.rds out/figure1.pdf
 run 02-wildcards 4 out/figure1.pdf rds/sim/n400_rho80_split.rds
-run 03-config 4 out/figure1.pdf rds/sim/n50_rho0_naive.rds
+run 03-config 4 out/figure1.pdf rds/200/sim/n50_rho0_naive.rds
 run 04-manuscript 4 out/figure1.pdf out/table1.tex build/paper.pdf \
-  build/submission.pdf rds/sim/n50_rho0_naive.rds \
-  logs/sim/n50_rho0_naive.log benchmarks/sim/n50_rho0_naive.tsv
+  build/submission.pdf rds/200/sim/n50_rho0_naive.rds \
+  logs/200/sim/n50_rho0_naive.log benchmarks/200/sim/n50_rho0_naive.tsv
 run 05-analysis 4 rds/analysis.rds rds/models.rds rds/table1.rds \
   out/figure1.png report.html
 

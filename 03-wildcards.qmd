@@ -156,6 +156,8 @@ This is how you develop. Rather than running the whole grid to find out whether
 your new method works, ask for one small scenario, look at it, and only then let
 the rest go.
 
+This is also extremely powerful, because now if you want a certain simulation... you just ahve to ask for it rather than edit an R file and run it.
+
 ## Try it
 
 1. Add `1000` to `N` and run `snakemake -n`. How many jobs? Which ones are new?

@@ -1,0 +1,11 @@
+$ find rds -name '*.rds' | cut -d/ -f1-2 | sort | uniq -c
+  18 rds/20
+  18 rds/200
+$ snakemake --cores 4 --config iterations=20
+$ snakemake -n
+Job stats:
+job       count
+------  -------
+all           1
+figure        1
+total         2

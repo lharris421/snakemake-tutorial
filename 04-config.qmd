@@ -45,19 +45,69 @@ embed_file("examples/03-config/Snakefile", from = "^rule sim:", to = '^        "
            filename = "Snakefile (excerpt)")
 ```
 
-You could write `config["iterations"]` straight into the command with a Python
-f-string and it would work. Declaring it in `params` is better for one specific
-reason: Snakemake records the params it used alongside each output, so changing a
-parameter marks the affected files stale, exactly as changing an input file does.
-Values smuggled into the command another way are invisible to that machinery.
+You could write `config["seed"]` straight into the command with a Python f-string
+and it would work. Declaring it in `params` is better for one specific reason:
+Snakemake records the params it used alongside each output, so changing one marks
+the affected files stale, exactly as changing an input file does. Values smuggled
+into the command another way are invisible to that machinery.
 
-The grid comes from the config now too, so `expand()` reads:
+## params or filename? {#sec-params-or-filename}
+
+Notice that `seed` and `level` are params but `iterations` is not --- it is a
+wildcard, and it names a directory. That is the most consequential decision in
+this chapter, and it is worth being deliberate about.
+
+Every setting that affects a result has to be visible to Snakemake somehow. There
+are exactly two places to put it, and the choice is not about taste:
+
+**In the output path** --- when different values are different results, both of
+which you might want to keep. Running 20 iterations and running 1000 does not make
+one of them wrong; they are a quick check and a final answer, and there is no
+reason they should not sit on disk together.
+
+**In `params:`** --- when there is only one right value, so changing it means the
+existing file was simply *wrong* and should be replaced. The seed is like this. You
+do not want `seed-1234` and `seed-9999` versions of everything; you want the
+results, from the seed the paper reports.
+
+**In neither** is a bug. Snakemake cannot see the change, nothing reruns, and your
+results are quietly stale --- the failure mode of @sec-debugging.
+
+So `iterations` goes in the path:
+
+```{r}
+#| echo: false
+#| output: asis
+embed_file("examples/03-config/Snakefile", from = "^## The iteration count",
+           to = "^ITER = ", filename = "Snakefile (excerpt)")
+```
+
+and the smoke run and the real run coexist:
+
+```{r}
+#| echo: false
+#| output: asis
+transcript("03-coexist.txt")
+```
+
+Eighteen results at 20 iterations, eighteen at 200, and going back to the config's
+default rebuilds only the figure --- the 200-iteration simulations were still there
+and still valid. Had `iterations` been a `params` value, the second run would have
+overwritten the first, and switching back would have meant recomputing all
+eighteen.
+
+`ITER = config["iterations"]` is what selects which of them the figure is built
+from, so the config still controls the answer; it just no longer destroys the
+alternative. @sec-scaling shows the same pattern at the scale where it matters,
+where the recomputation being avoided is measured in days.
+
+The grid comes from the config too, so `expand()` reads:
 
 ```{r}
 #| echo: false
 #| output: asis
 embed_file("examples/03-config/Snakefile", from = "        rds = expand",
-           to = "                     n=config", filename = "Snakefile (excerpt)")
+           to = "                     method=config", filename = "Snakefile (excerpt)")
 ```
 
 Adding a fourth sample size is now a two-character edit to `config.yaml`.
@@ -110,11 +160,22 @@ iteration counts of a real paper.
 ::: {.callout-warning}
 ## `--config` does not always rebuild what you expect
 
-`--config iterations=20` changes a `params` value, so the affected outputs are
-marked stale and rerun. A config value used only to build the list inside
-`expand()` --- the grid itself --- behaves differently: dropping a sample size just
-means fewer files are asked for, and the files still being asked for are still
-valid, so nothing reruns. That is correct, and occasionally surprising.
+Which of the cases in @sec-params-or-filename a setting falls into decides what
+overriding it does, and they behave quite differently:
+
+- **`--config iterations=20`** asks for *different files*. Eighteen new simulations
+  run; the old ones are left alone.
+- **`--config seed=99`** changes a `params` value. The eighteen existing files are
+  marked stale and rebuilt in place.
+- **Dropping a sample size from the grid** changes only the list inside `expand()`.
+  No simulation reruns --- the remaining results are still perfectly valid --- but
+  the figure does, with the reason `Set of input files has changed since last
+  execution`, because it is now summarizing twelve files instead of eighteen.
+
+Note that `--config` wants one `key=value` per setting and will not take a list on
+the command line (`--config n=[50,100]` is a parse error on 9.13). Change the grid
+in `config.yaml`, or point `--configfile` at a second YAML file whose values
+override the first.
 
 When you want to force the issue, `snakemake --forcerun sim` reruns every job of
 that rule regardless. See @sec-debugging.

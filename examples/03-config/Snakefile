@@ -1,8 +1,14 @@
 configfile: "config.yaml"
 
+## The iteration count names the directory the results go in, so a 20-iteration
+## smoke run and a 1000-iteration final run sit side by side instead of
+## overwriting each other.  ITER picks which of them the figure is built from.
+ITER = config["iterations"]
+
 ## Wildcards match greedily by default; these constraints keep {n} from
 ## swallowing part of the filename when a rule could match more than one way
 wildcard_constraints:
+    iterations = r"\d+",
     n = r"\d+",
     rho = r"\d+",
     method = "[a-z]+"
@@ -16,9 +22,8 @@ rule sim:
         script = "code/sim.R",
         setup = "code/setup.R"
     output:
-        "rds/sim/n{n}_rho{rho}_{method}.rds"
+        "rds/{iterations}/sim/n{n}_rho{rho}_{method}.rds"
     params:
-        iterations = config["iterations"],
         seed = config["seed"],
         level = config["level"]
     shell:
@@ -26,7 +31,7 @@ rule sim:
         "--n {wildcards.n} "
         "--rho {wildcards.rho} "
         "--method {wildcards.method} "
-        "--iterations {params.iterations} "
+        "--iterations {wildcards.iterations} "
         "--seed {params.seed} "
         "--level {params.level} "
         "--out {output}"
@@ -35,8 +40,9 @@ rule figure:
     input:
         script = "code/figure.R",
         setup = "code/setup.R",
-        rds = expand("rds/sim/n{n}_rho{rho}_{method}.rds",
-                     n=config["n"], rho=config["rho"], method=config["methods"])
+        rds = expand("rds/{iterations}/sim/n{n}_rho{rho}_{method}.rds",
+                     iterations=ITER, n=config["n"], rho=config["rho"],
+                     method=config["methods"])
     output:
         "out/figure1.pdf"
     params:
