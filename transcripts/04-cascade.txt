@@ -1,0 +1,10 @@
+$ echo '## a real edit' >> code/sim.R && snakemake -n
+Job stats:
+job           count
+----------  -------
+all               1
+figure1           1
+manuscript        2
+sim              18
+table1            1
+total            23

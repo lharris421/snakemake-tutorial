@@ -1,0 +1,45 @@
+configfile: "config.yaml"
+
+## Wildcards match greedily by default; these constraints keep {n} from
+## swallowing part of the filename when a rule could match more than one way
+wildcard_constraints:
+    n = r"\d+",
+    rho = r"\d+",
+    method = "[a-z]+"
+
+rule all:
+    input:
+        "results/figure1.pdf"
+
+rule sim:
+    input:
+        script = "code/sim.R",
+        setup = "code/setup.R"
+    output:
+        "results/sim/n{n}_rho{rho}_{method}.rds"
+    params:
+        iterations = config["iterations"],
+        seed = config["seed"],
+        level = config["level"]
+    shell:
+        "Rscript {input.script} "
+        "--n {wildcards.n} "
+        "--rho {wildcards.rho} "
+        "--method {wildcards.method} "
+        "--iterations {params.iterations} "
+        "--seed {params.seed} "
+        "--level {params.level} "
+        "--out {output}"
+
+rule figure:
+    input:
+        script = "code/figure.R",
+        setup = "code/setup.R",
+        rds = expand("results/sim/n{n}_rho{rho}_{method}.rds",
+                     n=config["n"], rho=config["rho"], method=config["methods"])
+    output:
+        "results/figure1.pdf"
+    params:
+        level = config["level"]
+    shell:
+        "Rscript {input.script} --out {output} --level {params.level} {input.rds}"

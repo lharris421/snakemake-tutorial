@@ -1,0 +1,130 @@
+# Building the manuscript {#sec-manuscript}
+
+```{r}
+#| include: false
+source("_common.R")
+```
+
+Here is the situation this chapter is about. You are using an editor that rebuilds
+your PDF every time you save, so the document always matches its LaTeX source. It
+does not match its *figures*: `results/figure1.pdf` was made by some script at some
+point, and if you change the simulation nothing tells the manuscript about it. The
+document is only as current as the last time you remembered to rerun things.
+
+Making the manuscript a rule closes that gap.
+
+## The rule
+
+```{r}
+#| echo: false
+#| output: asis
+embed_file("examples/04-manuscript/Snakefile", from = "^## The manuscript depends",
+           filename = "Snakefile (excerpt)")
+```
+
+`latexmk` is doing the LaTeX-specific work --- running `pdflatex` and BibTeX as many
+times as it takes for references and citations to settle. Snakemake's contribution
+is the `input:` block: the PDF depends on the figure and the table, which depend on
+the simulations, which depend on the code. One command now walks the entire chain.
+
+The wildcard `{doc}` builds either document with the same rule, constrained to the
+two names that exist. `wildcard_constraints` is attached to this rule rather than
+declared at the top of the file, since it is only meaningful here.
+
+## Separating layout from content
+
+Both documents contain the same words. Neither contains any of them:
+
+```{r}
+#| echo: false
+#| output: asis
+embed_file("examples/04-manuscript/paper.tex", filename = "paper.tex")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+embed_file("examples/04-manuscript/submission.tex", filename = "submission.tex")
+```
+
+The prose is in `main.tex`, which both wrappers `\input`. This costs you nothing on
+the first draft and saves you a great deal on the fourth, when the paper is going
+to a second journal with a different class file, and again when you post it to
+arXiv. You change the wrapper. You never touch a sentence.
+
+Real projects extend this in the obvious way --- a wrapper per journal, one for
+arXiv, one for the version with the supplement bound in --- each a rule producing
+its own PDF, all sharing `main.tex`. The `man-avg-cov` project this example is
+modeled on has one for arXiv and one for Biometrics, the latter of which also
+splits the compiled PDF into a main document and a supplement with `qpdf`, because
+that journal requires them as separate uploads.
+
+## The cascade
+
+This is the payoff, so it is worth watching happen. Everything is currently built
+and up to date. Now change one line in the simulation code:
+
+```{r}
+#| echo: false
+#| output: asis
+transcript("04-cascade.txt")
+```
+
+Twenty-three jobs: eighteen simulations, the figure, the table, and both PDFs. In
+the right order, with no decisions from you, and --- the part that matters --- with
+no possibility of a version of the paper containing a figure from before the change.
+
+Compare the alternative, which is remembering to run four things in order and being
+right about it every time, for the entire life of the project.
+
+## Making LaTeX quiet
+
+Two flags in that rule are there for the sake of your terminal:
+
+`-interaction=nonstopmode` stops LaTeX from halting at an error to ask you what to
+do. In a pipeline, an interactive prompt is a hang, not a question.
+
+`> {log} 2>&1` sends the several hundred lines LaTeX produces to `logs/paper-latexmk.log`.
+When the build fails, the error is in there, and `latexmk` also leaves the more
+readable `build/paper.log`.
+
+::: {.callout-warning}
+## LaTeX's own idea of what is up to date
+
+`latexmk` does its own dependency tracking and will sometimes decide there is
+nothing to do even when Snakemake has just asked it to rebuild. If a rerun leaves
+the PDF unchanged when you expected otherwise, delete the `build/` directory and
+try again --- and note that this is exactly why the compiled PDF should not be the
+only place a result appears.
+:::
+
+## What goes in git
+
+The `.gitignore` for a project of this shape:
+
+```{.default filename=".gitignore"}
+.snakemake/
+results/
+logs/
+benchmarks/
+build/
+```
+
+Everything ignored is regenerable, and the claim that it is regenerable is now
+enforced by a program rather than by your recollection. Commit the code, the
+`.tex` files, and `config.yaml`.
+
+There is one honest exception. If a simulation takes three days, colleagues who
+clone the repository cannot rebuild it over coffee, and it is reasonable to ship
+the `.rds` files --- or, better, to keep them somewhere outside the repository
+that the Snakefile knows how to find. @sec-scaling covers how the real project
+handles that.
+
+## Try it
+
+1. Change the figure's y-axis label and run `snakemake --cores 4`. Which jobs run?
+   Which do not, and why not?
+2. Add a `supplement.tex` wrapper that includes only the table, plus a rule to
+   build it, and add it to `rule all`.
+3. Introduce a deliberate LaTeX error in `main.tex` and run the build. Where does
+   Snakemake tell you to look, and what is in that file?

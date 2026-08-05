@@ -1,0 +1,54 @@
+---
+title: "FEV1 at week 12: analysis report"
+format:
+  html:
+    toc: true
+    embed-resources: true
+execute:
+  echo: false
+  warning: false
+---
+
+```{r}
+#| include: false
+source("code/setup.R")
+library(knitr)
+analysis <- readRDS("results/analysis.rds")
+tab1 <- readRDS("results/table1.rds")
+models <- readRDS("results/models.rds")
+eff <- models$effects
+```
+
+The report does no computing of its own. It reads the objects the pipeline
+produced and displays them, so that rendering it can never quietly change a
+result.
+
+## Analysis set
+
+`r nrow(analysis)` participants had a week 12 measurement:
+`r sum(analysis$arm == "Placebo")` on placebo and
+`r sum(analysis$arm == "Treatment")` on treatment.
+
+## Table 1
+
+```{r}
+kable(tab1, col.names = c("Characteristic",
+                          sprintf("Placebo (n = %d)", attr(tab1, "n")[["Placebo"]]),
+                          sprintf("Treatment (n = %d)", attr(tab1, "n")[["Treatment"]])),
+      align = "lcc")
+```
+
+## Change in FEV1
+
+![](results/figure1.png)
+
+## Treatment effect
+
+```{r}
+kable(eff, digits = 3, col.names = c("Model", "Estimate", "Lower", "Upper", "p", "n"),
+      align = "lccccc")
+```
+
+The estimated treatment effect is
+`r sprintf("%.3f L (95%% CI %.3f to %.3f)", eff$estimate[eff$model == "adjusted"], eff$lower[eff$model == "adjusted"], eff$upper[eff$model == "adjusted"])`
+in the adjusted model, and is insensitive to which covariates are included.

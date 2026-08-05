@@ -1,0 +1,39 @@
+/*-- scss:defaults --*/
+
+$font-size-root: 17px;
+$code-block-font-size: 0.85em;
+$toc-font-size: 0.85em;
+
+/*-- scss:rules --*/
+
+body {
+  line-height: 1.65;
+}
+
+main h1,
+main h2 {
+  margin-top: 2.5rem;
+}
+
+/* Filename headers on code blocks: the tutorial leans on these to say "this is
+   a file called Snakefile", so make them read as labels rather than as part of
+   the code. */
+.code-with-filename .code-with-filename-file {
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/* Tables of commands and flags show up in several chapters */
+main table {
+  font-size: 0.92em;
+  margin-bottom: 1.5rem;
+}
+main table code {
+  white-space: nowrap;
+}
+
+/* Callouts a little tighter than the Quarto default */
+.callout {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+}

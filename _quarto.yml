@@ -1,0 +1,53 @@
+project:
+  type: book
+  output-dir: docs
+  # GitHub Pages serves docs/ straight from the main branch and would otherwise
+  # run it through Jekyll, which ignores some paths.  Rendering clears docs/, so
+  # the marker file has to be put back every time.
+  post-render:
+    - touch docs/.nojekyll
+
+book:
+  title: "Snakemake for biostatisticians"
+  subtitle: "Reproducible analyses, simulations, and manuscripts"
+  author: "Logan Harris"
+  date: today
+  date-format: "MMMM YYYY"
+  search: true
+  page-navigation: true
+  sidebar:
+    style: docked
+  chapters:
+    - index.qmd
+    - part: "Getting started"
+      chapters:
+        - 01-rscript.qmd
+        - 02-first-snakefile.qmd
+    - part: "Doing it at scale"
+      chapters:
+        - 03-wildcards.qmd
+        - 04-config.qmd
+        - 05-parallel-and-logs.qmd
+    - part: "Products"
+      chapters:
+        - 06-figures-tables.qmd
+        - 07-manuscript.qmd
+        - 08-analysis-pipeline.qmd
+    - part: "In practice"
+      chapters:
+        - 09-debugging.qmd
+        - 10-scaling-up.qmd
+
+format:
+  html:
+    theme:
+      light: [cosmo, custom.scss]
+      dark: [darkly, custom.scss]
+    code-copy: true
+    code-overflow: wrap
+    code-link: false
+    toc-depth: 3
+    fig-align: center
+
+execute:
+  freeze: false

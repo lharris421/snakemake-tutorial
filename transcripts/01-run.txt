@@ -1,0 +1,61 @@
+$ snakemake --cores 2
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Job stats:
+job          count
+---------  -------
+all              1
+figure           1
+sim_naive        1
+sim_split        1
+total            4
+
+Select jobs to execute...
+Execute 2 jobs...
+
+localrule sim_naive:
+    input: sim.R
+    output: results/sim-naive.rds
+    jobid: 2
+    reason: Missing output files: results/sim-naive.rds
+    resources: tmpdir=/var/folders/gz/hbrw64n97wb0vy5prhnxst400000gp/T
+
+localrule sim_split:
+    input: sim.R
+    output: results/sim-split.rds
+    jobid: 3
+    reason: Missing output files: results/sim-split.rds
+    resources: tmpdir=/var/folders/gz/hbrw64n97wb0vy5prhnxst400000gp/T
+wrote results/sim-naive.rds -- coverage: 0.828 
+wrote results/sim-split.rds -- coverage: 0.944 
+
+Finished jobid: 2 (Rule: sim_naive)
+1 of 4 steps (25%) done
+
+Finished jobid: 3 (Rule: sim_split)
+2 of 4 steps (50%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+localrule figure:
+    input: figure.R, results/sim-naive.rds, results/sim-split.rds
+    output: results/figure1.pdf
+    jobid: 1
+    reason: Missing output files: results/figure1.pdf; Input files updated by another job: results/sim-naive.rds, results/sim-split.rds
+    resources: tmpdir=/var/folders/gz/hbrw64n97wb0vy5prhnxst400000gp/T
+wrote results/figure1.pdf 
+
+Finished jobid: 1 (Rule: figure)
+3 of 4 steps (75%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+localrule all:
+    input: results/figure1.pdf
+    jobid: 0
+    reason: Input files updated by another job: results/figure1.pdf
+    resources: tmpdir=/var/folders/gz/hbrw64n97wb0vy5prhnxst400000gp/T
+
+Finished jobid: 0 (Rule: all)
+4 of 4 steps (100%) done

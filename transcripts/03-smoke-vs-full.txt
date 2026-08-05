@@ -1,0 +1,10 @@
+$ snakemake --cores 4 --config iterations=20
+
+real	0m5.055s
+user	0m9.280s
+sys	0m0.970s
+$ snakemake --cores 4 --forcerun sim
+
+real	0m11.171s
+user	0m31.453s
+sys	0m1.153s

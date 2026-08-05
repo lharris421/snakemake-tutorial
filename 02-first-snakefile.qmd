@@ -1,0 +1,191 @@
+# A first Snakefile {#sec-first-snakefile}
+
+```{r}
+#| include: false
+source("_common.R")
+```
+
+Start in `examples/01-first-rules`. It contains two R scripts --- `sim.R`, which
+runs the simulation for one method, and `figure.R`, which turns simulation output
+into a figure --- and a file called `Snakefile`.
+
+By hand, building the figure means running three commands in the right order:
+
+```bash
+Rscript sim.R naive results/sim-naive.rds
+Rscript sim.R split results/sim-split.rds
+Rscript figure.R results/figure1.pdf results/sim-naive.rds results/sim-split.rds
+```
+
+That is not hard. It is just something you have to remember, and remember *again*
+every time you change one of the scripts, and remember correctly --- because
+nothing stops you from rebuilding the figure without rerunning the simulation.
+
+## Rules
+
+A Snakefile is a list of rules. A rule says: here are the files I need, here is the
+file I produce, and here is the command that gets from one to the other.
+
+```{r}
+#| echo: false
+#| output: asis
+embed_file("examples/01-first-rules/Snakefile")
+```
+
+Read `rule sim_naive` as a sentence: *to make `results/sim-naive.rds`, given
+`sim.R`, run `Rscript sim.R naive results/sim-naive.rds`.*
+
+A few mechanics:
+
+- **`{output}` and `{input}` are substituted into the shell command.** You write
+  the filename once, in the `output:` block, and refer to it after that. This is
+  not just brevity --- it makes it impossible for the rule to declare one file and
+  write a different one.
+- **Inputs can be named**, as in `rule figure`, where `input.script` and
+  `input.rds` are referred to separately in the command. Without names, `{input}`
+  expands to all of them, space-separated, in order.
+- **Indentation matters**, as in Python. Use four spaces and stay consistent.
+- **`sim.R` is listed as an input**, even though it is code rather than data. This
+  is the whole game: it is what makes "the script changed" a reason to rerun.
+
+## rule all
+
+`rule all` is different. It has no output and no command --- only inputs. It exists
+because of a rule Snakemake follows strictly:
+
+> Snakemake builds the first rule in the file, and whatever that rule needs.
+
+So `rule all` is where you list the things you actually want to exist at the end.
+Everything else gets built because something in that list, directly or indirectly,
+depends on it. A file that is not reachable from `rule all` will not be built, no
+matter how many rules could make it. By convention `rule all` goes first and is
+named `all`, but neither is required; only being first matters.
+
+## The dependency graph
+
+From those four rules Snakemake works out the order for itself. Nothing in the
+file says the simulations come before the figure; it deduces that from the fact
+that `rule figure` needs files that `rule sim_naive` and `rule sim_split` produce.
+
+```{mermaid}
+%%| fig-align: center
+flowchart LR
+  A[sim.R] --> B[results/sim-naive.rds]
+  A --> C[results/sim-split.rds]
+  D[figure.R] --> E[results/figure1.pdf]
+  B --> E
+  C --> E
+  E --> F([rule all])
+```
+
+This is a directed acyclic graph, and Snakemake calls it the DAG. Two consequences
+worth internalizing early: anything with no path between the nodes can run at the
+same time (@sec-parallel), and a cycle is an error rather than an infinite loop.
+
+## Running it
+
+Always look before you leap. `-n` (or `--dry-run`) reports what *would* happen:
+
+```{r}
+#| echo: false
+#| output: asis
+transcript("01-dry-run.txt")
+```
+
+Note the `reason:` line on each job --- Snakemake tells you not just what it plans
+to do but why. Here everything is missing, so everything runs.
+
+Now do it, allowing two jobs at a time:
+
+```{r}
+#| echo: false
+#| output: asis
+transcript("01-run.txt")
+```
+
+`--cores` is not optional; Snakemake refuses to run without being told how much of
+your machine it may use. The two simulations ran concurrently, the figure waited
+for both, and the whole thing took about four seconds.
+
+## Doing nothing, quickly
+
+Run it again:
+
+```{r}
+#| echo: false
+#| output: asis
+transcript("01-up-to-date.txt")
+```
+
+This is the point of the exercise. Ask for the figure a hundred more times and you
+will get that message a hundred times. Now delete the figure and ask again:
+
+```{r}
+#| echo: false
+#| output: asis
+transcript("01-rebuild-figure.txt")
+```
+
+Only the figure was rebuilt. The simulations were still there and still current, so
+they were left alone --- Snakemake rebuilds what is out of date and nothing else.
+
+## What counts as out of date
+
+Here is where Snakemake differs from `make`, and from most people's expectations.
+
+`make` compares timestamps: if an input is newer than an output, rebuild. Snakemake
+records a SHA-256 checksum of every input alongside each output it creates, in a
+directory called `.snakemake/`. When you ask for a file, it compares the current
+inputs against the recorded ones. So:
+
+```{r}
+#| echo: false
+#| output: asis
+transcript("04-touch-is-not-enough.txt")
+```
+
+Touching a file does not trigger a rebuild, because the contents did not change.
+Change one character of `sim.R`, though, and everything downstream of it goes:
+
+```{r}
+#| echo: false
+#| output: asis
+transcript("04-cascade.txt")
+```
+
+(That transcript comes from the larger example of @sec-manuscript, which is why
+there are 23 jobs rather than 4.)
+
+Content is not the only trigger. Snakemake also stores the shell command and the
+parameters used for each output, so editing a rule's command --- not just the
+script it calls --- makes the affected outputs stale too. @sec-debugging covers how
+to inspect and override all of this.
+
+::: {.callout-note}
+## Deleting `.snakemake/` is safe
+
+It is a cache of metadata, not results. Delete it and the next run rebuilds
+everything, because Snakemake no longer has any record of how the existing files
+were made. Add it to `.gitignore` and otherwise ignore it.
+:::
+
+## Building one thing
+
+You can also name a target directly, which is invaluable when you are developing
+and want to check one piece:
+
+```bash
+snakemake --cores 1 results/sim-naive.rds
+```
+
+Snakemake finds the rule that can produce that file, builds whatever it needs, and
+stops. You can also name a *rule* --- `snakemake --cores 1 figure` --- which asks
+for that rule's outputs.
+
+## Try it
+
+1. Delete `results/` entirely and rebuild. Time it.
+2. Change the `n <- 100` line in `sim.R` to `n <- 200` and run `snakemake -n`.
+   Which jobs are planned, and why?
+3. Add a line to `rule all` asking for `results/nonexistent.rds` and run
+   `snakemake -n`. Read the error carefully --- you will see it again.

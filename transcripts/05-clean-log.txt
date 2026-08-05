@@ -1,0 +1,6 @@
+$ cat logs/clean.log
+raw file                                      n = 201
+after dropping duplicate patient records      n = 200
+with a usable age                             n = 199
+with a week 12 measurement (analysis set)     n = 191
+wrote results/analysis.rds 

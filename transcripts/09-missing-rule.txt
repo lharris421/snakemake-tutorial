@@ -1,0 +1,3 @@
+$ snakemake --cores 1 results/coverage-summary.csv
+MissingRuleException:
+No rule to produce results/coverage-summary.csv (if you use input functions make sure that they don't raise unexpected exceptions).

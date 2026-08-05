@@ -1,0 +1,130 @@
+# Running R from the command line {#sec-rscript}
+
+```{r}
+#| include: false
+source("_common.R")
+```
+
+Snakemake does not run R code. It runs *commands*, and it decides when to run
+them. So before any of it is useful, your analysis has to be something you can
+start from a terminal without clicking anything --- and, ideally, something you
+can point at different parameter values without editing the file.
+
+This chapter has nothing to do with Snakemake. If you already write scripts that
+take arguments and save their output to a file you name, skip to
+@sec-first-snakefile.
+
+## Rscript
+
+`Rscript` runs an R file top to bottom and exits:
+
+```bash
+Rscript sim.R
+```
+
+Two things change when your code runs this way rather than in RStudio.
+
+The first is that the working directory is wherever your terminal is, not wherever
+the file is. If `sim.R` says `readRDS("results/thing.rds")`, that path is resolved
+relative to the directory you were sitting in when you typed the command. Pick a
+convention and hold to it; the one used throughout this book is **always run from
+the project root**, so every path in every script is relative to the top of the
+project. Snakemake follows the same convention by default, which is convenient.
+
+The second is that nothing prints unless you ask. Auto-printing at the top level
+is an interactive feature, so `head(d)` on its own line produces no output under
+`Rscript`; you need `print(head(d))` or `cat()`. This matters more than it sounds
+like it should, because those prints become your log file in @sec-parallel.
+
+## Taking arguments
+
+A script that hard-codes `n <- 100` can only ever do one thing. To run the same
+code at three sample sizes you would have to edit the file between runs, which is
+exactly the kind of manual step we are trying to eliminate. Instead, read the
+values from the command line.
+
+The base R way is `commandArgs()`, which hands you the arguments as a character
+vector:
+
+```{r}
+#| echo: false
+#| output: asis
+embed_file("examples/01-first-rules/sim.R", from = "^args <- commandArgs",
+           to = "^outfile", filename = "sim.R (excerpt)")
+```
+
+and is then called like this:
+
+```bash
+Rscript sim.R naive results/sim-naive.rds
+```
+
+This is fine for two arguments. It gets bad quickly: the arguments are positional,
+so you have to remember the order, everything arrives as a character string that
+you have to convert yourself, and there is no way to give something a default.
+
+## optparse
+
+The [`optparse`](https://cran.r-project.org/package=optparse) package gives you
+named flags with types and defaults, which is what the rest of this book uses:
+
+```{r}
+#| echo: false
+#| output: asis
+embed_file("examples/02-wildcards/sim.R", from = "^library\\(optparse\\)",
+           to = "^opt <- parse_args", filename = "sim.R (excerpt)")
+```
+
+Now the script is called with named arguments in any order:
+
+```bash
+Rscript sim.R --n 400 --rho 80 --method split --out results/sim/n400_rho80_split.rds
+```
+
+and `opt` is a list: `opt$n` is an integer, `opt$method` is a string. Anything you
+leave off falls back to its default, so the script still runs as-is when you are
+poking at it interactively.
+
+::: {.callout-tip}
+## Defaults are documentation
+
+Set the defaults to the values you use most often. Someone reading
+`make_option("--iterations", type = "integer", default = 200)` learns both what
+the flag is called and what a normal value looks like, and you get a script that
+runs unmodified when you source it by hand.
+:::
+
+## One script, one output file
+
+The last convention, and the one Snakemake actually requires: **a script should
+write to a path it was told, not a path it invented.**
+
+```{r}
+#| echo: false
+#| output: asis
+embed_file("examples/02-wildcards/sim.R", from = "^dir.create",
+           to = "^cat\\(\"wrote", filename = "sim.R (excerpt)")
+```
+
+Note the `dir.create()`. Snakemake creates the directories for a rule's declared
+outputs before running it, but scripts that also work when you run them by hand
+shouldn't count on that.
+
+This is what makes a script composable. `sim.R` does not know it is part of a
+pipeline; it knows how to turn a set of parameters into one file. The Snakefile in
+the next chapter is nothing more than a list of which parameters go with which
+filename.
+
+## Where the results go
+
+Two decisions that will save you pain later:
+
+**Results are files, and files are named for what produced them.** A file called
+`n400_rho80_split.rds` tells you the sample size, the correlation, and the method.
+A file called `results2_final.rds` tells you nothing, and in six months neither
+will you.
+
+**Results are regenerable, so they don't go in git.** Commit the code and the
+inputs; let the outputs be rebuilt. Every example in this book has a `results/`
+directory that is safe to delete at any moment --- which is a claim you can only
+make honestly once the pipeline is complete.

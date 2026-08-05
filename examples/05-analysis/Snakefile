@@ -1,0 +1,74 @@
+## A data analysis pipeline: raw data in, report out.
+##
+## The shape is the same as the simulation example -- rules whose inputs and
+## outputs are files -- but the chain is linear rather than a fan-out, and the
+## first input is a file you did not generate and must not modify.
+
+rule all:
+    input:
+        "report.html"
+
+rule clean:
+    input:
+        script = "code/clean.R",
+        setup = "code/setup.R",
+        data = "data/trial.csv"
+    output:
+        "results/analysis.rds"
+    log:
+        "logs/clean.log"
+    shell:
+        "Rscript {input.script} --in {input.data} --out {output} > {log} 2>&1"
+
+rule model:
+    input:
+        script = "code/model.R",
+        setup = "code/setup.R",
+        rds = "results/analysis.rds"
+    output:
+        "results/models.rds"
+    log:
+        "logs/model.log"
+    shell:
+        "Rscript {input.script} --in {input.rds} --out {output} > {log} 2>&1"
+
+rule table1:
+    input:
+        script = "code/table1.R",
+        setup = "code/setup.R",
+        rds = "results/analysis.rds"
+    output:
+        "results/table1.rds"
+    log:
+        "logs/table1.log"
+    shell:
+        "Rscript {input.script} --in {input.rds} --out {output} > {log} 2>&1"
+
+rule figure1:
+    input:
+        script = "code/figure.R",
+        setup = "code/setup.R",
+        rds = "results/analysis.rds"
+    output:
+        "results/figure1.png"
+    log:
+        "logs/figure1.log"
+    shell:
+        "Rscript {input.script} --in {input.rds} --out {output} > {log} 2>&1"
+
+## Listing every object the report reads is what makes the report trustworthy:
+## it cannot be rendered against a stale table or a figure from last month.
+rule report:
+    input:
+        qmd = "report.qmd",
+        setup = "code/setup.R",
+        analysis = "results/analysis.rds",
+        models = "results/models.rds",
+        table1 = "results/table1.rds",
+        figure1 = "results/figure1.png"
+    output:
+        "report.html"
+    log:
+        "logs/report.log"
+    shell:
+        "quarto render {input.qmd} --to html > {log} 2>&1"

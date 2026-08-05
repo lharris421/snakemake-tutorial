@@ -1,0 +1,148 @@
+# Configuration {#sec-config}
+
+```{r}
+#| include: false
+source("_common.R")
+```
+
+The Snakefile in @sec-wildcards has the parameter grid written into it, and `sim.R`
+has 200 iterations and the seed written into it. Both are the wrong places. You will
+want 20 iterations while you are debugging and 1000 for the final results, and a
+coauthor will want to add a sample size without reading your Python.
+
+Move to `examples/03-config`, which puts all of it in one file.
+
+## config.yaml
+
+```{r}
+#| echo: false
+#| output: asis
+embed_file("examples/03-config/config.yaml")
+```
+
+YAML is about as simple as it looks: `key: value`, one per line, lists in square
+brackets, `#` for comments. Load it at the top of the Snakefile:
+
+```{r}
+#| echo: false
+#| output: asis
+embed_file("examples/03-config/Snakefile", from = "^configfile:", to = "^configfile:",
+           filename = "Snakefile (excerpt)")
+```
+
+and everything in it is available as `config`, a dictionary --- `config["iterations"]`
+is `200` and `config["n"]` is the list `[50, 100, 400]`. Use `config.get("key",
+default)` when a setting is optional.
+
+## params
+
+Values from the config reach a shell command through `params`:
+
+```{r}
+#| echo: false
+#| output: asis
+embed_file("examples/03-config/Snakefile", from = "^rule sim:", to = '^        "--out',
+           filename = "Snakefile (excerpt)")
+```
+
+You could write `config["iterations"]` straight into the command with a Python
+f-string and it would work. Declaring it in `params` is better for one specific
+reason: Snakemake records the params it used alongside each output, so changing a
+parameter marks the affected files stale, exactly as changing an input file does.
+Values smuggled into the command another way are invisible to that machinery.
+
+The grid comes from the config now too, so `expand()` reads:
+
+```{r}
+#| echo: false
+#| output: asis
+embed_file("examples/03-config/Snakefile", from = "        rds = expand",
+           to = "                     n=config", filename = "Snakefile (excerpt)")
+```
+
+Adding a fourth sample size is now a two-character edit to `config.yaml`.
+
+## wildcard_constraints
+
+@sec-wildcards warned that a wildcard matches anything. Constraints fix that:
+
+```{r}
+#| echo: false
+#| output: asis
+embed_file("examples/03-config/Snakefile", from = "^wildcard_constraints:",
+           to = '^    method = ', filename = "Snakefile (excerpt)")
+```
+
+`r"\d+"` is a regular expression matching one or more digits; the `r` prefix marks a
+raw string, so the backslash reaches the regex intact. Declared at the top level
+they apply to every rule, and they can also be attached to a single rule, as
+@sec-manuscript does.
+
+Two reasons to bother:
+
+**Ambiguity.** With unconstrained wildcards there is more than one way to match
+`n{n}_rho{rho}_{method}.rds` against a name containing extra underscores, and
+Snakemake resolves it by its rules rather than yours.
+
+**Failing early.** A typo like `n50_rho0_naive.RDS` now fails immediately with "no
+rule to produce" instead of launching a job that dies twenty minutes later inside R.
+
+## Overriding from the command line
+
+Any config value can be replaced for a single run with `--config`:
+
+```bash
+snakemake --cores 4 --config iterations=20
+```
+
+which is the fastest way to check that a pipeline is wired up before committing to
+the real thing:
+
+```{r}
+#| echo: false
+#| output: asis
+transcript("03-smoke-vs-full.txt")
+```
+
+Five seconds against eleven, for a grid that would take considerably longer at the
+iteration counts of a real paper.
+
+::: {.callout-warning}
+## `--config` does not always rebuild what you expect
+
+`--config iterations=20` changes a `params` value, so the affected outputs are
+marked stale and rerun. A config value used only to build the list inside
+`expand()` --- the grid itself --- behaves differently: dropping a sample size just
+means fewer files are asked for, and the files still being asked for are still
+valid, so nothing reruns. That is correct, and occasionally surprising.
+
+When you want to force the issue, `snakemake --forcerun sim` reruns every job of
+that rule regardless. See @sec-debugging.
+:::
+
+## Where to draw the line
+
+A useful test: **if changing it changes the results, it belongs in the config; if
+changing it changes what the code does, it belongs in the code.**
+
+Iteration counts, seeds, grids, confidence levels, file locations --- config. The
+definition of the estimator --- code. The temptation, once you have a config file,
+is to make everything configurable, and you end up with a 200-line YAML file harder
+to read than the code it configures. The config here has seven settings and covers
+everything a reader of the paper would plausibly want to change.
+
+## Keeping the config with the results
+
+One habit worth adopting: since `config.yaml` determines what the numbers are, it is
+part of the manuscript's provenance. @sec-manuscript lists it as an input to the
+manuscript rule for that reason, and so does the real project these examples are
+modeled on. Commit it, and the paper you compiled last March can be rebuilt from
+the tag.
+
+## Try it
+
+1. Run with `--config iterations=20`, then again with `--config iterations=200`.
+   What does Snakemake rerun, and why?
+2. Add `1000` to the `n` list in `config.yaml` and run `snakemake -n`.
+3. Delete the `wildcard_constraints` block and ask for
+   `results/sim/n50_rho0_na_ive.rds`. What happens, and what did `{method}` match?

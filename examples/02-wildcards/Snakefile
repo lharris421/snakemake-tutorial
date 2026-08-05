@@ -1,0 +1,29 @@
+N = [50, 100, 400]
+RHO = [0, 50, 80]
+METHODS = ["naive", "split"]
+
+rule all:
+    input:
+        "results/figure1.pdf"
+
+rule sim:
+    input:
+        "sim.R"
+    output:
+        "results/sim/n{n}_rho{rho}_{method}.rds"
+    shell:
+        "Rscript sim.R "
+        "--n {wildcards.n} "
+        "--rho {wildcards.rho} "
+        "--method {wildcards.method} "
+        "--out {output}"
+
+rule figure:
+    input:
+        script = "figure.R",
+        rds = expand("results/sim/n{n}_rho{rho}_{method}.rds",
+                     n=N, rho=RHO, method=METHODS)
+    output:
+        "results/figure1.pdf"
+    shell:
+        "Rscript {input.script} {output} {input.rds}"

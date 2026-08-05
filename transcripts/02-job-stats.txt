@@ -1,0 +1,8 @@
+$ snakemake -n
+Job stats:
+job       count
+------  -------
+all           1
+figure        1
+sim          18
+total        20

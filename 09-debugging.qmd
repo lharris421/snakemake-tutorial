@@ -1,0 +1,202 @@
+# When things go wrong {#sec-debugging}
+
+```{r}
+#| include: false
+source("_common.R")
+```
+
+Most of the trouble people have with Snakemake comes from one of two questions:
+*why is it doing that?* and *why is it not doing that?* This chapter is a reference
+for both, plus the errors you will actually see.
+
+## Look before you run
+
+`-n` is the answer to a surprising fraction of problems. It builds the DAG, decides
+what it would do, and does none of it:
+
+```bash
+snakemake -n              # what would you do?
+snakemake -n --quiet      # just the summary table
+snakemake -p              # print the shell commands as they run
+```
+
+Each planned job comes with a `reason:` line:
+
+```{r}
+#| echo: false
+#| output: asis
+transcript("04-reason.txt")
+```
+
+::: {.callout-note}
+## `-r`/`--reason` no longer exists
+
+Reasons are printed by default now, and the flag was removed --- on 9.13 it is a
+hard error, not a deprecation warning. If you find a tutorial recommending
+`snakemake -n -r`, it predates version 8, and whatever else it tells you about
+cluster execution is likely out of date too.
+:::
+
+## Why is it rebuilding?
+
+Snakemake stores, for every output file, a record of how it was made: the checksums
+of the inputs, the shell command, and the params. Any of them changing makes the
+output stale. `--summary` prints the table:
+
+```{r}
+#| echo: false
+#| output: asis
+transcript("09-summary.txt")
+```
+
+The `plan` column tells you what would happen and the `status` column whether the
+recorded provenance still matches.
+
+The usual surprises:
+
+**A whole grid reruns after a cosmetic edit.** You changed a comment in `sim.R`, and
+`sim.R` is an input to eighteen jobs. Snakemake compares content, so *any* change
+counts, including whitespace. There is no way to say "this edit does not matter";
+if you are sure, `--touch` (below) is the escape hatch.
+
+**A rule reruns after you edited its shell command.** Expected, and desirable ---
+the command is part of the provenance.
+
+**Nothing reruns after you edit a script that is not listed as an input.** This one
+is silent and it is the dangerous one. If a rule calls `Rscript code/figure.R` but
+only lists `{input.rds}`, then editing `figure.R` changes nothing as far as
+Snakemake is concerned, and your figure quietly stays stale. **List your scripts as
+inputs.** Every example in this book does.
+
+## Making it rerun anyway
+
+| Command | What it does |
+|---|---|
+| `snakemake -R sim` | rerun rule `sim` and everything downstream |
+| `snakemake --forcerun sim` | same thing, spelled out |
+| `snakemake -f results/figure1.pdf` | rebuild just that file |
+| `snakemake -F` | force everything, from scratch |
+| `snakemake --delete-all-output` | delete everything the workflow produced |
+
+`-R` is the one you will use. It is the right response to "I changed something
+Snakemake cannot see" --- a package upgrade, an edit to a script you forgot to list,
+a change to a data file that lives outside the project.
+
+## Making it stop rerunning
+
+The mirror image: files are current but Snakemake wants to rebuild them, usually
+because they were copied from somewhere or restored from a backup.
+
+```bash
+snakemake --touch
+```
+
+`--touch` marks every output as up to date without running anything. Use it when you
+know the files are fine, and note that you are making an assertion Snakemake cannot
+check.
+
+For the specific case of "I only want to rebuild when files change, not when
+timestamps do", `--rerun-triggers` controls which signals count:
+
+```bash
+snakemake --rerun-triggers mtime      # only timestamps
+snakemake --rerun-triggers input params code    # the usual set
+```
+
+## The errors you will see
+
+### No rule to produce
+
+```{r}
+#| echo: false
+#| output: asis
+transcript("09-missing-rule.txt")
+```
+
+You asked for a file no rule can make. Nine times in ten it is a typo, in the target
+or in a rule's `input:`. Check spelling, check the directory, and check whether a
+`wildcard_constraints` is stopping the match --- a constraint of `\d+` on `{n}` will
+make `nfifty_rho0_naive.rds` unmatchable, which is the point, but the message does
+not say so.
+
+### A job failed
+
+```{r}
+#| echo: false
+#| output: asis
+transcript("09-job-failed.txt")
+```
+
+Snakemake reports the rule, the wildcards, and the exact shell command. **Copy that
+command and run it yourself** --- you will get the R error directly, and you can
+step through the script interactively with the same arguments.
+
+Two things happened that you did not see. Any output the job had already written
+was deleted --- you get `Removing output files of failed job … since they might be
+corrupted`, so a half-written `.rds` can never be mistaken for a real result. (Here
+the script died before writing anything, so there was nothing to remove.) The log
+file, by contrast, was kept: if the rule declared one, the R error message is in it.
+
+The example above is the wildcard problem from @sec-wildcards: `bayes` matched
+`{method}`, so Snakemake built a perfectly good job for a method that does not
+exist. `wildcard_constraints` turns this into a "no rule to produce" error before
+anything runs.
+
+### Incomplete files
+
+> The files below seem to be incomplete.
+
+A previous run was killed hard. `snakemake --rerun-incomplete` discards the suspect
+files and rebuilds them.
+
+### Directory cannot be locked
+
+> Error: Directory cannot be locked.
+
+Either another Snakemake is running in this directory --- check before you assume it
+is not --- or one was killed without cleaning up. If you are sure nothing is
+running, `snakemake --unlock`.
+
+### The ILP solver warning
+
+> Failed to solve scheduling problem with ILP solver, falling back to greedy
+> scheduler.
+
+Harmless. Snakemake schedules jobs optimally when it can find a working solver, and
+falls back to a greedy scheduler when it cannot; the workflow runs correctly either
+way. It shows up on some Homebrew and conda installs. Ignore it, or install
+`pulp` properly if the noise bothers you.
+
+## Reading a workflow you did not write
+
+```{r}
+#| echo: false
+#| output: asis
+transcript("09-list.txt")
+```
+
+`--list` shows the rule names. Then:
+
+```bash
+snakemake --dag | dot -Tpdf > dag.pdf          # the job graph, one node per job
+snakemake --rulegraph | dot -Tpdf > rules.pdf  # the rule graph, one node per rule
+```
+
+Both need [Graphviz](https://graphviz.org/) for `dot`. For a grid of any size, use
+`--rulegraph`: `--dag` draws a node per *job*, which for the example in
+@sec-manuscript means twenty-three of them.
+
+Failing that, read `rule all` first. It tells you what the project is for, and
+everything else follows from it.
+
+## Habits that prevent most of this
+
+1. **List every script as an input.** The one failure mode Snakemake cannot warn
+   you about is the dependency you did not declare.
+2. **Dry-run before long runs.** Twenty seconds against three hours.
+3. **Smoke-test with a small config.** `--config iterations=20` finds broken
+   plumbing without simulating anything.
+4. **Give every rule a log.** Debugging a parallel run without logs is guesswork.
+5. **Delete `results/` occasionally and rebuild from scratch.** It is the only way
+   to know the pipeline still works end to end --- and the thing you are implicitly
+   promising anyone who reads your paper.

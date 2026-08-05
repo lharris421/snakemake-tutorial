@@ -1,0 +1,164 @@
+# One rule, many jobs {#sec-wildcards}
+
+```{r}
+#| include: false
+source("_common.R")
+```
+
+Look again at the Snakefile from the last chapter and notice how much of it is
+copied and pasted:
+
+```{r}
+#| echo: false
+#| output: asis
+embed_file("examples/01-first-rules/Snakefile", from = "^rule sim_naive",
+           to = '^        "Rscript sim.R split', filename = "Snakefile (excerpt)")
+```
+
+Two rules, identical but for the word `naive` versus `split`. Now imagine the real
+version of this simulation: three sample sizes, three correlation levels, two
+methods. Eighteen rules, all the same, and one typo away from a figure that
+silently mixes up two scenarios.
+
+Wildcards fix this. Move to `examples/02-wildcards`.
+
+## A wildcard is a hole in a filename
+
+```{r}
+#| echo: false
+#| output: asis
+embed_file("examples/02-wildcards/Snakefile", from = "^rule sim:",
+           to = '^        "--out \\{output\\}"', filename = "Snakefile (excerpt)")
+```
+
+The output is no longer a filename; it is a *pattern*. The parts in braces are
+wildcards, and they work backwards: when something asks for
+`results/sim/n400_rho80_split.rds`, Snakemake matches that name against the
+pattern, concludes that `n` is `400`, `rho` is `80` and `method` is `split`, and
+substitutes those values into the command wherever `{wildcards.…}` appears.
+
+This is the mental adjustment that makes Snakemake click. You do not tell it to run
+the simulation eighteen times. You tell it what a result file is *called* as a
+function of its parameters, and then you ask for the files you want.
+
+::: {.callout-important}
+## Wildcards match anything, including nonsense
+
+A wildcard is a regular expression, `.+` by default. Nothing in the rule above says
+`method` has to be `naive` or `split`, so asking for
+`results/sim/n50_rho0_bayes.rds` produces a perfectly valid job that runs `sim.R
+--method bayes` and fails inside R. @sec-config shows how to constrain wildcards,
+and @sec-debugging shows what that failure looks like.
+:::
+
+## Naming files so this works
+
+Wildcards make your file-naming scheme part of the pipeline's logic, which is worth
+two minutes of thought up front:
+
+- **Put every parameter that changes into the name.** If two runs differ in
+  anything, their outputs must differ in name, or one will overwrite the other and
+  Snakemake will believe both are up to date.
+- **Use a separator that cannot appear in a value.** These examples use `_` between
+  fields and stick to digits and lowercase letters within a field.
+- **Keep it parseable in the other direction too.** You will eventually want to read
+  `n400_rho80_split.rds` back into columns in R.
+
+The scheme here is `n{n}_rho{rho}_{method}.rds`, with `rho` as a percentage so that
+it stays an integer --- `rho50` rather than `rho0.5`, because a decimal point in a
+filename is an invitation to trouble.
+
+## expand()
+
+Something still has to say which eighteen files we want. That is `expand()`:
+
+```{r}
+#| echo: false
+#| output: asis
+embed_file("examples/02-wildcards/Snakefile", from = "^N = ", to = "^METHODS",
+           filename = "Snakefile (excerpt)")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+embed_file("examples/02-wildcards/Snakefile", from = "^rule figure:",
+           filename = "Snakefile (excerpt)")
+```
+
+`expand()` takes a pattern and some lists and returns every combination of them, so
+
+```python
+expand("results/sim/n{n}_rho{rho}_{method}.rds", n=N, rho=RHO, method=METHODS)
+```
+
+returns a list of 3 × 3 × 2 = 18 filenames. Those are the inputs of `rule figure`,
+which is what causes all eighteen simulations to run.
+
+::: {.callout-note}
+## The Python you need
+
+`N = [50, 100, 400]` is a list, the same idea as `c(50, 100, 400)` in R. That is
+essentially the entire Python vocabulary required to use Snakemake: lists, strings
+in quotes, and the occasional dictionary in @sec-config.
+:::
+
+Note that `expand()` fills wildcards in, and `{wildcards.n}` reads them back out.
+These are opposite operations, and it is worth being clear about which one you are
+doing: `expand()` appears in the rule that *consumes* many files, and
+`{wildcards.…}` in the rule that *produces* one.
+
+## Running it
+
+```{r}
+#| echo: false
+#| output: asis
+transcript("02-job-stats.txt")
+```
+
+Twenty jobs from three rules. On four cores:
+
+```{r}
+#| echo: false
+#| output: asis
+transcript("02-run-tail.txt")
+```
+
+The DAG has changed shape: one rule now stands for eighteen independent jobs, all of
+which must finish before the figure runs.
+
+```{mermaid}
+%%| fig-align: center
+flowchart LR
+  A[sim.R] --> B1[n50_rho0_naive.rds]
+  A --> B2[n50_rho0_split.rds]
+  A --> B3["(15 more)"]
+  A --> B4[n400_rho80_split.rds]
+  B1 --> F[results/figure1.pdf]
+  B2 --> F
+  B3 --> F
+  B4 --> F
+  G[figure.R] --> F
+```
+
+## Building one cell of the grid
+
+Because the output is a pattern, you can ask for any file it can match, whether or
+not anything else wants it:
+
+```{r}
+#| echo: false
+#| output: asis
+transcript("02-one-target.txt")
+```
+
+This is how you develop. Rather than running the whole grid to find out whether
+your new method works, ask for one small scenario, look at it, and only then let
+the rest go.
+
+## Try it
+
+1. Add `1000` to `N` and run `snakemake -n`. How many jobs? Which ones are new?
+2. Ask for `results/sim/n77_rho33_naive.rds`. It works --- explain why.
+3. Ask for `results/sim/n50_rho0_bayes.rds` and watch it fail. Where does the error
+   come from, and how would you have preferred to find out?

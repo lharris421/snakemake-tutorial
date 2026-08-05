@@ -1,0 +1,53 @@
+\section{Introduction}
+
+Forward selection is still routinely used to choose which covariates enter a
+regression model, and the confidence intervals reported afterwards are almost
+always the ones the software prints for the selected model. Those intervals
+ignore the fact that the model was chosen using the same data, and so they do
+not have their nominal coverage. We quantify the problem by simulation and
+compare against the simplest available remedy, sample splitting.
+
+\section{Simulation}
+
+We generate $n$ observations on $p = 10$ predictors with AR(1) correlation
+$\rho$, where $\beta_1 = 1$, $\beta_2 = -1$, and $\beta_3 = \cdots = \beta_{10}
+= 0$. For each replication we select variables by forward selection using AIC
+and then form intervals for the selected coefficients two ways:
+
+\begin{itemize}
+  \item \emph{Naive}: refit the selected model on all $n$ observations and take
+        the usual intervals.
+  \item \emph{Sample splitting}: select on a random half of the data and fit the
+        selected model on the other half.
+\end{itemize}
+
+\section{Results}
+
+Figure~\ref{fig:coverage} shows coverage against $n$ for three correlation
+levels. The naive intervals cover well below the nominal rate at every sample
+size, and increasing $n$ does not help: selection error does not vanish as the
+sample grows, because there are always null covariates that happen to look
+useful. Sample splitting is close to nominal throughout, at the cost of using
+half the data for each task.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=\textwidth]{results/figure1.pdf}
+  \caption{Coverage of nominal 95\% confidence intervals for coefficients
+    selected by forward selection.}
+  \label{fig:coverage}
+\end{figure}
+
+Table~\ref{tab:coverage} separates the selected coefficients into those that are
+truly non-null and those that are truly zero. The naive undercoverage is driven
+almost entirely by the null coefficients, which are selected only when their
+sample correlation with the outcome is unusually large --- exactly the situation
+in which the resulting interval is centered far from zero.
+
+\input{results/table1.tex}
+
+\section{Discussion}
+
+Nothing here is new; the point is that the numbers above were produced by a
+pipeline in which every figure and table is tied to the code and the parameter
+settings that generated it.

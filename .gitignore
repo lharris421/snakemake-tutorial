@@ -1,0 +1,24 @@
+# Quarto
+/.quarto/
+*_files/
+*.knit.md
+/_freeze/
+
+# Everything the examples regenerate.  If any of this is missing, `snakemake`
+# in the relevant directory puts it back -- which is the point of the book.
+.snakemake/
+examples/*/results/
+examples/*/logs/
+examples/*/benchmarks/
+examples/*/build/
+examples/*/report.html
+
+# R
+.Rhistory
+.RData
+.Rproj.user/
+
+# macOS
+.DS_Store
+
+**/*.quarto_ipynb

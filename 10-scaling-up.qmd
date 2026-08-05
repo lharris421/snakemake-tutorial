@@ -1,0 +1,208 @@
+# Scaling up {#sec-scaling}
+
+```{r}
+#| include: false
+source("_common.R")
+```
+
+The example in @sec-manuscript is a real pipeline in miniature: eighteen simulations,
+a figure, a table, two documents. A real methods paper is the same shape with the
+numbers changed --- a few hundred simulation jobs, seventeen figures and tables,
+results measured in days of compute rather than seconds. This chapter is about what
+changes and what does not.
+
+Almost nothing about the Snakefile changes. What changes is where things live.
+
+## Two repositories
+
+The natural instinct is to put everything in the manuscript's repository. That works
+until the second paper, at which point you find yourself copying the estimator into
+a new directory and maintaining two versions of it.
+
+The structure that holds up splits the work in two:
+
+```{mermaid}
+%%| fig-align: center
+flowchart TB
+  subgraph M["manuscript repo"]
+    S[Snakefile]
+    T[main.tex]
+    C[code/figure1.R ...]
+  end
+  subgraph R["methods repo (an R package)"]
+    F[R/ -- the estimators]
+    Q[scripts/ -- one per simulation]
+  end
+  S -->|runs| Q
+  Q -->|writes| D[(rds/ -- cached results)]
+  D --> C
+  C --> T
+```
+
+**The methods repository is an R package.** `R/` holds the estimators, with the
+usual `DESCRIPTION` and `NAMESPACE`, so it can be installed, tested, versioned and
+cited on its own. `scripts/` holds one script per kind of simulation, each taking
+`optparse` flags and writing one `.rds` named for its parameters --- exactly the
+scripts of @sec-rscript, just more of them.
+
+**The manuscript repository holds the paper**: the `.tex` files, the scripts that
+draw each figure, and the Snakefile that ties it together. Its rules call the *other*
+repository's scripts.
+
+The payoff is that the estimator has one home. The next paper gets a new manuscript
+repository and reuses the package; a reader who wants the method installs the
+package and ignores the paper entirely.
+
+## Pointing at the other repository
+
+The Snakefile needs to know where the methods repository is, and coauthors keep it
+in different places. The straightforward approach is a config value:
+
+```{.yaml filename="config.yaml"}
+res-loc: "~/repos/lasso-confint/"
+```
+
+```{.python filename="Snakefile"}
+import os
+LOC = os.path.expanduser(config["res-loc"])
+
+rule distribution_results:
+    input:
+        script = f"{LOC}scripts/distribution_results.R"
+    output:
+        f"{LOC}rds/{ITER}/original/{{distribution}}_{{n}}_{{method}}.rds"
+    shell:
+        "Rscript {input.script} --n {wildcards.n} --method {wildcards.method} "
+        "--loc {LOC}"
+```
+
+Two things to notice. The `f` prefix makes a Python f-string, where `{LOC}` is
+substituted immediately; wildcards, which must survive to be matched later, are
+written `{{n}}` to escape them. And `--loc {LOC}` passes the location to the R
+script too, so that it can find the package and write its results in the right
+place.
+
+If your collaborators will not maintain a config file, you can look the path up by
+username instead:
+
+```{.python filename="Snakefile"}
+import getpass
+LOC = {
+    "pbreheny": "~/res/lasso-confint/",
+    "hlogan":   "~/repos/lasso-confint/",
+}.get(getpass.getuser(), "~/res/lasso-confint/")
+```
+
+This is what `man-avg-cov` does, and it is genuinely convenient for a small group.
+It also stops working the moment someone new joins, so treat it as a default that
+the config can override rather than the only mechanism.
+
+## Results outside the repository
+
+Notice that the `.rds` files in that layout live in the *methods* repository, not
+the manuscript's. This is deliberate, and it is the main structural difference from
+the toy example.
+
+A simulation that takes two days to run is not a build artifact in the way a figure
+is. You do not want it deleted when you clean the manuscript directory, you want it
+shared between the paper and the talk and the grant renewal, and you do not want it
+in git. Keeping the cache in one place outside the manuscript --- keyed by
+parameters, so a run for `n = 400` is never confused with a run for `n = 100` ---
+gets you all three.
+
+The iteration count is part of the path for the same reason:
+
+```
+rds/1000/original/laplace_autoregressive_0_100_101_gaussian_100_pipep.rds
+    ^^^^
+```
+
+so the 20-iteration smoke test and the 1000-iteration final run coexist, and
+switching between them is a config edit rather than an act of destruction.
+
+## Chained rules
+
+Expensive intermediate steps become their own rules, rather than being folded into
+the script that needs them:
+
+```{.python filename="Snakefile"}
+rule fit_gam:
+    input:
+        script = f"{LOC}scripts/fit_gam.R",
+        rds    = f"{LOC}rds/{ITER}/original/{{distribution}}_{{n}}_{{method}}.rds"
+    output:
+        f"{LOC}rds/{ITER}/gam/{{distribution}}_{{n}}_{{method}}.rds"
+    shell:
+        "Rscript {input.script} --n {wildcards.n} --method {wildcards.method} "
+        "--loc {LOC}"
+```
+
+The smoothing step reads the simulation output and writes its own file, so
+re-tuning the smoother does not rerun the simulation. Every stage you can afford to
+separate is a stage you will not have to repeat --- and in a project where the
+first stage takes a day, that is the difference between iterating on a figure in
+minutes and iterating on it overnight.
+
+## Optional expensive pieces
+
+Some comparisons are too slow to run by default. Make them a switch:
+
+```{.yaml filename="config.yaml"}
+desparsified: false   # adds hours; needed only for the final version
+```
+
+```{.python filename="Snakefile"}
+DESPARSIFIED = config.get("desparsified", False)
+
+rule figure5:
+    input:
+        rds = expand(
+            f"{LOC}rds/{ITER}/gam/laplace_{{method}}.rds",
+            method = ["pipep", "selectiveinferenceS"] +
+                     (["desparsified"] if DESPARSIFIED else [])
+        )
+```
+
+The list of inputs is computed by Python, so a flag in the config changes which jobs
+exist at all. The figure script gets the same flag and adjusts its legend
+accordingly. Someone reproducing your results gets something in an hour by default,
+and everything if they are willing to wait.
+
+## What this buys you
+
+A `README` for a project of this shape can honestly say:
+
+> With Snakemake installed, `snakemake --cores=1` runs the simulations and builds
+> the manuscript. Start with `snakemake figure1` to confirm your setup works.
+
+Which is a strong claim, and it is checkable --- by a reviewer, by a reader, and by
+you in eighteen months when someone asks where a number came from.
+
+## Where to go next {#sec-next}
+
+Everything in this book runs locally. Three directions to read about when you
+outgrow that:
+
+**Clusters.** Snakemake can submit each job to SLURM or SGE instead of running it
+locally. This is a *profile* --- a directory containing a `config.yaml` with the
+submit command and resource defaults --- plus an executor plugin
+(`snakemake-executor-plugin-slurm`, or `-cluster-generic` for SGE). The Snakefile
+does not change; you add `--profile slurm` to the command line. Per-rule
+`resources: mem_mb=..., runtime=...` become the memory and walltime requests. Note
+that this changed substantially in Snakemake 8, so check the version of anything
+you read. The [Iowa HPC tutorial](https://iowabiostat.github.io/hpc/12.html) has a
+worked SGE example.
+
+**Containers.** A `container:` directive at the top of the Snakefile runs every job
+inside a Docker or Apptainer image, which pins your R version and every package
+along with it. This is the piece that turns "reproducible on my machine" into
+"reproducible".
+
+**Checkpoints.** Everything here assumes the DAG is known before anything runs.
+When the set of jobs depends on a result --- fit a model, then run one job per
+selected variable --- you need `checkpoint` instead of `rule`, which lets Snakemake
+re-plan mid-run.
+
+The [Snakemake documentation](https://snakemake.readthedocs.io/) covers all three,
+and the [best practices](https://snakemake.readthedocs.io/en/stable/snakefiles/best_practices.html)
+page is worth a read once the ideas here are comfortable.

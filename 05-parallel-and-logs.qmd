@@ -1,0 +1,142 @@
+# Parallelism, logs and benchmarks {#sec-parallel}
+
+```{r}
+#| include: false
+source("_common.R")
+```
+
+Simulation studies are the easiest parallel problem there is: a thousand independent
+replications, no communication between them. The reason to mention this in a
+Snakemake tutorial is that once your work is expressed as a DAG, you get the
+parallelism for free --- Snakemake already knows which jobs do not depend on each
+other.
+
+## --cores
+
+`--cores N` is a promise about the whole machine, not a setting per rule: Snakemake
+will keep up to `N` cores busy, starting whatever jobs are runnable.
+
+```bash
+snakemake --cores 4
+```
+
+With eighteen independent simulations and four cores, four run, and as each
+finishes another starts, until all eighteen are done and the figure can go. There is
+nothing to configure --- the ordering falls out of the graph.
+
+`--cores all` uses every core you have. On a laptop you are also using for other
+things, leave one or two free; on a shared server, be a good citizen and pick a
+number.
+
+::: {.callout-note}
+## Two kinds of parallel
+
+`--cores` controls how many *jobs* run at once, and that is usually the only kind
+of parallelism you need for a simulation study. It is unrelated to parallelism
+*inside* a job (`mclapply`, `future`, a multithreaded BLAS). If a rule does use
+threads internally, tell Snakemake with `threads:` so its accounting stays honest:
+
+```python
+rule sim:
+    threads: 4
+    shell: "Rscript sim.R --cores {threads} ..."
+```
+
+Then `--cores 8` runs two such jobs at a time rather than eight. Getting this wrong
+in the other direction --- eight jobs each spawning eight threads on an eight-core
+machine --- is the single most common way to make a pipeline slower by parallelizing
+it.
+:::
+
+## Logs
+
+Once eighteen jobs are interleaving their output, the terminal becomes unreadable,
+and the run you actually want to look at scrolled past an hour ago. The `log:`
+directive gives each job its own file:
+
+```{r}
+#| echo: false
+#| output: asis
+embed_file("examples/04-manuscript/Snakefile", from = "^rule sim:",
+           to = '^        "--out \\{output\\} > \\{log\\} 2>&1"',
+           filename = "Snakefile (excerpt)")
+```
+
+Two details. The log file is *declared* by `log:` but nothing writes to it
+automatically --- the redirection `> {log} 2>&1` at the end of the shell command is
+what does it (`2>&1` catches errors as well as normal output). And the log path
+carries the same wildcards as the output, so each job gets its own file rather than
+eighteen jobs overwriting one.
+
+Anything the script prints lands there:
+
+```{r}
+#| echo: false
+#| output: asis
+transcript("04-log.txt")
+```
+
+Which is worth designing for. A script that prints its parameters, its sample size
+after exclusions, and a summary of what it computed gives you a log directory that
+answers most questions without rerunning anything. @sec-analysis leans on this
+heavily.
+
+Logs also survive failure. When a job dies, Snakemake tells you which log to read,
+and the R error message is sitting in it --- as opposed to being lost in the
+scrollback of a parallel run.
+
+::: {.callout-important}
+## Snakemake will not delete a log file
+
+Outputs of a failed job are removed so that a half-written file is never mistaken
+for a real one. Logs are deliberately kept, because they are the evidence. This also
+means a log from a successful run sticks around until the job runs again.
+:::
+
+## Benchmarks
+
+`benchmark:` records how long a job took and how much memory it used:
+
+```python
+rule sim:
+    benchmark: "benchmarks/sim/n{n}_rho{rho}_{method}.tsv"
+```
+
+```{r}
+#| echo: false
+#| output: asis
+transcript("04-benchmark.txt")
+```
+
+The first column is seconds. This is how you find out that one corner of your
+parameter grid takes forty times as long as the rest, which is worth knowing before
+you scale the whole grid up by a factor of ten.
+
+The memory columns come from `/proc` and are populated on Linux; on macOS they read
+zero, as above. Timing works everywhere.
+
+## Interrupting and resuming
+
+Snakemake is designed to be stopped. `Ctrl-C` lets running jobs finish and shuts
+down cleanly; anything already built stays built, and the next run picks up where
+this one left off. That property --- being able to kill a twelve-hour simulation
+after four hours and lose only the jobs that were mid-flight --- is worth more in
+practice than the parallelism.
+
+If you kill it *hard* (`kill -9`, a closed laptop, a cluster timeout), a job may
+have been interrupted with its output file half-written. Snakemake notices and
+refuses to proceed until you say what to do:
+
+```bash
+snakemake --cores 4 --rerun-incomplete
+```
+
+which discards the suspect files and rebuilds them.
+
+## Try it
+
+1. In `examples/03-config`, run with `--cores 1`, then `--cores 4`, and compare.
+   Why is the speedup less than four?
+2. Delete one simulation's `.rds` file and run again. How many jobs run?
+3. Add a `log:` directive to the `figure` rule in `examples/03-config` and check
+   that `ggsave`'s output ends up in it.

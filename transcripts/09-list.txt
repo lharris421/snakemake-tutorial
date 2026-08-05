@@ -1,0 +1,6 @@
+$ snakemake --list
+all
+figure1
+manuscript
+sim
+table1
