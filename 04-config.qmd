@@ -57,30 +57,8 @@ embed_file("examples/03-config/Snakefile", from = "^rule sim:", to = '^        "
 ```
 
 `{ITER}` never appears in that rule: the count arrives as the wildcard
-`{wildcards.iterations}`, read back out of the filename that was asked for, just
+`{wildcards.iterations}`, read back out of the filename that was asked for by `rule figure`, just
 like `{wildcards.n}`.
-
-The reason is that 20 iterations and 1000 iterations are not a right answer and a
-wrong one. They are a quick check and a final result, and there is no reason they
-should not sit on disk at the same time. Because the count is part of the path,
-they do:
-
-```{r}
-#| echo: false
-#| output: asis
-transcript("03-coexist.txt")
-```
-
-Eighteen results at 20 iterations, eighteen at 200, and going back to the config's
-default rebuilds only the figure --- the 200-iteration simulations were still there
-and still valid. Had the count merely been handed to the script, the smoke run
-would have overwritten the real one, and switching back would have meant
-recomputing all eighteen.
-
-`ITER = config["iterations"]` is what selects which set the figure is built from,
-so the config still controls the answer; it just no longer destroys the
-alternative. @sec-scaling shows the same pattern at the scale where it matters,
-where the recomputation being avoided is measured in days.
 
 The figure rule collects the set `ITER` points at:
 
@@ -90,9 +68,6 @@ The figure rule collects the set `ITER` points at:
 embed_file("examples/03-config/Snakefile", from = "        rds = expand",
            to = "                     method = ", filename = "Snakefile (excerpt)")
 ```
-
-The grid itself stays in the Snakefile beside the rule that sweeps it, since
-another rule may well want a different one.
 
 ## wildcard_constraints
 
@@ -116,8 +91,20 @@ Two reasons to bother:
 `n{n}_rho{rho}_{method}.rds` against a name containing extra underscores, and
 Snakemake resolves it by its rules rather than yours.
 
-**Failing early.** A typo like `n50_rho0_naive.RDS` now fails immediately with "no
-rule to produce" instead of launching a job that dies twenty minutes later inside R.
+**Failing early.** Without the `\d+` on `{n}`, asking for
+`rds/200/sim/nfifty_rho0_naive.rds` matches quite happily ---
+
+```{.default}
+wildcards: iterations=200, n=fifty, rho=0, method=naive
+```
+
+--- and Snakemake goes off and runs `sim.R --n fifty`, which dies inside R however
+long the job takes to get that far. With the constraint, nothing can produce that
+file and you are told so before anything starts.
+
+A misspelled *extension* is a different matter: `n50_rho0_naive.RDS` fails whether
+or not you have constraints, because the pattern ends in a literal `.rds` and
+`.RDS` is not that. Constraints police the wildcards, not the text around them.
 
 ## Overriding from the command line
 
