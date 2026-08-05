@@ -113,15 +113,16 @@ build/
 
 Everything ignored is regenerable, and the claim that it is regenerable is now
 enforced by a program rather than by your recollection. Commit the code, the
-`.tex` files, and `config.yaml`.
+`.tex` files, and `config.yaml` --- and note that the compiled PDF is on the
+ignored side of that line too. It is an output like any other.
 
-There is one honest exception. If a simulation takes three days, colleagues who
-clone the repository cannot rebuild it over coffee, and it is reasonable to ship
-them `rds/` --- or, better, to keep it somewhere outside the repository that the
-Snakefile knows how to find. This is the payoff for keeping it separate from
-`out/`: you can hand over the expensive half on its own, and every figure and
-table rebuilds from it in seconds. @sec-scaling covers how the real project
-handles that.
+The awkward case is a simulation that takes three days, which colleagues who clone
+the repository cannot rebuild over coffee. The answer is still not to commit it.
+Send them `rds/`, or keep it somewhere outside the repository that the Snakefile
+knows how to find; either way it travels beside the repository rather than inside
+it. This is the payoff for keeping `rds/` separate from `out/` --- you hand over
+the expensive half on its own, and every figure, table and PDF rebuilds from it in
+seconds. @sec-scaling covers the mechanics.
 
 ## Try it
 

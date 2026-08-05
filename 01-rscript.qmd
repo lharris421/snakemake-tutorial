@@ -165,11 +165,13 @@ A file called `results2_final.rds` tells you nothing, and in six months neither
 will you.
 
 **Results are regenerable, so they don't go in git.** Commit the code and the
-inputs; let the outputs be rebuilt.
+inputs; let the outputs be rebuilt. This applies to figures and tables as firmly
+as it applies to a 200 MB `.rds` file --- a committed figure is a second copy of a
+result, free to drift away from the code that made it.
 
 **Computed results and finished products live in separate directories.** Every
 example in this book writes serialized results --- the expensive part --- to
-`rds/`, and figures and tables to `out/`. Nothing is written anywhere else. Two
-directories to ignore in git, and a clean line between the things that took an
-afternoon to compute and the things that can be redrawn in a second. @sec-shape
-says more about the layout once you have seen a Snakefile.
+`rds/`, and figures and tables to `out/`. Nothing is written anywhere else, and
+neither directory is tracked by git. It draws a clean line between the things that
+took an afternoon to compute and the things that can be redrawn in a second.
+@sec-shape says more about the layout once you have seen a Snakefile.

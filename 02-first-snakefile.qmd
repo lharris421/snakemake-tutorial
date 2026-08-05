@@ -258,7 +258,30 @@ Once they are separate directories you can treat them differently, and
 
 The corollary is that anything *not* in `rds/` or `out/` is either code, settings,
 or something a human wrote. That is a useful thing to be able to say about a
-directory.
+directory --- and it is what makes the next rule easy to apply.
+
+**Neither `rds/` nor `out/` is tracked by git.** Both are outputs. Git holds the
+things a person wrote --- the scripts, the Snakefile, the config, the `.tex` files
+--- and nothing that a program produced:
+
+```{.default filename=".gitignore"}
+rds/
+out/
+.snakemake/
+```
+
+`rds/` is the easy case; nobody wants four hundred megabytes of serialized objects
+in a repository. `out/` is the one people talk themselves out of, because figures
+are small and it is genuinely convenient to look at a PDF on GitHub. Do it anyway.
+A committed figure is a second copy of a result, and the moment it exists it can
+disagree with the code that made it --- which is the exact failure this book is
+about. If you want to see the figures, run `snakemake`; it takes seconds, and what
+you get is guaranteed to match the repository you are looking at.
+
+The one thing this costs you is that a fresh clone cannot show anybody a result
+until it has been rebuilt. When the rebuild takes days rather than seconds that is
+a real cost, and @sec-scaling deals with it --- by sharing `rds/` outside of git,
+not by committing it.
 
 ## Try it
 

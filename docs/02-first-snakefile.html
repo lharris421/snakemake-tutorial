@@ -801,7 +801,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong><code>rds/</code> holds what the pipeline computes.</strong> Simulation output, fitted models, cleaned data — the objects that took time to produce and that everything else is derived from. They are serialized R objects, hence the name; use whatever name you like, but use one directory.</p>
 <p><strong><code>out/</code> holds what a human looks at.</strong> Figures and tables: the things that end up in the manuscript or the report.</p>
 <p>The reason to split these rather than pile everything into one <code>results/</code> folder is that the two halves behave completely differently. <code>rds/</code> is expensive, is reused across a paper and a talk and a grant renewal, and may take days to regenerate — it is the thing worth backing up and worth sending to a coauthor. <code>out/</code> is cheap: delete it and <code>snakemake</code> puts it back in seconds, from the contents of <code>rds/</code>. Once they are separate directories you can treat them differently, and <a href="10-scaling-up.html" class="quarto-xref"><span>Chapter 10</span></a> does exactly that.</p>
-<p>The corollary is that anything <em>not</em> in <code>rds/</code> or <code>out/</code> is either code, settings, or something a human wrote. That is a useful thing to be able to say about a directory.</p>
+<p>The corollary is that anything <em>not</em> in <code>rds/</code> or <code>out/</code> is either code, settings, or something a human wrote. That is a useful thing to be able to say about a directory — and it is what makes the next rule easy to apply.</p>
+<p><strong>Neither <code>rds/</code> nor <code>out/</code> is tracked by git.</strong> Both are outputs. Git holds the things a person wrote — the scripts, the Snakefile, the config, the <code>.tex</code> files — and nothing that a program produced:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>.gitignore</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12" data-filename=".gitignore"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>rds/</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>out/</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>.snakemake/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><code>rds/</code> is the easy case; nobody wants four hundred megabytes of serialized objects in a repository. <code>out/</code> is the one people talk themselves out of, because figures are small and it is genuinely convenient to look at a PDF on GitHub. Do it anyway. A committed figure is a second copy of a result, and the moment it exists it can disagree with the code that made it — which is the exact failure this book is about. If you want to see the figures, run <code>snakemake</code>; it takes seconds, and what you get is guaranteed to match the repository you are looking at.</p>
+<p>The one thing this costs you is that a fresh clone cannot show anybody a result until it has been rebuilt. When the rebuild takes days rather than seconds that is a real cost, and <a href="10-scaling-up.html" class="quarto-xref"><span>Chapter 10</span></a> deals with it — by sharing <code>rds/</code> outside of git, not by committing it.</p>
 </section>
 <section id="try-it" class="level2" data-number="2.9">
 <h2 data-number="2.9" class="anchored" data-anchor-id="try-it"><span class="header-section-number">2.9</span> Try it</h2>
