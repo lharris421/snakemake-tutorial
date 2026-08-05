@@ -83,6 +83,36 @@ buried in a `ggplot` call. In a project with more than a couple of figures it is
 worth going further and putting these in a file the scripts share; here, where each
 script is short enough to read at a glance, keeping them self-contained is simpler.
 
+::: {.callout-note}
+## Shared code belongs in a file of its own
+
+That goes double for functions. `sim.R` defines `gen_data()` and
+`select_forward()` inline because nothing else in this project needs them, and the
+script stays readable top to bottom. The moment a second script wants one of them
+--- a supplementary simulation, a figure that regenerates a single dataset to
+illustrate the method --- copying it across is how two versions of your estimator
+begin to disagree.
+
+At that point give them a file, say `code/functions.R`, and `source()` it. There is
+one Snakemake-specific thing to remember when you do: list it as an input on every
+rule whose script sources it.
+
+```python
+rule sim:
+    input:
+        script = "code/sim.R",
+        functions = "code/functions.R"
+```
+
+Without that line the dependency is invisible, and editing a function leaves every
+result that used it silently stale --- the one failure mode Snakemake cannot warn
+you about (@sec-debugging).
+
+When the functions are the contribution rather than the scaffolding, the natural
+home is an R package rather than a loose file, which is where @sec-scaling picks
+the story up.
+:::
+
 ## Tables
 
 Tables are the same idea with a different output format: the script writes a LaTeX

@@ -544,6 +544,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"naive"</span> <span class="ot">=</span> <span class="st">"#d95f02"</span>, <span class="st">"split"</span> <span class="ot">=</span> <span class="st">"#1b9e77"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>so that the spelling and the color are decided in one visible place rather than buried in a <code>ggplot</code> call. In a project with more than a couple of figures it is worth going further and putting these in a file the scripts share; here, where each script is short enough to read at a glance, keeping them self-contained is simpler.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Shared code belongs in a file of its own
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>That goes double for functions. <code>sim.R</code> defines <code>gen_data()</code> and <code>select_forward()</code> inline because nothing else in this project needs them, and the script stays readable top to bottom. The moment a second script wants one of them — a supplementary simulation, a figure that regenerates a single dataset to illustrate the method — copying it across is how two versions of your estimator begin to disagree.</p>
+<p>At that point give them a file, say <code>code/functions.R</code>, and <code>source()</code> it. There is one Snakemake-specific thing to remember when you do: list it as an input on every rule whose script sources it.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>rule sim:</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span>:</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        script <span class="op">=</span> <span class="st">"code/sim.R"</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        functions <span class="op">=</span> <span class="st">"code/functions.R"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Without that line the dependency is invisible, and editing a function leaves every result that used it silently stale — the one failure mode Snakemake cannot warn you about (<a href="09-debugging.html" class="quarto-xref"><span>Chapter 9</span></a>).</p>
+<p>When the functions are the contribution rather than the scaffolding, the natural home is an R package rather than a loose file, which is where <a href="10-scaling-up.html" class="quarto-xref"><span>Chapter 10</span></a> picks the story up.</p>
+</div>
+</div>
 </section>
 <section id="tables" class="level2" data-number="6.3">
 <h2 data-number="6.3" class="anchored" data-anchor-id="tables"><span class="header-section-number">6.3</span> Tables</h2>
@@ -552,40 +572,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-with-filename-file">
 <pre><strong>code/table.R (excerpt)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" data-filename="code/table.R (excerpt)"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">## escape = FALSE so that "$n$" reaches LaTeX as math rather than as literal</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="do">## dollar signs; the price is that anything else in the table must be valid LaTeX</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">kbl</span>(wide, <span class="at">format =</span> <span class="st">"latex"</span>, <span class="at">booktabs =</span> <span class="cn">TRUE</span>, <span class="at">digits =</span> <span class="dv">3</span>, <span class="at">linesep =</span> <span class="st">""</span>,</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">escape =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"$n$"</span>, <span class="fu">rep</span>(<span class="fu">unname</span>(method_labels), <span class="dv">2</span>)),</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">align =</span> <span class="fu">c</span>(<span class="st">"r"</span>, <span class="fu">rep</span>(<span class="st">"c"</span>, <span class="fu">ncol</span>(wide) <span class="sc">-</span> <span class="dv">1</span>)),</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">caption =</span> <span class="fu">sprintf</span>(<span class="fu">paste</span>(<span class="st">"Coverage of nominal %g</span><span class="sc">\\</span><span class="st">%% confidence"</span>,</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>             <span class="st">"intervals for coefficients selected by forward selection, by"</span>,</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>             <span class="st">"whether the selected coefficient is truly zero."</span>),</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>             <span class="dv">100</span> <span class="sc">*</span> opt<span class="sc">$</span>level),</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>           <span class="at">label =</span> <span class="st">"coverage"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_header_above</span>(<span class="fu">c</span>(<span class="st">" "</span> <span class="ot">=</span> <span class="dv">1</span>, <span class="st">"Non-null"</span> <span class="ot">=</span> <span class="dv">2</span>, <span class="st">"Null"</span> <span class="ot">=</span> <span class="dv">2</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" data-filename="code/table.R (excerpt)"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## escape = FALSE so that "$n$" reaches LaTeX as math rather than as literal</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="do">## dollar signs; the price is that anything else in the table must be valid LaTeX</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">kbl</span>(wide, <span class="at">format =</span> <span class="st">"latex"</span>, <span class="at">booktabs =</span> <span class="cn">TRUE</span>, <span class="at">digits =</span> <span class="dv">3</span>, <span class="at">linesep =</span> <span class="st">""</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">escape =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"$n$"</span>, <span class="fu">rep</span>(<span class="fu">unname</span>(method_labels), <span class="dv">2</span>)),</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">align =</span> <span class="fu">c</span>(<span class="st">"r"</span>, <span class="fu">rep</span>(<span class="st">"c"</span>, <span class="fu">ncol</span>(wide) <span class="sc">-</span> <span class="dv">1</span>)),</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">caption =</span> <span class="fu">sprintf</span>(<span class="fu">paste</span>(<span class="st">"Coverage of nominal %g</span><span class="sc">\\</span><span class="st">%% confidence"</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>             <span class="st">"intervals for coefficients selected by forward selection, by"</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>             <span class="st">"whether the selected coefficient is truly zero."</span>),</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>             <span class="dv">100</span> <span class="sc">*</span> opt<span class="sc">$</span>level),</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>           <span class="at">label =</span> <span class="st">"coverage"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_header_above</span>(<span class="fu">c</span>(<span class="st">" "</span> <span class="ot">=</span> <span class="dv">1</span>, <span class="st">"Non-null"</span> <span class="ot">=</span> <span class="dv">2</span>, <span class="st">"Null"</span> <span class="ot">=</span> <span class="dv">2</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>which produces:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>out/table1.tex</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" data-filename="out/table1.tex"><pre class="sourceCode latex code-with-copy"><code class="sourceCode latex"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">\begin</span>{<span class="ex">table</span>}</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">\caption</span>{<span class="kw">\label</span>{<span class="ex">tab:coverage</span>}Coverage of nominal 95<span class="fu">\%</span> confidence intervals for coefficients selected by forward selection, by whether the selected coefficient is truly zero.}</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">\centering</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="kw">\begin</span>{<span class="ex">tabular</span>}[t]{rcccc}</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">\toprule</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">\multicolumn</span>{1}{c}{ } <span class="op">&amp;</span> <span class="fu">\multicolumn</span>{2}{c}{Non-null} <span class="op">&amp;</span> <span class="fu">\multicolumn</span>{2}{c}{Null} <span class="fu">\\</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="fu">\cmidrule</span>(l{3pt}r{3pt}){2-3} <span class="fu">\cmidrule</span>(l{3pt}r{3pt}){4-5}</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="ss">$n$</span> <span class="op">&amp;</span> Naive <span class="op">&amp;</span> Sample splitting <span class="op">&amp;</span> Naive <span class="op">&amp;</span> Sample splitting<span class="fu">\\</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="fu">\midrule</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>50 <span class="op">&amp;</span> 0.917 <span class="op">&amp;</span> 0.941 <span class="op">&amp;</span> 0.598 <span class="op">&amp;</span> 0.952<span class="fu">\\</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>100 <span class="op">&amp;</span> 0.944 <span class="op">&amp;</span> 0.957 <span class="op">&amp;</span> 0.619 <span class="op">&amp;</span> 0.928<span class="fu">\\</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>400 <span class="op">&amp;</span> 0.939 <span class="op">&amp;</span> 0.943 <span class="op">&amp;</span> 0.564 <span class="op">&amp;</span> 0.944<span class="fu">\\</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="fu">\bottomrule</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">tabular</span>}</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">table</span>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" data-filename="out/table1.tex"><pre class="sourceCode latex code-with-copy"><code class="sourceCode latex"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">\begin</span>{<span class="ex">table</span>}</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">\caption</span>{<span class="kw">\label</span>{<span class="ex">tab:coverage</span>}Coverage of nominal 95<span class="fu">\%</span> confidence intervals for coefficients selected by forward selection, by whether the selected coefficient is truly zero.}</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">\centering</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="kw">\begin</span>{<span class="ex">tabular</span>}[t]{rcccc}</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">\toprule</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">\multicolumn</span>{1}{c}{ } <span class="op">&amp;</span> <span class="fu">\multicolumn</span>{2}{c}{Non-null} <span class="op">&amp;</span> <span class="fu">\multicolumn</span>{2}{c}{Null} <span class="fu">\\</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">\cmidrule</span>(l{3pt}r{3pt}){2-3} <span class="fu">\cmidrule</span>(l{3pt}r{3pt}){4-5}</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="ss">$n$</span> <span class="op">&amp;</span> Naive <span class="op">&amp;</span> Sample splitting <span class="op">&amp;</span> Naive <span class="op">&amp;</span> Sample splitting<span class="fu">\\</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="fu">\midrule</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>50 <span class="op">&amp;</span> 0.917 <span class="op">&amp;</span> 0.941 <span class="op">&amp;</span> 0.598 <span class="op">&amp;</span> 0.952<span class="fu">\\</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>100 <span class="op">&amp;</span> 0.944 <span class="op">&amp;</span> 0.957 <span class="op">&amp;</span> 0.619 <span class="op">&amp;</span> 0.928<span class="fu">\\</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>400 <span class="op">&amp;</span> 0.939 <span class="op">&amp;</span> 0.943 <span class="op">&amp;</span> 0.564 <span class="op">&amp;</span> 0.944<span class="fu">\\</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="fu">\bottomrule</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">tabular</span>}</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">table</span>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Points worth noting:</p>
 <ul>
@@ -602,18 +622,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-with-filename-file">
 <pre><strong>Snakefile (excerpt)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" data-filename="Snakefile (excerpt)"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>rule <span class="bu">all</span>:</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span>:</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>        <span class="co">"build/paper.pdf"</span>,</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>        <span class="co">"build/submission.pdf"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Here it names only the two PDFs, because everything else is reachable through them. In a larger project — the one in <a href="10-scaling-up.html" class="quarto-xref"><span>Chapter 10</span></a> has seventeen figures and tables — it is common to list every product explicitly instead:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>rule <span class="bu">all</span>:</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" data-filename="Snakefile (excerpt)"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>rule <span class="bu">all</span>:</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span>:</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>        <span class="co">"build/paper.pdf"</span>,</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>        <span class="co">"out/figure1.pdf"</span>,</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>        <span class="co">"out/figure2.pdf"</span>,</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>        ...</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>        <span class="co">"build/submission.pdf"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Here it names only the two PDFs, because everything else is reachable through them. In a larger project — the one in <a href="10-scaling-up.html" class="quarto-xref"><span>Chapter 10</span></a> has seventeen figures and tables — it is common to list every product explicitly instead:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>rule <span class="bu">all</span>:</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span>:</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>        <span class="co">"build/paper.pdf"</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>        <span class="co">"out/figure1.pdf"</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>        <span class="co">"out/figure2.pdf"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>        ...</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This is slightly redundant, and it is what you want anyway. It gives you one place to read off what the project produces, and it means <code>snakemake</code> still builds a figure you have temporarily commented out of the manuscript while you rearrange the results section.</p>
 </section>
 <section id="try-it" class="level2" data-number="6.5">
