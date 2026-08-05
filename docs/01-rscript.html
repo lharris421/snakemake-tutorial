@@ -471,7 +471,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="interactive-work-is-not-reproducible" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="interactive-work-is-not-reproducible"><span class="header-section-number">1.1</span> Interactive work is not reproducible</h2>
 <p>It is worth being blunt about this once, because everything else in the book follows from it.</p>
-<p>Whatever is in your R session right now is the product of a history nobody has, including you. Objects created by code you have since edited or deleted. A package loaded by hand in March. A working directory you changed at some point. A seed set before an experiment you abandoned. The console records what you <em>typed</em>, not what you <em>ran</em>, and certainly not in what order — and if you saved the workspace on exit, all of that invisible state came back with you the next morning.</p>
+<p>Whatever is in your R session right now is the product of a history nobody has, including you. Objects created by code you have since edited or deleted. A package loaded by hand in March. A seed set before an experiment you abandoned. And if you saved the workspace on exit, all of that invisible state came back with you the next morning.</p>
 <p>The practical consequence is that “it works” is not a claim you can check. A number in your session may or may not be what the current version of your code produces. There is no way to find out except to start a clean session and run the code from the top — which is exactly what running a script does.</p>
 <p>None of this is an argument against working interactively. Interactive is how you figure out what the code should be; it is the right tool for exploring a dataset, staring at a model, and getting a plot to look right. The rule is narrower than that: <strong>nothing may exist only in your session.</strong> Once a piece of analysis is real, it belongs in a file that runs top to bottom, in a fresh session, and writes its output somewhere you named.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -568,7 +568,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="1.6" class="anchored" data-anchor-id="where-the-results-go"><span class="header-section-number">1.6</span> Where the results go</h2>
 <p>Two decisions that will save you pain later:</p>
 <p><strong>Results are files, and files are named for what produced them.</strong> A file called <code>n400_rho80_split.rds</code> tells you the sample size, the correlation, and the method. A file called <code>results2_final.rds</code> tells you nothing, and in six months neither will you.</p>
-<p><strong>Results are regenerable, so they don’t go in git.</strong> Commit the code and the inputs; let the outputs be rebuilt — which is a claim you can only make honestly once the pipeline is complete.</p>
+<p><strong>Results are regenerable, so they don’t go in git.</strong> Commit the code and the inputs; let the outputs be rebuilt.</p>
 <p><strong>Everything a project computes goes in one directory.</strong> Every example in this book has a <code>results/</code> folder at its root, and nothing is written anywhere else. One directory to ignore in git, one to delete when you want to prove the pipeline still works, one to hand to a collaborator. <a href="02-first-snakefile.html#sec-shape" class="quarto-xref"><span>Section 2.8</span></a> says more about the layout once you have seen a Snakefile.</p>
 
 

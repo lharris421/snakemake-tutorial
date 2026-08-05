@@ -520,7 +520,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong><code>{output}</code> and <code>{input}</code> are substituted into the shell command.</strong> You write the filename once, in the <code>output:</code> block, and refer to it after that. This is not just brevity — it makes it impossible for the rule to declare one file and write a different one.</li>
 <li><strong>Inputs can be named</strong>, as in <code>rule figure</code>, where <code>input.script</code> and <code>input.rds</code> are referred to separately in the command. Without names, <code>{input}</code> expands to all of them, space-separated, in order.</li>
 <li><strong>Indentation matters</strong>, as in Python. Use four spaces and stay consistent.</li>
-<li><strong><code>sim.R</code> is listed as an input</strong>, even though it is code rather than data. This is the whole game: it is what makes “the script changed” a reason to rerun.</li>
+<li><strong><code>sim.R</code> is listed as an input</strong>, even though it is code rather than data. This is important. It is what makes “the script changed” a reason to rerun.</li>
 </ul>
 </section>
 <section id="rule-all" class="level2" data-number="2.2">
@@ -529,7 +529,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <blockquote class="blockquote">
 <p>Snakemake builds the first rule in the file, and whatever that rule needs.</p>
 </blockquote>
-<p>So <code>rule all</code> is where you list the things you actually want to exist at the end. Everything else gets built because something in that list, directly or indirectly, depends on it. A file that is not reachable from <code>rule all</code> will not be built, no matter how many rules could make it. By convention <code>rule all</code> goes first and is named <code>all</code>, but neither is required; only being first matters.</p>
+<p>So <code>rule all</code> is where you list the things you actually want to exist at the end. Everything else gets built because something in that list, directly or indirectly, depends on it. A file that is not reachable from <code>rule all</code> will not be built, no matter how many rules could make it. By convention this is named <code>rule all</code>, but what matters is that it is first.</p>
 </section>
 <section id="the-dependency-graph" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="the-dependency-graph"><span class="header-section-number">2.3</span> The dependency graph</h2>
@@ -552,7 +552,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>This is a directed acyclic graph, and Snakemake calls it the DAG. Two consequences worth internalizing early: anything with no path between the nodes can run at the same time (<a href="05-parallel-and-logs.html" class="quarto-xref"><span>Chapter 5</span></a>), and a cycle is an error rather than an infinite loop.</p>
+<p>This is a directed acyclic graph (DAG). Two consequences worth internalizing early: anything with no path between the nodes can run at the same time (<a href="05-parallel-and-logs.html" class="quarto-xref"><span>Chapter 5</span></a>), and a cycle is an error rather than an infinite loop (it won’t run).</p>
 </section>
 <section id="running-it" class="level2" data-number="2.4">
 <h2 data-number="2.4" class="anchored" data-anchor-id="running-it"><span class="header-section-number">2.4</span> Running it</h2>
@@ -721,7 +721,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="what-counts-as-out-of-date" class="level2" data-number="2.6">
 <h2 data-number="2.6" class="anchored" data-anchor-id="what-counts-as-out-of-date"><span class="header-section-number">2.6</span> What counts as out of date</h2>
 <p>Here is where Snakemake differs from <code>make</code>, and from most people’s expectations.</p>
-<p><code>make</code> compares timestamps: if an input is newer than an output, rebuild. Snakemake records a SHA-256 checksum of every input alongside each output it creates, in a directory called <code>.snakemake/</code>. When you ask for a file, it compares the current inputs against the recorded ones. So:</p>
+<p><code>make</code> asks one question: is the input newer than the output? If so, rebuild.</p>
+<p>Snakemake asks two, and needs both answers to be yes. It keeps a record of every output it has ever made — in a directory called <code>.snakemake/</code> — including a SHA-256 checksum of each input that went into it. A job is out of date when</p>
+<ol type="1">
+<li>an input’s timestamp is newer than the output’s, <strong>and</strong></li>
+<li>that input’s contents differ from what was recorded.</li>
+</ol>
+<p>The timestamp is the gate and the checksum is the confirmation. So:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> touch code/sim.R <span class="kw">&amp;&amp;</span> <span class="ex">snakemake</span> <span class="at">-n</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Nothing</span> to be done <span class="er">(</span><span class="ex">all</span> requested files are present and up to date<span class="kw">)</span><span class="bu">.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Touching a file does not trigger a rebuild, because the contents did not change. Change one character of <code>sim.R</code>, though, and everything downstream of it goes:</p>
@@ -737,6 +743,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="ex">total</span>            23</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>(That transcript comes from the larger example of <a href="07-manuscript.html" class="quarto-xref"><span>Chapter 7</span></a>, which is why there are 23 jobs rather than 4.)</p>
 <p>Content is not the only trigger. Snakemake also stores the shell command and the parameters used for each output, so editing a rule’s command — not just the script it calls — makes the affected outputs stale too. <a href="09-debugging.html" class="quarto-xref"><span>Chapter 9</span></a> covers how to inspect and override all of this.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>The timestamp really is a gate
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Because the check is an <em>and</em>, a changed file whose timestamp is not newer than the output is invisible: Snakemake never gets as far as comparing the checksum. You will not produce that situation by editing a file — editing sets the timestamp to now — but you can arrive at it by other routes, because several common tools preserve timestamps deliberately:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> <span class="at">-p</span> old/sim.R code/sim.R      <span class="co"># -p preserves the original mtime</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rsync</span> <span class="at">-a</span> backup/ .              <span class="co"># -a implies -t</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tar</span> xf archive.tar              <span class="co"># restores the archived mtimes</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Restore a script from a backup or an archive that way and the pipeline can sit there insisting everything is up to date. If you have moved files around by any means other than editing them, <code>touch</code> the ones you restored, or force the issue with <code>snakemake -R</code> (<a href="09-debugging.html" class="quarto-xref"><span>Chapter 9</span></a>).</p>
+</div>
+</div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -754,7 +777,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="building-one-thing" class="level2" data-number="2.7">
 <h2 data-number="2.7" class="anchored" data-anchor-id="building-one-thing"><span class="header-section-number">2.7</span> Building one thing</h2>
 <p>You can also name a target directly, which is invaluable when you are developing and want to check one piece:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">--cores</span> 1 results/sim-naive.rds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">--cores</span> 1 results/sim-naive.rds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Snakemake finds the rule that can produce that file, builds whatever it needs, and stops. You can also name a <em>rule</em> — <code>snakemake --cores 1 figure</code> — which asks for that rule’s outputs.</p>
 </section>
 <section id="sec-shape" class="level2" data-number="2.8">
@@ -766,11 +789,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-with-filename-file">
 <pre><strong>the shape of a project</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10" data-filename="the shape of a project"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>my-project/</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  Snakefile          &lt;- the map: every rule, in one file, at the root</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  config.yaml        &lt;- the settings (chapter 4)</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  code/              &lt;- the scripts the rules call</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  results/           &lt;- everything the pipeline computes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11" data-filename="the shape of a project"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>my-project/</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  Snakefile          &lt;- the map: every rule, in one file, at the root</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  config.yaml        &lt;- the settings (chapter 4)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  code/              &lt;- the scripts the rules call</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  results/           &lt;- everything the pipeline computes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Two of those deserve to be stated as rules rather than suggestions.</p>
 <p><strong>One Snakefile, at the root.</strong> Not one per subdirectory. The Snakefile is the only place that describes how the pieces of the project fit together, so a newcomer — a coauthor, a reviewer, you in a year — has exactly one file to open to find out what this project builds and what it builds it from. Snakemake does let you split rules across files with <code>include:</code>, and that is worth reaching for once a single file becomes genuinely unwieldy, but the default should be one file you can read top to bottom.</p>

@@ -563,9 +563,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The mirror image: files are current but Snakemake wants to rebuild them, usually because they were copied from somewhere or restored from a backup.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">--touch</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>--touch</code> marks every output as up to date without running anything. Use it when you know the files are fine, and note that you are making an assertion Snakemake cannot check.</p>
-<p>For the specific case of “I only want to rebuild when files change, not when timestamps do”, <code>--rerun-triggers</code> controls which signals count:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">--rerun-triggers</span> mtime      <span class="co"># only timestamps</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">--rerun-triggers</span> input params code    <span class="co"># the usual set</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>--rerun-triggers</code> narrows what Snakemake is allowed to notice. All five signals are on by default:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">--rerun-triggers</span> code input mtime params software-env   <span class="co"># the default</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">--rerun-triggers</span> input                                  <span class="co"># only file contents</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>which is occasionally useful — dropping <code>params</code>, say, when you are sweeping a setting that does not really affect the output and do not want the whole grid rebuilding each time.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span><code>--rerun-triggers mtime</code> is not <code>make</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Snakemake’s own help text offers <code>--rerun-triggers mtime</code> as “the traditional way of just considering file modification dates”. It does not behave that way: on 9.13, <code>touch</code>ing an input under <code>--rerun-triggers mtime</code> still does not cause a rerun, because the checksum comparison described in <a href="02-first-snakefile.html" class="quarto-xref"><span>Chapter 2</span></a> applies regardless. If you want a rebuild, ask for one with <code>-R</code> rather than trying to manufacture one through timestamps.</p>
+</div>
+</div>
 </section>
 <section id="the-errors-you-will-see" class="level2" data-number="9.5">
 <h2 data-number="9.5" class="anchored" data-anchor-id="the-errors-you-will-see"><span class="header-section-number">9.5</span> The errors you will see</h2>

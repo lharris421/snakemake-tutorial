@@ -108,3 +108,4 @@ Biostatistics HPC tutorial](https://iowabiostat.github.io/hpc/) by Patrick Brehe
 and Grant Brown, whose final chapter on Snakemake is the seed this grew from. The
 manuscript structure in @sec-manuscript follows the conventions in Patrick
 Breheny's [manuscript template](https://github.com/pbreheny/manuscript-template).
+

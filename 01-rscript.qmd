@@ -21,9 +21,8 @@ follows from it.
 
 Whatever is in your R session right now is the product of a history nobody has,
 including you. Objects created by code you have since edited or deleted. A package
-loaded by hand in March. A working directory you changed at some point. A seed set
-before an experiment you abandoned. The console records what you *typed*, not what
-you *ran*, and certainly not in what order --- and if you saved the workspace on
+loaded by hand in March. A seed set
+before an experiment you abandoned. And if you saved the workspace on
 exit, all of that invisible state came back with you the next morning.
 
 The practical consequence is that "it works" is not a claim you can check. A number
@@ -166,8 +165,7 @@ A file called `results2_final.rds` tells you nothing, and in six months neither
 will you.
 
 **Results are regenerable, so they don't go in git.** Commit the code and the
-inputs; let the outputs be rebuilt --- which is a claim you can only make honestly
-once the pipeline is complete.
+inputs; let the outputs be rebuilt.
 
 **Everything a project computes goes in one directory.** Every example in this
 book has a `results/` folder at its root, and nothing is written anywhere else.

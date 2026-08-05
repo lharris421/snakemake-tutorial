@@ -95,13 +95,28 @@ snakemake --touch
 know the files are fine, and note that you are making an assertion Snakemake cannot
 check.
 
-For the specific case of "I only want to rebuild when files change, not when
-timestamps do", `--rerun-triggers` controls which signals count:
+`--rerun-triggers` narrows what Snakemake is allowed to notice. All five signals
+are on by default:
 
 ```bash
-snakemake --rerun-triggers mtime      # only timestamps
-snakemake --rerun-triggers input params code    # the usual set
+snakemake --rerun-triggers code input mtime params software-env   # the default
+snakemake --rerun-triggers input                                  # only file contents
 ```
+
+which is occasionally useful --- dropping `params`, say, when you are sweeping a
+setting that does not really affect the output and do not want the whole grid
+rebuilding each time.
+
+::: {.callout-note}
+## `--rerun-triggers mtime` is not `make`
+
+Snakemake's own help text offers `--rerun-triggers mtime` as "the traditional way
+of just considering file modification dates". It does not behave that way: on
+9.13, `touch`ing an input under `--rerun-triggers mtime` still does not cause a
+rerun, because the checksum comparison described in @sec-first-snakefile applies
+regardless. If you want a rebuild, ask for one with `-R` rather than trying to
+manufacture one through timestamps.
+:::
 
 ## The errors you will see
 

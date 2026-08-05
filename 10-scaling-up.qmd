@@ -179,9 +179,11 @@ Twenty-three jobs, eighteen of them the simulations that just arrived. On a real
 project that is the two days of compute the sharing was supposed to avoid.
 
 `--touch` is the escape hatch: it marks outputs as up to date without running
-anything. Reaching for it on its own, though, is a coin flip. With no metadata to
-consult, Snakemake falls back to comparing timestamps, and `--touch` only acts on
-jobs it would otherwise have run. So if the incoming `.rds` files happen to be
+anything. Reaching for it on its own, though, is a coin flip. Of the two conditions
+in @sec-first-snakefile only the first survives here --- there are no recorded
+checksums to compare against, so the timestamp gate is all that is left --- and
+`--touch` acts only on jobs it would otherwise have run. So if the incoming `.rds`
+files happen to be
 newer than the scripts, nothing looks out of date, nothing gets touched, and you
 are left with no provenance at all --- which Snakemake mentions, quietly, at the
 end of the next dry run:
