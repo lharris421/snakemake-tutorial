@@ -616,7 +616,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <blockquote class="blockquote">
 <p>The files below seem to be incomplete.</p>
 </blockquote>
-<p>A previous run was killed hard. <code>snakemake --rerun-incomplete</code> discards the suspect files and rebuilds them.</p>
+<p>A previous run was stopped while a job was part-way through writing its output — by <code>Ctrl-C</code> as readily as by a hard kill, since <code>Ctrl-C</code> terminates running jobs rather than waiting for them (<a href="05-parallel-and-logs.html" class="quarto-xref"><span>Chapter 5</span></a>). <code>snakemake --rerun-incomplete</code> discards the suspect files and rebuilds them.</p>
 </section>
 <section id="directory-cannot-be-locked" class="level3" data-number="9.5.4">
 <h3 data-number="9.5.4" class="anchored" data-anchor-id="directory-cannot-be-locked"><span class="header-section-number">9.5.4</span> Directory cannot be locked</h3>

@@ -161,8 +161,10 @@ anything runs.
 
 > The files below seem to be incomplete.
 
-A previous run was killed hard. `snakemake --rerun-incomplete` discards the suspect
-files and rebuilds them.
+A previous run was stopped while a job was part-way through writing its output ---
+by `Ctrl-C` as readily as by a hard kill, since `Ctrl-C` terminates running jobs
+rather than waiting for them (@sec-parallel). `snakemake --rerun-incomplete`
+discards the suspect files and rebuilds them.
 
 ### Directory cannot be locked
 

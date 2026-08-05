@@ -106,21 +106,39 @@ you scale the whole grid up by a factor of ten.
 
 ## Interrupting and resuming
 
-Snakemake is designed to be stopped. `Ctrl-C` lets running jobs finish and shuts
-down cleanly; anything already built stays built, and the next run picks up where
-this one left off. That property --- being able to kill a twelve-hour simulation
-after four hours and lose only the jobs that were mid-flight --- is worth more in
-practice than the parallelism.
+Snakemake is designed to be stopped. `Ctrl-C` does not wait politely for the
+running jobs --- it kills them:
 
-If you kill it *hard* (`kill -9`, a closed laptop, a cluster timeout), a job may
-have been interrupted with its output file half-written. Snakemake notices and
-refuses to proceed until you say what to do:
+```{.default}
+Terminating processes on user request, this might take some time.
+```
+
+What survives is everything that had already *finished*. Those outputs stay on
+disk, and the next run does not rebuild them; it starts from wherever the
+interruption left the pipeline. So the cost of stopping a twelve-hour run after
+four hours is only the handful of jobs that were in flight at that moment --- not
+the four hours. That property is worth more in practice than the parallelism.
+
+The jobs that were in flight need one more thought, because a killed job may have
+got as far as writing part of its output. Snakemake tracks that, and rather than
+letting a truncated file pass for a real result it stops the next run:
+
+```{.default}
+IncompleteFilesException:
+The files below seem to be incomplete. …
+Incomplete files:
+rds/200/sim/n400_rho80_split.rds
+```
+
+The fix is to say so explicitly:
 
 ```bash
 snakemake --cores 4 --rerun-incomplete
 ```
 
-which discards the suspect files and rebuilds them.
+which discards the suspect files and rebuilds them. The same thing happens after a
+hard kill (`kill -9`, a closed laptop, a cluster timeout), and for the same reason
+--- an ordinary `Ctrl-C` is simply the common way to get there.
 
 ## Try it
 
