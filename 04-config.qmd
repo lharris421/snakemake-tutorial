@@ -36,40 +36,6 @@ Notice how little is in there. A config is for settings that apply to the projec
 as a whole --- `iterations` means the same thing to every rule that computes
 anything.
 
-## How a config change reaches your results {#sec-config-input}
-
-There are two routes, and it is worth knowing which one you are relying on.
-
-Most of the time the config travels through the **filenames**. `ITER` goes into
-`expand()`, so changing `iterations` makes the figure ask for a different set of
-files, and it rebuilds because its inputs are not the ones it was built from. No
-extra bookkeeping is involved --- the setting is visible to Snakemake because it
-shaped a path.
-
-That covers any setting that ends up in a filename, and it is why the figure rule
-does not mention `config.yaml`. Listing it there would be redundant, and worse than
-redundant: the figure would then rebuild every time somebody reworded a comment in
-the config.
-
-The second route is for settings that shape *nothing* in any path --- a confidence
-level handed to the script, a page number used to split a PDF, a flag that changes
-how a figure is drawn. Snakemake cannot see those at all, and there the config has
-to be declared like any other input:
-
-```{r}
-#| echo: false
-#| output: asis
-embed_file("examples/04-manuscript/Snakefile", from = "^rule manuscript:",
-           to = '^        config = ', filename = "Snakefile (excerpt)")
-```
-
-That is @sec-manuscript's rule, and the argument there is provenance as much as
-correctness: the compiled PDF should be tied to the settings that produced the
-numbers in it, so that editing the config rebuilds the paper. The real project of
-@sec-scaling does the same --- `config.yaml` is an input to its manuscript rules
-and to none of its simulation rules, for exactly the reason above. Days of compute
-should not be invalidated because somebody changed a comment.
-
 ## Runs that don't overwrite each other {#sec-iterations-path}
 
 This one setting is treated differently, and it is the most useful idea in this chapter.

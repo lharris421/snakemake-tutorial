@@ -541,14 +541,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    benchmark: <span class="st">"benchmarks/sim/n</span><span class="sc">{n}</span><span class="st">_rho</span><span class="sc">{rho}</span><span class="st">_</span><span class="sc">{method}</span><span class="st">.tsv"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> cat benchmarks/200/sim/n400_rho80_naive.tsv</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">s</span>   h:m:s   max_rss max_vms max_uss max_pss io_in   io_out  mean_load   cpu_time</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">1.85</span>    0:00:01 0   0   0   0   0.00    0.00    55.47   0</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">1.85</span>    0:00:01 0   0   0   0   0.00    0.00    55.55   0</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The first column is seconds. This is how you find out that one corner of your parameter grid takes forty times as long as the rest, which is worth knowing before you scale the whole grid up by a factor of ten.</p>
 </section>
 <section id="interrupting-and-resuming" class="level2" data-number="5.4">
 <h2 data-number="5.4" class="anchored" data-anchor-id="interrupting-and-resuming"><span class="header-section-number">5.4</span> Interrupting and resuming</h2>
-<p>Snakemake is designed to be stopped. <code>Ctrl-C</code> does not wait politely for the running jobs — it kills them:</p>
+<p>Snakemake is designed to handle being stopped.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Terminating processes on user request, this might take some time.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>What survives is everything that had already <em>finished</em>. Those outputs stay on disk, and the next run does not rebuild them; it starts from wherever the interruption left the pipeline. So the cost of stopping a twelve-hour run after four hours is only the handful of jobs that were in flight at that moment — not the four hours. That property is worth more in practice than the parallelism.</p>
+<p>What survives is everything that had already <em>finished</em>. Those outputs stay on disk, and the next run does not rebuild them; it starts from wherever the interruption left the pipeline. So the cost of stopping a twelve-hour run after four hours is only the handful of jobs that were in flight at that moment.</p>
 <p>The jobs that were in flight need one more thought, because a killed job may have got as far as writing part of its output. Snakemake tracks that, and rather than letting a truncated file pass for a real result it stops the next run:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>IncompleteFilesException:</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>The files below seem to be incomplete. …</span>
@@ -556,7 +556,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>rds/200/sim/n400_rho80_split.rds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The fix is to say so explicitly:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">--cores</span> 4 <span class="at">--rerun-incomplete</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>which discards the suspect files and rebuilds them. The same thing happens after a hard kill (<code>kill -9</code>, a closed laptop, a cluster timeout), and for the same reason — an ordinary <code>Ctrl-C</code> is simply the common way to get there.</p>
+<p>which discards the suspect files and rebuilds them.</p>
 </section>
 <section id="try-it" class="level2" data-number="5.5">
 <h2 data-number="5.5" class="anchored" data-anchor-id="try-it"><span class="header-section-number">5.5</span> Try it</h2>

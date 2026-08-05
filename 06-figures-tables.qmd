@@ -17,20 +17,14 @@ the whole grid rather than one cell:
 ```{r}
 #| echo: false
 #| output: asis
-embed_file("examples/04-manuscript/Snakefile", from = "^## Everything the manuscript",
-           to = "^              method = ", filename = "Snakefile (excerpt)")
-```
-
-```{r}
-#| echo: false
-#| output: asis
 embed_file("examples/04-manuscript/Snakefile", from = "^rule figure1:", to = '^        "\\{input.rds\\} > \\{log\\} 2>&1"',
            filename = "Snakefile (excerpt)")
 ```
 
-Pulling the `expand()` out into a variable named `SIMS` is worth doing as soon as
-more than one rule needs the same list. The figure and the table both summarize the
-whole grid, and defining that list once means they cannot drift apart.
+The `expand()` sits in the rule that needs it. `rule table1` next to it writes out
+the same call, because it happens to summarize the same grid --- but it is free not
+to, and a supplementary figure covering only the large sample sizes would simply
+sweep less.
 
 The R script receives all eighteen filenames as trailing arguments and stacks them:
 
