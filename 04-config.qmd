@@ -34,7 +34,7 @@ and everything in it is available as `config`, a dictionary --- `config["iterati
 is `200` and `config["n"]` is the list `[50, 100, 400]`. Use `config.get("key",
 default)` when a setting is optional.
 
-## Getting config values into a command
+## Using config values in a rule
 
 Pull the settings out into plain Python variables at the top of the Snakefile, and
 use them in the shell command like any other placeholder:
@@ -57,22 +57,11 @@ embed_file("examples/03-config/Snakefile", from = "^rule sim:", to = '^        "
 `{wildcards.n}` is filled in from the wildcard. Anything defined at the top of the
 Snakefile is available this way.
 
-## Path or command? {#sec-params-or-filename}
+## Runs that don't overwrite each other {#sec-iterations-path}
 
-Notice that `seed` and `level` go into the command while `iterations` names a
-directory. That is the most consequential decision in this chapter.
-
-**Put it in the output path** when different values are different results, both of
-which you might want to keep. Running 20 iterations and running 1000 does not make
-one of them wrong; they are a quick check and a final answer, and there is no
-reason they should not sit on disk together.
-
-**Put it in the command** when there is only one right value, so a change means
-the existing file was simply *wrong*. The seed is like this. You do not want
-`seed-1234` and `seed-9999` copies of everything; you want the results, from the
-seed the paper reports.
-
-So `iterations` goes in the path:
+One setting is treated differently, and it is the most useful idea in this chapter.
+`iterations` is not passed to the script and forgotten --- it names the directory
+the results go in:
 
 ```{r}
 #| echo: false
@@ -81,7 +70,17 @@ embed_file("examples/03-config/Snakefile", from = "^## The iteration count",
            to = "^ITER", filename = "Snakefile (excerpt)")
 ```
 
-and the smoke run and the real run coexist:
+```{r}
+#| echo: false
+#| output: asis
+embed_file("examples/03-config/Snakefile", from = "^    output:", to = "^        \"rds/",
+           filename = "Snakefile (excerpt)")
+```
+
+The reason is that 20 iterations and 1000 iterations are not a right answer and a
+wrong one. They are a quick check and a final result, and there is no reason they
+should not sit on disk at the same time. Because the count is part of the path,
+they do:
 
 ```{r}
 #| echo: false
@@ -91,47 +90,14 @@ transcript("03-coexist.txt")
 
 Eighteen results at 20 iterations, eighteen at 200, and going back to the config's
 default rebuilds only the figure --- the 200-iteration simulations were still there
-and still valid. Had `iterations` been passed in the command like the seed, the
-second run would have overwritten the first, and switching back would have meant
+and still valid. Had the count merely been handed to the script, the smoke run
+would have overwritten the real one, and switching back would have meant
 recomputing all eighteen.
 
-`ITER = config["iterations"]` is what selects which of them the figure is built
-from, so the config still controls the answer; it just no longer destroys the
+`ITER = config["iterations"]` is what selects which set the figure is built from,
+so the config still controls the answer; it just no longer destroys the
 alternative. @sec-scaling shows the same pattern at the scale where it matters,
 where the recomputation being avoided is measured in days.
-
-::: {.callout-warning}
-## Snakemake does not watch the values in your command
-
-There is a price for the simplicity above, and it is worth knowing exactly what it
-is. Change `seed` in `config.yaml` and run again:
-
-```bash
-snakemake --cores 4 --config seed=99
-```
-
-```
-Nothing to be done (all requested files are present and up to date).
-```
-
-Nothing reruns. Snakemake records the shell command as it is *written* ---
-`"--seed {SEED} "` --- not as it is *expanded*, so a different `SEED` looks
-identical to the last run. The same is true of `level`. Your results are now from
-seed 1234 while the config says 99.
-
-Snakemake does offer a mechanism that closes this: declare the value in a `params:`
-block instead of a global, and it is recorded alongside the output, so changing it
-reports `Params have changed since last execution: before: 1234 now: 9999` and
-rebuilds. The reason this book does not use it --- and neither does the project in
-@sec-scaling --- is that these particular settings are chosen once at the start of
-a project and then left alone; carrying a `params:` block on every rule to guard
-against an edit you make once is a poor trade.
-
-Know which bargain you have taken. If a setting is one you expect to change while
-the project is live, either put it in the path so the variants coexist, or declare
-it in `params:` so Snakemake notices. If you change one of these by hand, force
-the rebuild yourself with `snakemake -R sim` (@sec-debugging).
-:::
 
 The grid comes from the config too, so `expand()` reads:
 
@@ -192,14 +158,11 @@ iteration counts of a real paper.
 ::: {.callout-warning}
 ## `--config` does not always rebuild what you expect
 
-Which of the cases in @sec-params-or-filename a setting falls into decides what
-overriding it does, and they behave quite differently:
+What an override actually rebuilds depends on how the setting is used, and the two
+cases here behave differently:
 
 - **`--config iterations=20`** asks for *different files*. Eighteen new simulations
   run; the old ones are left alone.
-- **`--config seed=99`** changes a value that only appears inside the shell
-  command, which Snakemake does not track. Nothing reruns at all --- see the
-  warning above.
 - **Dropping a sample size from the grid** changes only the list inside `expand()`.
   No simulation reruns --- the remaining results are still perfectly valid --- but
   the figure does, with the reason `Set of input files has changed since last
