@@ -37,10 +37,7 @@ rule sim:
     shell: "Rscript sim.R --cores {threads} ..."
 ```
 
-Then `--cores 8` runs two such jobs at a time rather than eight. Getting this wrong
-in the other direction --- eight jobs each spawning eight threads on an eight-core
-machine --- is the single most common way to make a pipeline slower by parallelizing
-it.
+Then `--cores 8` runs two such jobs at a time rather than eight.
 :::
 
 ## Logs
@@ -90,7 +87,7 @@ means a log from a successful run sticks around until the job runs again.
 
 ## Benchmarks
 
-`benchmark:` records how long a job took and how much memory it used:
+`benchmark:` records how long a job took:
 
 ```python
 rule sim:
@@ -106,9 +103,6 @@ transcript("04-benchmark.txt")
 The first column is seconds. This is how you find out that one corner of your
 parameter grid takes forty times as long as the rest, which is worth knowing before
 you scale the whole grid up by a factor of ten.
-
-The memory columns come from `/proc` and are populated on Linux; on macOS they read
-zero, as above. Timing works everywhere.
 
 ## Interrupting and resuming
 

@@ -435,7 +435,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#config.yaml" id="toc-config.yaml" class="nav-link active" data-scroll-target="#config.yaml"><span class="header-section-number">4.1</span> config.yaml</a></li>
-  <li><a href="#sec-config-input" id="toc-sec-config-input" class="nav-link" data-scroll-target="#sec-config-input"><span class="header-section-number">4.2</span> The config is an input</a></li>
+  <li><a href="#sec-config-input" id="toc-sec-config-input" class="nav-link" data-scroll-target="#sec-config-input"><span class="header-section-number">4.2</span> How a config change reaches your results</a></li>
   <li><a href="#sec-iterations-path" id="toc-sec-iterations-path" class="nav-link" data-scroll-target="#sec-iterations-path"><span class="header-section-number">4.3</span> Runs that don’t overwrite each other</a></li>
   <li><a href="#wildcard_constraints" id="toc-wildcard_constraints" class="nav-link" data-scroll-target="#wildcard_constraints"><span class="header-section-number">4.4</span> wildcard_constraints</a></li>
   <li><a href="#overriding-from-the-command-line" id="toc-overriding-from-the-command-line" class="nav-link" data-scroll-target="#overriding-from-the-command-line"><span class="header-section-number">4.5</span> Overriding from the command line</a></li>
@@ -491,21 +491,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Notice how little is in there. A config is for settings that apply to the project as a whole — <code>iterations</code> means the same thing to every rule that computes anything.</p>
 </section>
 <section id="sec-config-input" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="sec-config-input"><span class="header-section-number">4.2</span> The config is an input</h2>
-<p>One more line is worth adding before going further. <code>config.yaml</code> decides what the numbers are, so anything built from those numbers depends on it — and saying so is a matter of listing it, exactly like a script:</p>
+<h2 data-number="4.2" class="anchored" data-anchor-id="sec-config-input"><span class="header-section-number">4.2</span> How a config change reaches your results</h2>
+<p>There are two routes, and it is worth knowing which one you are relying on.</p>
+<p>Most of the time the config travels through the <strong>filenames</strong>. <code>ITER</code> goes into <code>expand()</code>, so changing <code>iterations</code> makes the figure ask for a different set of files, and it rebuilds because its inputs are not the ones it was built from. No extra bookkeeping is involved — the setting is visible to Snakemake because it shaped a path.</p>
+<p>That covers any setting that ends up in a filename, and it is why the figure rule does not mention <code>config.yaml</code>. Listing it there would be redundant, and worse than redundant: the figure would then rebuild every time somebody reworded a comment in the config.</p>
+<p>The second route is for settings that shape <em>nothing</em> in any path — a confidence level handed to the script, a page number used to split a PDF, a flag that changes how a figure is drawn. Snakemake cannot see those at all, and there the config has to be declared like any other input:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>Snakefile (excerpt)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-filename="Snakefile (excerpt)"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>rule figure:</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-filename="Snakefile (excerpt)"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>rule manuscript:</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span>:</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>        script <span class="op">=</span> <span class="st">"code/figure.R"</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        setup <span class="op">=</span> <span class="st">"code/setup.R"</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>        tex <span class="op">=</span> <span class="st">"</span><span class="sc">{doc}</span><span class="st">.tex"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        shared <span class="op">=</span> [<span class="st">"main.tex"</span>, <span class="st">"preamble.tex"</span>],</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        config <span class="op">=</span> <span class="st">"config.yaml"</span>,</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Now the figure carries a recorded dependency on the settings that produced it. Edit <code>config.yaml</code> — even to add a comment — and Snakemake reports <code>Updated input files: config.yaml</code> and rebuilds it, for the same reason it does when <code>figure.R</code> changes: the contents no longer match what was recorded.</p>
-<p>Note where the line is <em>not</em> listed. <code>rule sim</code> does not take <code>config.yaml</code> as an input, deliberately, because otherwise any edit to the config would invalidate every simulation on disk — and in a real project that is days of compute thrown away because somebody reworded a comment. Put it on the rules that assemble your products, not on the ones that do the expensive work.</p>
-<p>This matters most at the far end of a pipeline. <a href="07-manuscript.html" class="quarto-xref"><span>Chapter 7</span></a> lists <code>config.yaml</code> among the manuscript’s inputs, so the compiled PDF is tied to the configuration that produced the numbers in it; the real project in <a href="10-scaling-up.html" class="quarto-xref"><span>Chapter 10</span></a> does the same. Commit the config, and the paper you built last March can be rebuilt from the tag.</p>
+<p>That is <a href="07-manuscript.html" class="quarto-xref"><span>Chapter 7</span></a>’s rule, and the argument there is provenance as much as correctness: the compiled PDF should be tied to the settings that produced the numbers in it, so that editing the config rebuilds the paper. The real project of <a href="10-scaling-up.html" class="quarto-xref"><span>Chapter 10</span></a> does the same — <code>config.yaml</code> is an input to its manuscript rules and to none of its simulation rules, for exactly the reason above. Days of compute should not be invalidated because somebody changed a comment.</p>
 </section>
 <section id="sec-iterations-path" class="level2" data-number="4.3">
 <h2 data-number="4.3" class="anchored" data-anchor-id="sec-iterations-path"><span class="header-section-number">4.3</span> Runs that don’t overwrite each other</h2>
@@ -578,14 +579,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>which is the fastest way to check that a pipeline is wired up before committing to the real thing:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">--cores</span> 4 <span class="at">--config</span> iterations=20</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="ex">real</span>    0m4.923s</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="ex">user</span>    0m9.337s</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="ex">sys</span> 0m0.910s</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="ex">real</span>    0m4.922s</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="ex">user</span>    0m9.637s</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="ex">sys</span> 0m1.106s</span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">--cores</span> 4</span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="ex">real</span>    0m10.801s</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="ex">user</span>    0m30.634s</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="ex">sys</span> 0m1.114s</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="ex">real</span>    0m11.341s</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="ex">user</span>    0m32.284s</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="ex">sys</span> 0m1.357s</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Five seconds against eleven, for a grid that would take considerably longer at the iteration counts of a real paper.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">

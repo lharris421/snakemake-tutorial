@@ -36,34 +36,39 @@ Notice how little is in there. A config is for settings that apply to the projec
 as a whole --- `iterations` means the same thing to every rule that computes
 anything.
 
-## The config is an input {#sec-config-input}
+## How a config change reaches your results {#sec-config-input}
 
-One more line is worth adding before going further. `config.yaml` decides what the
-numbers are, so anything built from those numbers depends on it --- and saying so
-is a matter of listing it, exactly like a script:
+There are two routes, and it is worth knowing which one you are relying on.
+
+Most of the time the config travels through the **filenames**. `ITER` goes into
+`expand()`, so changing `iterations` makes the figure ask for a different set of
+files, and it rebuilds because its inputs are not the ones it was built from. No
+extra bookkeeping is involved --- the setting is visible to Snakemake because it
+shaped a path.
+
+That covers any setting that ends up in a filename, and it is why the figure rule
+does not mention `config.yaml`. Listing it there would be redundant, and worse than
+redundant: the figure would then rebuild every time somebody reworded a comment in
+the config.
+
+The second route is for settings that shape *nothing* in any path --- a confidence
+level handed to the script, a page number used to split a PDF, a flag that changes
+how a figure is drawn. Snakemake cannot see those at all, and there the config has
+to be declared like any other input:
 
 ```{r}
 #| echo: false
 #| output: asis
-embed_file("examples/03-config/Snakefile", from = "^rule figure:", to = "^        config = ",
-           filename = "Snakefile (excerpt)")
+embed_file("examples/04-manuscript/Snakefile", from = "^rule manuscript:",
+           to = '^        config = ', filename = "Snakefile (excerpt)")
 ```
 
-Now the figure carries a recorded dependency on the settings that produced it. Edit
-`config.yaml` --- even to add a comment --- and Snakemake reports `Updated input
-files: config.yaml` and rebuilds it, for the same reason it does when `figure.R`
-changes: the contents no longer match what was recorded.
-
-Note where the line is *not* listed. `rule sim` does not take `config.yaml` as an
-input, deliberately, because otherwise any edit to the config would invalidate
-every simulation on disk --- and in a real project that is days of compute thrown
-away because somebody reworded a comment. Put it on the rules that assemble your
-products, not on the ones that do the expensive work.
-
-This matters most at the far end of a pipeline. @sec-manuscript lists `config.yaml`
-among the manuscript's inputs, so the compiled PDF is tied to the configuration
-that produced the numbers in it; the real project in @sec-scaling does the same.
-Commit the config, and the paper you built last March can be rebuilt from the tag.
+That is @sec-manuscript's rule, and the argument there is provenance as much as
+correctness: the compiled PDF should be tied to the settings that produced the
+numbers in it, so that editing the config rebuilds the paper. The real project of
+@sec-scaling does the same --- `config.yaml` is an input to its manuscript rules
+and to none of its simulation rules, for exactly the reason above. Days of compute
+should not be invalidated because somebody changed a comment.
 
 ## Runs that don't overwrite each other {#sec-iterations-path}
 
