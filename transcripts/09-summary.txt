@@ -1,7 +1,7 @@
 $ snakemake --summary | head -6
 output_file	date	rule	log-file(s)	status	plan
-build/paper.pdf	Wed Aug  5 11:57:31 2026	manuscript	logs/paper-latexmk.log	ok	no update
-out/figure1.pdf	Wed Aug  5 11:57:31 2026	figure1	logs/figure1.log	ok	no update
-rds/200/sim/n50_rho0_naive.rds	Wed Aug  5 11:57:31 2026	sim	logs/200/sim/n50_rho0_naive.log	ok	no update
-rds/200/sim/n50_rho0_split.rds	Wed Aug  5 11:57:31 2026	sim	logs/200/sim/n50_rho0_split.log	ok	no update
-rds/200/sim/n50_rho50_naive.rds	Wed Aug  5 11:57:31 2026	sim	logs/200/sim/n50_rho50_naive.log	ok	no update
+build/paper.pdf	Wed Aug  5 12:11:06 2026	manuscript	logs/paper-latexmk.log	ok	no update
+out/figure1.pdf	Wed Aug  5 12:11:06 2026	figure1	logs/figure1.log	ok	no update
+rds/200/sim/n50_rho0_naive.rds	Wed Aug  5 12:11:06 2026	sim	logs/200/sim/n50_rho0_naive.log	ok	no update
+rds/200/sim/n50_rho0_split.rds	Wed Aug  5 12:11:06 2026	sim	logs/200/sim/n50_rho0_split.log	ok	no update
+rds/200/sim/n50_rho50_naive.rds	Wed Aug  5 12:11:06 2026	sim	logs/200/sim/n50_rho50_naive.log	ok	no update

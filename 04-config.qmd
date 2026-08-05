@@ -5,10 +5,9 @@
 source("_common.R")
 ```
 
-The Snakefile in @sec-wildcards has the parameter grid written into it, and `sim.R`
-has 200 iterations written into it. Both are the wrong places. You will want 20
-iterations while you are debugging and 1000 for the final results, and a coauthor
-will want to add a sample size without reading your Python.
+`sim.R` in @sec-wildcards has 200 iterations written into it, which is the wrong
+place: you will want 20 while you are debugging and 1000 for the final results, and
+changing that should not mean editing the simulation code.
 
 Move to `examples/03-config`, which puts all of it in one file.
 
@@ -30,9 +29,13 @@ embed_file("examples/03-config/Snakefile", from = "^configfile:", to = "^configf
            filename = "Snakefile (excerpt)")
 ```
 
-and everything in it is available as `config`, a dictionary --- `config["iterations"]`
-is `200` and `config["n"]` is the list `[50, 100, 400]`. Use `config.get("key",
-default)` when a setting is optional.
+and everything in it is available as `config`, a dictionary: `config["iterations"]`
+is `200`. Use `config.get("key", default)` when a setting is optional.
+
+Notice how little is in there. A config is for settings that apply to the project
+as a whole, and `iterations` qualifies --- it means the same thing to every rule
+that computes anything. Most of what you might reflexively put in a config does
+not qualify, which is the subject of the next-but-one section.
 
 ## Runs that don't overwrite each other {#sec-iterations-path}
 
@@ -80,16 +83,33 @@ so the config still controls the answer; it just no longer destroys the
 alternative. @sec-scaling shows the same pattern at the scale where it matters,
 where the recomputation being avoided is measured in days.
 
-The grid comes from the config too, so `expand()` reads:
+## Grids belong to rules, not to the config {#sec-config-scope}
+
+The parameter grid stayed in the Snakefile, next to the rule that consumes it:
 
 ```{r}
 #| echo: false
 #| output: asis
 embed_file("examples/03-config/Snakefile", from = "        rds = expand",
-           to = "                     method=config", filename = "Snakefile (excerpt)")
+           to = "                     method = ", filename = "Snakefile (excerpt)")
 ```
 
-Adding a fourth sample size is now a two-character edit to `config.yaml`.
+It is tempting to hoist `n`, `rho` and `methods` into `config.yaml` alongside
+`iterations`, and for a project with one figure it makes no difference. It stops
+working as soon as there are two. A figure comparing methods at large sample sizes
+and a table summarizing small ones sweep different grids; a supplementary figure
+adds a correlation level the main one does not. Once `config["n"]` is shared by
+every rule, either they all move together or you start inventing names like `n_fig2`
+--- at which point the config is doing the Snakefile's job badly.
+
+The distinction is scope. `iterations` is **rule-agnostic**: it means the same
+thing everywhere, and if you halve it for a smoke test you halve it for everything.
+A grid is **rule-specific**: it is part of what a particular figure is *of*. Put
+the first in the config and leave the second beside the rule.
+
+The real project of @sec-scaling does exactly this. Its config holds five global
+settings and not one grid; of its sixteen figure and table rules, twelve carry
+their own `expand()`, each sweeping whatever that particular figure is about.
 
 ## wildcard_constraints
 
@@ -144,10 +164,11 @@ cases here behave differently:
 
 - **`--config iterations=20`** asks for *different files*. Eighteen new simulations
   run; the old ones are left alone.
-- **Dropping a sample size from the grid** changes only the list inside `expand()`.
-  No simulation reruns --- the remaining results are still perfectly valid --- but
-  the figure does, with the reason `Set of input files has changed since last
-  execution`, because it is now summarizing twelve files instead of eighteen.
+- **Dropping a sample size from a rule's `expand()`** is a Snakefile edit rather
+  than a config one, and it reruns no simulations at all --- the remaining results
+  are still perfectly valid. The figure does rerun, with the reason `Set of input
+  files has changed since last execution`, because it is now summarizing twelve
+  files instead of eighteen.
 
 Note that `--config` wants one `key=value` per setting and will not take a list on
 the command line (`--config n=[50,100]` is a parse error on 9.13). Change the grid
@@ -163,11 +184,11 @@ that rule regardless. See @sec-debugging.
 A useful test: **if changing it changes the results, it belongs in the config; if
 changing it changes what the code does, it belongs in the code.**
 
-Iteration counts, grids, file locations --- config. The definition of the
-estimator --- code. The temptation, once you have a config file, is to make
-everything configurable, and you end up with a 200-line YAML file harder to read
-than the code it configures. The config here has four settings and covers
-everything a reader of the paper would plausibly want to change.
+Iteration counts and file locations --- config. The definition of the estimator ---
+code. Grids --- the Snakefile, beside the rule, as above. The temptation, once you
+have a config file, is to make everything configurable, and you end up with a
+200-line YAML file harder to read than the code it configures. The config here has
+one setting, and it is the one that genuinely applies to everything.
 
 ## Keeping the config with the results
 

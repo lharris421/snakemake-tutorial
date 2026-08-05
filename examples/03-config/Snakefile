@@ -36,8 +36,10 @@ rule figure:
         script = "code/figure.R",
         setup = "code/setup.R",
         rds = expand("rds/{iterations}/sim/n{n}_rho{rho}_{method}.rds",
-                     iterations=ITER, n=config["n"], rho=config["rho"],
-                     method=config["methods"])
+                     iterations = ITER,
+                     n = [50, 100, 400],
+                     rho = [0, 50, 80],
+                     method = ["naive", "split"])
     output:
         "out/figure1.pdf"
     shell:

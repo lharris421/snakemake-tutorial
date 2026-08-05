@@ -12,10 +12,14 @@ wildcard_constraints:
     method = "[a-z]+"
 
 ## Everything the manuscript is built from, in one place.  If it is not reachable
-## from here, `snakemake` will not make it.
+## from here, `snakemake` will not make it.  The grid lives here rather than in the
+## config because it belongs to these rules: a second figure sweeping a different
+## set of sample sizes would write its own `expand()` and leave this one alone.
 SIMS = expand("rds/{iterations}/sim/n{n}_rho{rho}_{method}.rds",
-              iterations=ITER, n=config["n"], rho=config["rho"],
-              method=config["methods"])
+              iterations = ITER,
+              n = [50, 100, 400],
+              rho = [0, 50, 80],
+              method = ["naive", "split"])
 
 rule all:
     input:

@@ -1,9 +1,7 @@
-# Everything a reader might reasonably want to change lives here, not in the
-# Snakefile and not in the R scripts.  Drop `iterations` to 20 for a fast run
-# that checks the plumbing; put it back to 200 for results you would show anyone.
+# Settings that apply to the whole project, not to any one rule.  Drop
+# `iterations` to 20 for a fast run that checks the plumbing; put it back to 200
+# for results you would show anyone.
+#
+# The parameter grids are not here: each rule sweeps its own, so they live beside
+# the rule that uses them.
 iterations: 200
-
-# The parameter grid
-n: [50, 100, 400]
-rho: [0, 50, 80]      # as a percent
-methods: [naive, split]
