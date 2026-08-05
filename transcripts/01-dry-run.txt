@@ -26,7 +26,7 @@ rule figure:
     input: figure.R, results/sim-naive.rds, results/sim-split.rds
     output: results/figure1.pdf
     jobid: 1
-    reason: Missing output files: results/figure1.pdf; Input files updated by another job: results/sim-split.rds, results/sim-naive.rds
+    reason: Missing output files: results/figure1.pdf; Input files updated by another job: results/sim-naive.rds, results/sim-split.rds
     resources: tmpdir=<TBD>
 
 rule all:

@@ -1,0 +1,4 @@
+$ snakemake --touch --forcerun $(snakemake --summary all | awk '{print $1}' | grep '\.rds$')
+23 of 23 steps (100%) done
+$ snakemake -n
+Nothing to be done (all requested files are present and up to date).

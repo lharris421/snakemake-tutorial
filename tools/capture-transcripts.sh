@@ -109,6 +109,25 @@ snakemake --cores 4 > /dev/null 2>&1
 # copy next to the transcripts for the same reason
 cp results/table1.tex "$OUT/table1.tex"
 
+## ------------------------------------------- ch10: results without metadata
+## The scenario: results arrived from a collaborator, but .snakemake/ did not.
+cd "$ROOT/examples/04-manuscript"
+rm -rf .snakemake
+
+{
+  say "snakemake -n"
+  snakemake -n 2>&1 | filter | first_stats
+} > "$OUT/10-no-metadata.txt"
+
+{
+  say "snakemake --touch --forcerun \$(snakemake --summary all | awk '{print \$1}' | grep '\\.rds\$')"
+  snakemake --touch --forcerun \
+    $(snakemake --summary all 2>/dev/null | awk '{print $1}' | grep '\.rds$') 2>&1 |
+    filter | grep -E "steps \(100%\) done|touch"
+  say "snakemake -n"
+  snakemake -n 2>&1 | filter
+} > "$OUT/10-touch-forcerun.txt"
+
 ## ---------------------------------------------------------------- example 05
 cd "$ROOT/examples/05-analysis"
 clean

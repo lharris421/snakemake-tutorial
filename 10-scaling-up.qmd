@@ -160,6 +160,85 @@ history. `dat` holds the results: large, binary, and only ever wanting to be
 *current*. Each is one command to push, and a collaborator with both has your
 entire project.
 
+### Telling Snakemake the results are fine
+
+There is a catch, and it bites the first time you use any of this.
+
+Your coauthor clones the repository and pulls the results folder. Every `.rds`
+file is sitting there. But Snakemake's record of how those files were made ---
+`.snakemake/`, which is local and was never shared --- does not exist on their
+machine, so it has nothing to compare against and assumes the worst:
+
+```{r}
+#| echo: false
+#| output: asis
+transcript("10-no-metadata.txt")
+```
+
+Twenty-three jobs, eighteen of them the simulations that just arrived. On a real
+project that is the two days of compute the sharing was supposed to avoid.
+
+`--touch` is the escape hatch: it marks outputs as up to date without running
+anything. Reaching for it on its own, though, is a coin flip. With no metadata to
+consult, Snakemake falls back to comparing timestamps, and `--touch` only acts on
+jobs it would otherwise have run. So if the incoming `.rds` files happen to be
+newer than the scripts, nothing looks out of date, nothing gets touched, and you
+are left with no provenance at all --- which Snakemake mentions, quietly, at the
+end of the next dry run:
+
+```{.default filename="the branch you do not want"}
+Nothing to be done (all requested files are present and up to date).
+22 jobs have missing provenance/metadata so that it in part cannot be used to
+trigger re-runs.
+Rules with missing metadata: figure1 manuscript sim table1
+```
+
+That is a pipeline that will no longer notice when you edit `sim.R`. Which way it
+goes depends on the order files happened to land on disk when you cloned and
+pulled, and you have no control over that.
+
+The fix is to stop leaving it to chance: force the expensive outputs to be
+considered out of date, so the touch always has something to do.
+
+```bash
+snakemake --touch --forcerun \
+  $(snakemake --summary all | awk '{print $1}' | grep '\.rds$')
+```
+
+Read the inside out: `--summary all` prints one row per output file the workflow
+knows about, `awk '{print $1}'` takes the filename column, and `grep '\.rds$'`
+keeps the simulation results and drops the figures, tables, PDFs and the header
+line. Those filenames become the `--forcerun` list. Snakemake then walks the whole
+graph, touching rather than running --- and, crucially, writing the provenance
+records it was missing:
+
+```{r}
+#| echo: false
+#| output: asis
+transcript("10-touch-forcerun.txt")
+```
+
+From that point the project behaves normally: nothing to be done, and editing
+`code/sim.R` correctly plans all twenty-three jobs again. The cheap products ---
+the figure, the table, the PDF --- get touched too, so if you would rather rebuild
+those from the results you were given, delete them afterwards and run `snakemake`
+as usual. It takes seconds and it means the paper on your disk was compiled by
+your machine from the numbers you were sent.
+
+::: {.callout-warning}
+## `--touch` is an assertion, not a check
+
+You are telling Snakemake that files it has never seen are the correct output of
+the current code. It has no way to verify that, and it will believe you. If your
+coauthor generated those results with a different version of `sim.R` than the one
+you just cloned, the pipeline is now quietly wrong, and nothing downstream will
+ever notice.
+
+Use it when you know the results and the code came from the same commit --- which
+is an argument for tagging the code when you push results, and for keeping
+`iterations` and the seed in the config where a human can read them off.
+:::
+
 ## Chained rules
 
 Expensive intermediate steps become their own rules, rather than being folded into
