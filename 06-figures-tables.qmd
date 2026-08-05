@@ -79,38 +79,55 @@ embed_file("examples/04-manuscript/code/figure.R", from = "^method_labels",
 ```
 
 so that the spelling and the color are decided in one visible place rather than
-buried in a `ggplot` call. In a project with more than a couple of figures it is
-worth going further and putting these in a file the scripts share; here, where each
-script is short enough to read at a glance, keeping them self-contained is simpler.
+buried in a `ggplot` call.
 
 ::: {.callout-note}
-## Shared code belongs in a file of its own
+## Shared code belongs in files of its own
 
-That goes double for functions. `sim.R` defines `gen_data()` and
-`select_forward()` inline because nothing else in this project needs them, and the
-script stays readable top to bottom. The moment a second script wants one of them
---- a supplementary simulation, a figure that regenerates a single dataset to
-illustrate the method --- copying it across is how two versions of your estimator
-begin to disagree.
+Each script here is short enough to read top to bottom, so everything it needs sits
+at the top of it. A real project outgrows that quickly, in two directions.
 
-At that point give them a file, say `code/functions.R`, and `source()` it. There is
-one Snakemake-specific thing to remember when you do: list it as an input on every
-rule whose script sources it.
+**Values used by more than one script** --- the labels and colors above, a plotting
+theme, the levels of a factor --- go in a small script the others source, something
+like `code/setup.R`. Defining them once is what stops a figure and the table beside
+it disagreeing about what `naive` is called.
+
+**Functions get a directory, with one function per file.** Put them in `R/`, each
+file named for the function it defines: `R/gen_data.R`, `R/select_forward.R`,
+`R/eval_cis.R`. Finding the function you want a year from now is then a matter of
+reading the file listing.
+
+The reason for that particular directory name is that it is what an R package uses,
+and the distance between a directory of functions and a package is two lines:
+
+```{.default filename="DESCRIPTION"}
+Package: mymethods
+Version: 0.0.1
+```
+
+With that file present, `devtools::load_all()` loads everything in `R/` in one
+call, and the project is on its way to being installable and citable without a line
+of code moving. The methods repository in @sec-scaling has sixteen files in `R/`,
+organized exactly this way.
+
+Whichever you are doing, there is one Snakemake-specific thing to remember: list
+what a script sources as an input to the rules that call it.
 
 ```python
 rule sim:
     input:
         script = "code/sim.R",
-        functions = "code/functions.R"
+        functions = ["R/gen_data.R", "R/select_forward.R"]
 ```
 
-Without that line the dependency is invisible, and editing a function leaves every
-result that used it silently stale --- the one failure mode Snakemake cannot warn
-you about (@sec-debugging).
+Without those lines the dependency is invisible, and editing a function leaves
+every result that used it silently stale --- the one failure mode Snakemake cannot
+warn you about (@sec-debugging). A shortcut once `R/` has more than a handful of
+files: `functions = glob.glob("R/*.R")` catches the lot, at the cost of rerunning
+everything whenever any of them changes.
 
-When the functions are the contribution rather than the scaffolding, the natural
-home is an R package rather than a loose file, which is where @sec-scaling picks
-the story up.
+When the functions are the contribution rather than the scaffolding, that package
+in waiting should become a real one, which is where @sec-scaling picks the story up.
 :::
 
 ## Tables
@@ -163,7 +180,7 @@ embed_file("examples/04-manuscript/Snakefile", from = "^rule all:", to = '^     
 ```
 
 Here it names only the two PDFs, because everything else is reachable through them.
-In a larger project --- the one in @sec-scaling has seventeen figures and tables ---
+In a larger project --- the one in @sec-scaling has sixteen figures and tables ---
 it is common to list every product explicitly instead:
 
 ```python
