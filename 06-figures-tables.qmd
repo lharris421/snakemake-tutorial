@@ -85,49 +85,23 @@ buried in a `ggplot` call.
 ## Shared code belongs in files of its own
 
 Each script here is short enough to read top to bottom, so everything it needs sits
-at the top of it. A real project outgrows that quickly, in two directions.
+at the top of it. A real project outgrows that in two directions: values used by
+more than one script --- labels, colors, the levels of a factor --- belong in a
+small script the others source, and **functions belong in an `R/` directory, one
+function per file**. That is the layout an R package uses, which is the point: a
+two-line `DESCRIPTION` is the whole distance between a directory of functions and
+something `devtools::load_all()` will load for you.
 
-**Values used by more than one script** --- the labels and colors above, a plotting
-theme, the levels of a factor --- go in a small script the others source, something
-like `code/setup.R`. Defining them once is what stops a figure and the table beside
-it disagreeing about what `naive` is called.
+The part that is specific to this book: list whatever a script sources as an input
+to the rules that call it, or the dependency is invisible and editing a function
+leaves every result that used it silently stale (@sec-debugging).
 
-**Functions get a directory, with one function per file.** Put them in `R/`, each
-file named for the function it defines: `R/gen_data.R`, `R/select_forward.R`,
-`R/eval_cis.R`. Finding the function you want a year from now is then a matter of
-reading the file listing.
-
-The reason for that particular directory name is that it is what an R package uses,
-and the distance between a directory of functions and a package is two lines:
-
-```{.default filename="DESCRIPTION"}
-Package: mymethods
-Version: 0.0.1
-```
-
-With that file present, `devtools::load_all()` loads everything in `R/` in one
-call, and the project is on its way to being installable and citable without a line
-of code moving. The methods repository in @sec-scaling has sixteen files in `R/`,
-organized exactly this way.
-
-Whichever you are doing, there is one Snakemake-specific thing to remember: list
-what a script sources as an input to the rules that call it.
-
-```python
-rule sim:
-    input:
-        script = "code/sim.R",
-        functions = ["R/gen_data.R", "R/select_forward.R"]
-```
-
-Without those lines the dependency is invisible, and editing a function leaves
-every result that used it silently stale --- the one failure mode Snakemake cannot
-warn you about (@sec-debugging). A shortcut once `R/` has more than a handful of
-files: `functions = glob.glob("R/*.R")` catches the lot, at the cost of rerunning
-everything whenever any of them changes.
-
-When the functions are the contribution rather than the scaffolding, that package
-in waiting should become a real one, which is where @sec-scaling picks the story up.
+Beyond that this is really a question about project organization rather than about
+Snakemake, and it has been answered better elsewhere ---
+[IowaBiostat/project-workflow](https://github.com/IowaBiostat/project-workflow)
+is a talk and a small example project on exactly this, covering how `R/`, roxygen
+documentation, `devtools`, git and a Snakefile fit together. Its `example-project`
+is worth cloning and pulling apart.
 :::
 
 ## Tables
