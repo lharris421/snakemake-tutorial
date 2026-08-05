@@ -1,5 +1,5 @@
 ## Usage: Rscript figure.R <output file> <input rds files ...>
-## e.g.:  Rscript figure.R out/figure1.pdf ../../results/01-first-rules/sim-*.rds
+## e.g.:  Rscript figure.R results/figure1.pdf results/sim-naive.rds results/sim-split.rds
 
 library(ggplot2)
 

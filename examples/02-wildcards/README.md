@@ -9,5 +9,10 @@ into one `sim` rule with wildcards, and `expand()` turns the parameter grid into
 ```bash
 snakemake -n                                 # 18 simulations + 1 figure
 snakemake --cores 4                          # about 10 seconds
-snakemake --cores 4 ../../results/02-wildcards/sim/n50_rho0_naive.rds   # one scenario
+snakemake --cores 4 results/sim/n50_rho0_naive.rds   # just one scenario
 ```
+
+This directory is a complete, self-contained project: copy it anywhere, run
+`git init`, and it works. That is how each example in this book is meant to be
+read --- a miniature of a real repository, with one Snakefile and one `results/`
+folder at its root.

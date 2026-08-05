@@ -25,10 +25,10 @@ transcript("05-job-stats.txt")
 ```{mermaid}
 %%| fig-align: center
 flowchart LR
-  R[data/trial.csv] --> C["results/05-analysis/<br/>analysis.rds"]
-  C --> M["results/05-analysis/<br/>models.rds"]
-  C --> T["results/05-analysis/<br/>table1.rds"]
-  C --> F[out/figure1.png]
+  R[data/trial.csv] --> C[results/analysis.rds]
+  C --> M[results/models.rds]
+  C --> T[results/table1.rds]
+  C --> F[results/figure1.png]
   M --> P[report.html]
   T --> P
   F --> P
@@ -110,7 +110,7 @@ embed_file("examples/05-analysis/Snakefile", from = "^## Listing every object",
 
 Listing each object the report reads is what makes the report trustworthy. Rendering
 it cannot use a stale table, because Snakemake will rebuild the table first. And
-the models are in the central results folder, so the manuscript you write next year can
+the models are in `results/models.rds`, so the manuscript you write next year can
 load them without rerunning anything.
 
 Everything the report needs to say in prose comes through inline R:
@@ -165,6 +165,5 @@ command and a careful look at one log file.
 1. Edit a value in `data/trial.csv` and run `snakemake -n`. What reruns?
 2. Add a rule producing a subgroup analysis by smoking status, and show it in the
    report.
-3. Delete `analysis.rds` from the results folder but not the models. What does
-   Snakemake do, and is
+3. Delete `results/analysis.rds` but not the models. What does Snakemake do, and is
    that what you expected?

@@ -4,15 +4,6 @@
 ## outputs are files -- but the chain is linear rather than a fan-out, and the
 ## first input is a file you did not generate and must not modify.
 
-import os
-
-configfile: "config.yaml"
-
-## The cleaned data and the fitted models are the expensive, reusable products,
-## so they go to the central results folder.  The figure and the rendered report
-## are rebuilt from them in seconds and stay here.
-RESULTS = os.path.expanduser(config["results-loc"]) + "/05-analysis"
-
 rule all:
     input:
         "report.html"
@@ -23,7 +14,7 @@ rule clean:
         setup = "code/setup.R",
         data = "data/trial.csv"
     output:
-        f"{RESULTS}/analysis.rds"
+        "results/analysis.rds"
     log:
         "logs/clean.log"
     shell:
@@ -33,9 +24,9 @@ rule model:
     input:
         script = "code/model.R",
         setup = "code/setup.R",
-        rds = f"{RESULTS}/analysis.rds"
+        rds = "results/analysis.rds"
     output:
-        f"{RESULTS}/models.rds"
+        "results/models.rds"
     log:
         "logs/model.log"
     shell:
@@ -45,9 +36,9 @@ rule table1:
     input:
         script = "code/table1.R",
         setup = "code/setup.R",
-        rds = f"{RESULTS}/analysis.rds"
+        rds = "results/analysis.rds"
     output:
-        f"{RESULTS}/table1.rds"
+        "results/table1.rds"
     log:
         "logs/table1.log"
     shell:
@@ -57,9 +48,9 @@ rule figure1:
     input:
         script = "code/figure.R",
         setup = "code/setup.R",
-        rds = f"{RESULTS}/analysis.rds"
+        rds = "results/analysis.rds"
     output:
-        "out/figure1.png"
+        "results/figure1.png"
     log:
         "logs/figure1.log"
     shell:
@@ -71,10 +62,10 @@ rule report:
     input:
         qmd = "report.qmd",
         setup = "code/setup.R",
-        analysis = f"{RESULTS}/analysis.rds",
-        models = f"{RESULTS}/models.rds",
-        table1 = f"{RESULTS}/table1.rds",
-        figure1 = "out/figure1.png"
+        analysis = "results/analysis.rds",
+        models = "results/models.rds",
+        table1 = "results/table1.rds",
+        figure1 = "results/figure1.png"
     output:
         "report.html"
     log:

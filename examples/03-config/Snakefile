@@ -1,11 +1,4 @@
-import os
-
 configfile: "config.yaml"
-
-## The central results folder, plus a subdirectory for this example so that the
-## examples cannot overwrite each other's output.  expanduser() is what makes
-## "~/dat/snakemake-tutorial" work as a setting.
-RESULTS = os.path.expanduser(config["results-loc"]) + "/03-config"
 
 ## Wildcards match greedily by default; these constraints keep {n} from
 ## swallowing part of the filename when a rule could match more than one way
@@ -16,14 +9,14 @@ wildcard_constraints:
 
 rule all:
     input:
-        "out/figure1.pdf"
+        "results/figure1.pdf"
 
 rule sim:
     input:
         script = "code/sim.R",
         setup = "code/setup.R"
     output:
-        f"{RESULTS}/sim/n{{n}}_rho{{rho}}_{{method}}.rds"
+        "results/sim/n{n}_rho{rho}_{method}.rds"
     params:
         iterations = config["iterations"],
         seed = config["seed"],
@@ -42,10 +35,10 @@ rule figure:
     input:
         script = "code/figure.R",
         setup = "code/setup.R",
-        rds = expand(f"{RESULTS}/sim/n{{n}}_rho{{rho}}_{{method}}.rds",
+        rds = expand("results/sim/n{n}_rho{rho}_{method}.rds",
                      n=config["n"], rho=config["rho"], method=config["methods"])
     output:
-        "out/figure1.pdf"
+        "results/figure1.pdf"
     params:
         level = config["level"]
     shell:

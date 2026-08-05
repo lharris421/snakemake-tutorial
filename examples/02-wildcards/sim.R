@@ -1,7 +1,6 @@
 ## Coverage of confidence intervals after stepwise selection.
 ##
-## Usage:  Rscript sim.R --n 100 --rho 50 --method naive \
-##            --out ../../results/02-wildcards/sim/n100_rho50_naive.rds
+## Usage:  Rscript sim.R --n 100 --rho 50 --method naive --out results/sim/n100_rho50_naive.rds
 
 library(optparse)
 
@@ -11,7 +10,7 @@ option_list <- list(
   make_option("--method", type = "character", default = "naive"),
   make_option("--iterations", type = "integer", default = 200),
   make_option("--seed", type = "double", default = 1234),
-  make_option("--out", type = "character", default = "../../results/02-wildcards/sim.rds")
+  make_option("--out", type = "character", default = "results/sim.rds")
 )
 opt <- parse_args(OptionParser(option_list = option_list))
 

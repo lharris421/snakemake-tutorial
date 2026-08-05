@@ -13,3 +13,8 @@ snakemake --cores 4 --config iterations=20   # smoke test, ~2 seconds
 
 Note that changing `iterations` on the command line does *not* trigger a rerun on its
 own — see chapter 9 on `--forcerun` for why, and what to do about it.
+
+This directory is a complete, self-contained project: copy it anywhere, run
+`git init`, and it works. That is how each example in this book is meant to be
+read --- a miniature of a real repository, with one Snakefile and one `results/`
+folder at its root.

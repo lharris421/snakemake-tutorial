@@ -1,19 +1,16 @@
-## One central folder for simulation results; see chapter 2.
-RESULTS = "../../results/02-wildcards"
-
 N = [50, 100, 400]
 RHO = [0, 50, 80]
 METHODS = ["naive", "split"]
 
 rule all:
     input:
-        "out/figure1.pdf"
+        "results/figure1.pdf"
 
 rule sim:
     input:
         "sim.R"
     output:
-        f"{RESULTS}/sim/n{{n}}_rho{{rho}}_{{method}}.rds"
+        "results/sim/n{n}_rho{rho}_{method}.rds"
     shell:
         "Rscript sim.R "
         "--n {wildcards.n} "
@@ -24,9 +21,9 @@ rule sim:
 rule figure:
     input:
         script = "figure.R",
-        rds = expand(f"{RESULTS}/sim/n{{n}}_rho{{rho}}_{{method}}.rds",
+        rds = expand("results/sim/n{n}_rho{rho}_{method}.rds",
                      n=N, rho=RHO, method=METHODS)
     output:
-        "out/figure1.pdf"
+        "results/figure1.pdf"
     shell:
         "Rscript {input.script} {output} {input.rds}"

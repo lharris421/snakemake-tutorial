@@ -1,18 +1,12 @@
-## Simulation results go to one central folder shared by every example in this
-## book, so that there is a single directory to back up or hand to a
-## collaborator.  Everything cheap enough to rebuild in seconds -- figures,
-## tables -- stays here next to the code.
-RESULTS = "../../results/01-first-rules"
-
 rule all:
     input:
-        "out/figure1.pdf"
+        "results/figure1.pdf"
 
 rule sim_naive:
     input:
         "sim.R"
     output:
-        f"{RESULTS}/sim-naive.rds"
+        "results/sim-naive.rds"
     shell:
         "Rscript sim.R naive {output}"
 
@@ -20,15 +14,15 @@ rule sim_split:
     input:
         "sim.R"
     output:
-        f"{RESULTS}/sim-split.rds"
+        "results/sim-split.rds"
     shell:
         "Rscript sim.R split {output}"
 
 rule figure:
     input:
         script = "figure.R",
-        rds = [f"{RESULTS}/sim-naive.rds", f"{RESULTS}/sim-split.rds"]
+        rds = ["results/sim-naive.rds", "results/sim-split.rds"]
     output:
-        "out/figure1.pdf"
+        "results/figure1.pdf"
     shell:
         "Rscript {input.script} {output} {input.rds}"

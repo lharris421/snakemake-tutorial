@@ -475,7 +475,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-filename="Snakefile (excerpt)"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Everything the manuscript is built from, in one place.  If it is not reachable</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">## from here, `snakemake` will not make it.</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>SIMS <span class="op">=</span> expand(<span class="ss">f"</span><span class="sc">{</span>RESULTS<span class="sc">}</span><span class="ss">/sim/n</span><span class="ch">{{</span><span class="ss">n</span><span class="ch">}}</span><span class="ss">_rho</span><span class="ch">{{</span><span class="ss">rho</span><span class="ch">}}</span><span class="ss">_</span><span class="ch">{{</span><span class="ss">method</span><span class="ch">}}</span><span class="ss">.rds"</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>SIMS <span class="op">=</span> expand(<span class="st">"results/sim/n</span><span class="sc">{n}</span><span class="st">_rho</span><span class="sc">{rho}</span><span class="st">_</span><span class="sc">{method}</span><span class="st">.rds"</span>,</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>              n<span class="op">=</span>config[<span class="st">"n"</span>], rho<span class="op">=</span>config[<span class="st">"rho"</span>], method<span class="op">=</span>config[<span class="st">"methods"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="code-with-filename">
@@ -488,7 +488,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        setup <span class="op">=</span> <span class="st">"code/setup.R"</span>,</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        rds <span class="op">=</span> SIMS</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    output:</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        <span class="co">"out/figure1.pdf"</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        <span class="co">"results/figure1.pdf"</span></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    log:</span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        <span class="co">"logs/figure1.log"</span></span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    params:</span>
@@ -511,9 +511,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(infiles, readRDS))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><code>positional_arguments = TRUE</code> tells <code>optparse</code> to accept bare arguments alongside the named flags, so the script can be called as</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> code/figure.R <span class="at">--out</span> out/figure1.pdf <span class="at">--level</span> 0.95 <span class="dt">\</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  ../../results/04-manuscript/sim/<span class="pp">*</span>.rds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>An alternative worth knowing about: instead of passing filenames, the script could glob the results folder itself. Do not do this. A glob picks up whatever happens to be lying in the directory, including results from a parameter grid you abandoned last month, and it hides the dependency from Snakemake, which will then happily build your figure without running the simulations.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> code/figure.R <span class="at">--out</span> results/figure1.pdf <span class="at">--level</span> 0.95 results/sim/<span class="pp">*</span>.rds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>An alternative worth knowing about: instead of passing filenames, the script could glob <code>results/sim/</code> itself. Do not do this. A glob picks up whatever happens to be lying in the directory, including results from a parameter grid you abandoned last month, and it hides the dependency from Snakemake, which will then happily build your figure without running the simulations.</p>
 </section>
 <section id="figures" class="level2" data-number="6.2">
 <h2 data-number="6.2" class="anchored" data-anchor-id="figures"><span class="header-section-number">6.2</span> Figures</h2>
@@ -577,9 +576,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>which produces:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
-<pre><strong>out/table1.tex</strong></pre>
+<pre><strong>results/table1.tex</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" data-filename="out/table1.tex"><pre class="sourceCode latex code-with-copy"><code class="sourceCode latex"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">\begin</span>{<span class="ex">table</span>}</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" data-filename="results/table1.tex"><pre class="sourceCode latex code-with-copy"><code class="sourceCode latex"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">\begin</span>{<span class="ex">table</span>}</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">\caption</span>{<span class="kw">\label</span>{<span class="ex">tab:coverage</span>}Coverage of nominal 95<span class="fu">\%</span> confidence intervals for coefficients selected by forward selection, by whether the selected coefficient is truly zero.}</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">\centering</span></span>
@@ -620,8 +619,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>rule <span class="bu">all</span>:</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span>:</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>        <span class="co">"build/paper.pdf"</span>,</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>        <span class="co">"out/figure1.pdf"</span>,</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>        <span class="co">"out/figure2.pdf"</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>        <span class="co">"results/figure1.pdf"</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>        <span class="co">"results/figure2.pdf"</span>,</span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>        ...</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This is slightly redundant, and it is what you want anyway. It gives you one place to read off what the project produces, and it means <code>snakemake</code> still builds a figure you have temporarily commented out of the manuscript while you rearrange the results section.</p>
 </section>
@@ -630,7 +629,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ol type="1">
 <li>Change the color palette in <code>code/setup.R</code> and run <code>snakemake -n</code>. Does the table rebuild? Should it?</li>
 <li>Add a <code>figure2</code> rule showing coverage against <code>rho</code> instead of <code>n</code>, and add it to <code>rule all</code>.</li>
-<li>Delete <code>out/table1.tex</code> and run <code>snakemake --cores 4</code>. How far back does Snakemake go?</li>
+<li>Delete <code>results/table1.tex</code> and run <code>snakemake --cores 4</code>. How far back does Snakemake go?</li>
 </ol>
 
 

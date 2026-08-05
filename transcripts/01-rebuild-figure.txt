@@ -1,4 +1,4 @@
-$ rm out/figure1.pdf
+$ rm results/figure1.pdf
 $ snakemake --cores 2
 Using shell: /bin/bash
 Provided cores: 2
@@ -14,12 +14,12 @@ Select jobs to execute...
 Execute 1 jobs...
 
 localrule figure:
-    input: figure.R, ../../results/01-first-rules/sim-naive.rds, ../../results/01-first-rules/sim-split.rds
-    output: out/figure1.pdf
+    input: figure.R, results/sim-naive.rds, results/sim-split.rds
+    output: results/figure1.pdf
     jobid: 1
-    reason: Missing output files: out/figure1.pdf
+    reason: Missing output files: results/figure1.pdf
     resources: tmpdir=/var/folders/gz/hbrw64n97wb0vy5prhnxst400000gp/T
-wrote out/figure1.pdf 
+wrote results/figure1.pdf 
 
 Finished jobid: 1 (Rule: figure)
 1 of 2 steps (50%) done
@@ -27,9 +27,9 @@ Select jobs to execute...
 Execute 1 jobs...
 
 localrule all:
-    input: out/figure1.pdf
+    input: results/figure1.pdf
     jobid: 0
-    reason: Input files updated by another job: out/figure1.pdf
+    reason: Input files updated by another job: results/figure1.pdf
     resources: tmpdir=/var/folders/gz/hbrw64n97wb0vy5prhnxst400000gp/T
 
 Finished jobid: 0 (Rule: all)

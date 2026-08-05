@@ -9,6 +9,10 @@ snakemake -n          # dry run: what would be done?
 snakemake --cores 2   # do it
 ```
 
-Simulation output goes to the shared `results/01-first-rules/` folder at the top of
-the repository; the figure is written to `out/` here. Both are regenerable and
-neither is checked in --- delete them and run `snakemake --cores 2` again.
+Everything is written to `results/`, which is regenerable and not checked in.
+Delete it and run `snakemake --cores 2` again to rebuild from scratch.
+
+This directory is a complete, self-contained project: copy it anywhere, run
+`git init`, and it works. That is how each example in this book is meant to be
+read --- a miniature of a real repository, with one Snakefile and one `results/`
+folder at its root.

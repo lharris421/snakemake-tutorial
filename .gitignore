@@ -7,12 +7,7 @@
 # Everything the examples regenerate.  If any of this is missing, `snakemake`
 # in the relevant directory puts it back -- which is the point of the book.
 .snakemake/
-
-# The central results folder: every example's cached simulation output, in one
-# place so that it can be backed up or shared as a single directory.
-/results/
-
-examples/*/out/
+examples/*/results/
 examples/*/logs/
 examples/*/benchmarks/
 examples/*/build/

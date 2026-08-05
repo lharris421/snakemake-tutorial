@@ -1,8 +1,0 @@
-# Where computed results are cached.  One folder for every example in this book,
-# so there is a single directory to back up or share; point it somewhere outside
-# the repository (say "~/dat/snakemake-tutorial") if you would rather keep
-# results away from code entirely.
-#
-# For an analysis, this folder is what you would hand a collaborator: the cleaned
-# analysis set and the fitted models, without the raw data or the code.
-results-loc: "../../results"

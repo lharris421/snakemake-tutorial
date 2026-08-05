@@ -472,7 +472,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><code>Rscript</code> runs an R file top to bottom and exits:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> sim.R</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Two things change when your code runs this way rather than in RStudio.</p>
-<p>The first is that the working directory is wherever your terminal is, not wherever the file is. If <code>sim.R</code> says <code>readRDS("out/thing.rds")</code>, that path is resolved relative to the directory you were sitting in when you typed the command. Pick a convention and hold to it; the one used throughout this book is <strong>always run from the project root</strong>, so every path in every script is relative to the top of the project. Snakemake follows the same convention by default.</p>
+<p>The first is that the working directory is wherever your terminal is, not wherever the file is. If <code>sim.R</code> says <code>readRDS("results/thing.rds")</code>, that path is resolved relative to the directory you were sitting in when you typed the command. Pick a convention and hold to it; the one used throughout this book is <strong>always run from the project root</strong>, so every path in every script is relative to the top of the project. Snakemake follows the same convention by default, which is convenient.</p>
 <p>The second is that nothing prints unless you ask. Auto-printing at the top level is an interactive feature, so <code>head(d)</code> on its own line produces no output under <code>Rscript</code>; you need <code>print(head(d))</code> or <code>cat()</code>. This matters more than it sounds like it should, because those prints become your log file in <a href="05-parallel-and-logs.html" class="quarto-xref"><span>Chapter 5</span></a>.</p>
 </section>
 <section id="taking-arguments" class="level2" data-number="1.2">
@@ -488,7 +488,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>outfile <span class="ot">&lt;-</span> args[<span class="dv">2</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>and is then called like this:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> sim.R naive ../../results/01-first-rules/sim-naive.rds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> sim.R naive results/sim-naive.rds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This is fine for two arguments. It gets bad quickly: the arguments are positional, so you have to remember the order, everything arrives as a character string that you have to convert yourself, and there is no way to give something a default.</p>
 </section>
 <section id="optparse" class="level2" data-number="1.3">
@@ -506,13 +506,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">make_option</span>(<span class="st">"--method"</span>, <span class="at">type =</span> <span class="st">"character"</span>, <span class="at">default =</span> <span class="st">"naive"</span>),</span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">make_option</span>(<span class="st">"--iterations"</span>, <span class="at">type =</span> <span class="st">"integer"</span>, <span class="at">default =</span> <span class="dv">200</span>),</span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">make_option</span>(<span class="st">"--seed"</span>, <span class="at">type =</span> <span class="st">"double"</span>, <span class="at">default =</span> <span class="dv">1234</span>),</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">make_option</span>(<span class="st">"--out"</span>, <span class="at">type =</span> <span class="st">"character"</span>, <span class="at">default =</span> <span class="st">"../../results/02-wildcards/sim.rds"</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">make_option</span>(<span class="st">"--out"</span>, <span class="at">type =</span> <span class="st">"character"</span>, <span class="at">default =</span> <span class="st">"results/sim.rds"</span>)</span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>opt <span class="ot">&lt;-</span> <span class="fu">parse_args</span>(<span class="fu">OptionParser</span>(<span class="at">option_list =</span> option_list))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Now the script is called with named arguments in any order:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> sim.R <span class="at">--n</span> 400 <span class="at">--rho</span> 80 <span class="at">--method</span> split <span class="dt">\</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--out</span> ../../results/02-wildcards/sim/n400_rho80_split.rds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> sim.R <span class="at">--n</span> 400 <span class="at">--rho</span> 80 <span class="at">--method</span> split <span class="at">--out</span> results/sim/n400_rho80_split.rds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>and <code>opt</code> is a list: <code>opt$n</code> is an integer, <code>opt$method</code> is a string. Anything you leave off falls back to its default, so the script still runs as-is when you are poking at it interactively.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -544,26 +543,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="where-the-results-go" class="level2" data-number="1.5">
 <h2 data-number="1.5" class="anchored" data-anchor-id="where-the-results-go"><span class="header-section-number">1.5</span> Where the results go</h2>
-<p>Three decisions that will save you pain later:</p>
-<p><strong>Results are files, and files are named for what produced them.</strong> A file called <code>n400_rho80_split.rds</code> tells you the sample size, the correlation, and the method. A file called <code>results2_final.rds</code> tells you nothing.</p>
+<p>Two decisions that will save you pain later:</p>
+<p><strong>Results are files, and files are named for what produced them.</strong> A file called <code>n400_rho80_split.rds</code> tells you the sample size, the correlation, and the method. A file called <code>results2_final.rds</code> tells you nothing, and in six months neither will you.</p>
 <p><strong>Results are regenerable, so they don’t go in git.</strong> Commit the code and the inputs; let the outputs be rebuilt — which is a claim you can only make honestly once the pipeline is complete.</p>
-<p><strong>All the results go in one place.</strong> Every example in this book writes its simulation output to a single shared folder, <code>results/</code>, at the top of the repository:</p>
-<div class="code-with-filename">
-<div class="code-with-filename-file">
-<pre><strong>the layout</strong></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" data-filename="the layout"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>snakemake-tutorial/</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  results/                 &lt;- every example's computed results</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    01-first-rules/</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    02-wildcards/</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    ...</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  examples/</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    01-first-rules/</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>      sim.R  figure.R  Snakefile</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>      out/                 &lt;- figures and tables, rebuilt in seconds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>The split is between things that are expensive to compute and things that are derived from them. The <code>.rds</code> files are the expensive part, so they go in the shared folder; a figure that takes two seconds to redraw stays next to the code that draws it, in <code>out/</code>.</p>
-<p>Why bother, when each example could keep its own results next door? Because one folder is a thing you can hand to somebody. Back it up, sync it, put it on a shared drive, and a collaborator has every result the project has ever computed without also getting your working directory. <a href="10-scaling-up.html" class="quarto-xref"><span>Chapter 10</span></a> comes back to this once the pipeline is big enough for it to matter.</p>
+<p><strong>Everything a project computes goes in one directory.</strong> Every example in this book has a <code>results/</code> folder at its root, and nothing is written anywhere else. One directory to ignore in git, one to delete when you want to prove the pipeline still works, one to hand to a collaborator. <a href="02-first-snakefile.html#sec-shape" class="quarto-xref"><span>Section 2.8</span></a> says more about the layout once you have seen a Snakefile.</p>
 
 
 </section>

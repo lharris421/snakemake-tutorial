@@ -1,4 +1,4 @@
-$ snakemake --cores 1 ../../results/02-wildcards/sim/n50_rho0_naive.rds
+$ snakemake --cores 1 results/sim/n50_rho0_naive.rds
 Using shell: /bin/bash
 Provided cores: 1 (use --cores to define parallelism)
 Rules claiming more threads will be scaled down.
@@ -13,12 +13,12 @@ Execute 1 jobs...
 
 localrule sim:
     input: sim.R
-    output: ../../results/02-wildcards/sim/n50_rho0_naive.rds
+    output: results/sim/n50_rho0_naive.rds
     jobid: 0
-    reason: Missing output files: ../../results/02-wildcards/sim/n50_rho0_naive.rds
+    reason: Missing output files: results/sim/n50_rho0_naive.rds
     wildcards: n=50, rho=0, method=naive
     resources: tmpdir=/var/folders/gz/hbrw64n97wb0vy5prhnxst400000gp/T
-wrote ../../results/02-wildcards/sim/n50_rho0_naive.rds -- coverage: 0.823 
+wrote results/sim/n50_rho0_naive.rds -- coverage: 0.823 
 
 Finished jobid: 0 (Rule: sim)
 1 of 1 steps (100%) done

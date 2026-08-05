@@ -33,7 +33,7 @@ embed_file("examples/02-wildcards/Snakefile", from = "^rule sim:",
 
 The output is no longer a filename; it is a *pattern*. The parts in braces are
 wildcards, and they work backwards: when something asks for
-`n400_rho80_split.rds`, Snakemake matches that name against the
+`results/sim/n400_rho80_split.rds`, Snakemake matches that name against the
 pattern, concludes that `n` is `400`, `rho` is `80` and `method` is `split`, and
 substitutes those values into the command wherever `{wildcards.…}` appears.
 
@@ -46,7 +46,7 @@ function of its parameters, and then you ask for the files you want.
 
 A wildcard is a regular expression, `.+` by default. Nothing in the rule above says
 `method` has to be `naive` or `split`, so asking for
-`n50_rho0_bayes.rds` produces a perfectly valid job that runs `sim.R
+`results/sim/n50_rho0_bayes.rds` produces a perfectly valid job that runs `sim.R
 --method bayes` and fails inside R. @sec-config shows how to constrain wildcards,
 and @sec-debugging shows what that failure looks like.
 :::
@@ -89,7 +89,7 @@ embed_file("examples/02-wildcards/Snakefile", from = "^rule figure:",
 `expand()` takes a pattern and some lists and returns every combination of them, so
 
 ```python
-expand(f"{RESULTS}/sim/n{{n}}_rho{{rho}}_{{method}}.rds", n=N, rho=RHO, method=METHODS)
+expand("results/sim/n{n}_rho{rho}_{method}.rds", n=N, rho=RHO, method=METHODS)
 ```
 
 returns a list of 3 × 3 × 2 = 18 filenames. Those are the inputs of `rule figure`,
@@ -134,7 +134,7 @@ flowchart LR
   A --> B2[n50_rho0_split.rds]
   A --> B3["(15 more)"]
   A --> B4[n400_rho80_split.rds]
-  B1 --> F[out/figure1.pdf]
+  B1 --> F[results/figure1.pdf]
   B2 --> F
   B3 --> F
   B4 --> F
@@ -159,6 +159,6 @@ the rest go.
 ## Try it
 
 1. Add `1000` to `N` and run `snakemake -n`. How many jobs? Which ones are new?
-2. Ask for `../../results/02-wildcards/sim/n77_rho33_naive.rds`. It works --- explain why.
-3. Ask for `../../results/02-wildcards/sim/n50_rho0_bayes.rds` and watch it fail. Where does the error
+2. Ask for `results/sim/n77_rho33_naive.rds`. It works --- explain why.
+3. Ask for `results/sim/n50_rho0_bayes.rds` and watch it fail. Where does the error
    come from, and how would you have preferred to find out?

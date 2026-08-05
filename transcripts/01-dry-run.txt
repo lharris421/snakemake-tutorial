@@ -10,29 +10,29 @@ total            4
 
 rule sim_naive:
     input: sim.R
-    output: ../../results/01-first-rules/sim-naive.rds
+    output: results/sim-naive.rds
     jobid: 2
-    reason: Missing output files: ../../results/01-first-rules/sim-naive.rds
+    reason: Missing output files: results/sim-naive.rds
     resources: tmpdir=<TBD>
 
 rule sim_split:
     input: sim.R
-    output: ../../results/01-first-rules/sim-split.rds
+    output: results/sim-split.rds
     jobid: 3
-    reason: Missing output files: ../../results/01-first-rules/sim-split.rds
+    reason: Missing output files: results/sim-split.rds
     resources: tmpdir=<TBD>
 
 rule figure:
-    input: figure.R, ../../results/01-first-rules/sim-naive.rds, ../../results/01-first-rules/sim-split.rds
-    output: out/figure1.pdf
+    input: figure.R, results/sim-naive.rds, results/sim-split.rds
+    output: results/figure1.pdf
     jobid: 1
-    reason: Missing output files: out/figure1.pdf; Input files updated by another job: ../../results/01-first-rules/sim-naive.rds, ../../results/01-first-rules/sim-split.rds
+    reason: Missing output files: results/figure1.pdf; Input files updated by another job: results/sim-split.rds, results/sim-naive.rds
     resources: tmpdir=<TBD>
 
 rule all:
-    input: out/figure1.pdf
+    input: results/figure1.pdf
     jobid: 0
-    reason: Input files updated by another job: out/figure1.pdf
+    reason: Input files updated by another job: results/figure1.pdf
     resources: tmpdir=<TBD>
 Job stats:
 job          count

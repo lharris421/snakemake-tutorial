@@ -444,7 +444,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#doing-nothing-quickly" id="toc-doing-nothing-quickly" class="nav-link" data-scroll-target="#doing-nothing-quickly"><span class="header-section-number">2.5</span> Doing nothing, quickly</a></li>
   <li><a href="#what-counts-as-out-of-date" id="toc-what-counts-as-out-of-date" class="nav-link" data-scroll-target="#what-counts-as-out-of-date"><span class="header-section-number">2.6</span> What counts as out of date</a></li>
   <li><a href="#building-one-thing" id="toc-building-one-thing" class="nav-link" data-scroll-target="#building-one-thing"><span class="header-section-number">2.7</span> Building one thing</a></li>
-  <li><a href="#try-it" id="toc-try-it" class="nav-link" data-scroll-target="#try-it"><span class="header-section-number">2.8</span> Try it</a></li>
+  <li><a href="#sec-shape" id="toc-sec-shape" class="nav-link" data-scroll-target="#sec-shape"><span class="header-section-number">2.8</span> One Snakefile, one project</a></li>
+  <li><a href="#try-it" id="toc-try-it" class="nav-link" data-scroll-target="#try-it"><span class="header-section-number">2.9</span> Try it</a></li>
   </ul>
 </nav>
     </div>
@@ -473,9 +474,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <p>Start in <code>examples/01-first-rules</code>. It contains two R scripts — <code>sim.R</code>, which runs the simulation for one method, and <code>figure.R</code>, which turns simulation output into a figure — and a file called <code>Snakefile</code>.</p>
 <p>By hand, building the figure means running three commands in the right order:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> sim.R naive ../../results/01-first-rules/sim-naive.rds</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> sim.R split ../../results/01-first-rules/sim-split.rds</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> figure.R out/figure1.pdf ../../results/01-first-rules/sim-<span class="pp">*</span>.rds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> sim.R naive results/sim-naive.rds</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> sim.R split results/sim-split.rds</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> figure.R results/figure1.pdf results/sim-naive.rds results/sim-split.rds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>That is not hard. It is just something you have to remember, and remember <em>again</em> every time you change one of the scripts, and remember correctly — because nothing stops you from rebuilding the figure without rerunning the simulation.</p>
 <section id="rules" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="rules"><span class="header-section-number">2.1</span> Rules</h2>
@@ -484,42 +485,36 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-with-filename-file">
 <pre><strong>Snakefile</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-filename="Snakefile"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Simulation results go to one central folder shared by every example in this</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">## book, so that there is a single directory to back up or hand to a</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">## collaborator.  Everything cheap enough to rebuild in seconds -- figures,</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">## tables -- stays here next to the code.</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>RESULTS <span class="op">=</span> <span class="st">"../../results/01-first-rules"</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>rule <span class="bu">all</span>:</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span>:</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        <span class="co">"out/figure1.pdf"</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>rule sim_naive:</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span>:</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        <span class="co">"sim.R"</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    output:</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"</span><span class="sc">{</span>RESULTS<span class="sc">}</span><span class="ss">/sim-naive.rds"</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    shell:</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>        <span class="co">"Rscript sim.R naive {output}"</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>rule sim_split:</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span>:</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        <span class="co">"sim.R"</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    output:</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"</span><span class="sc">{</span>RESULTS<span class="sc">}</span><span class="ss">/sim-split.rds"</span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    shell:</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>        <span class="co">"Rscript sim.R split {output}"</span></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>rule figure:</span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span>:</span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>        script <span class="op">=</span> <span class="st">"figure.R"</span>,</span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>        rds <span class="op">=</span> [<span class="ss">f"</span><span class="sc">{</span>RESULTS<span class="sc">}</span><span class="ss">/sim-naive.rds"</span>, <span class="ss">f"</span><span class="sc">{</span>RESULTS<span class="sc">}</span><span class="ss">/sim-split.rds"</span>]</span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    output:</span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>        <span class="co">"out/figure1.pdf"</span></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    shell:</span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>        <span class="co">"Rscript {input.script} {output} {input.rds}"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-filename="Snakefile"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>rule <span class="bu">all</span>:</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span>:</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        <span class="co">"results/figure1.pdf"</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>rule sim_naive:</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span>:</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        <span class="co">"sim.R"</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    output:</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        <span class="co">"results/sim-naive.rds"</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    shell:</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        <span class="co">"Rscript sim.R naive {output}"</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>rule sim_split:</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span>:</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        <span class="co">"sim.R"</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    output:</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>        <span class="co">"results/sim-split.rds"</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    shell:</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>        <span class="co">"Rscript sim.R split {output}"</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>rule figure:</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span>:</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        script <span class="op">=</span> <span class="st">"figure.R"</span>,</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>        rds <span class="op">=</span> [<span class="st">"results/sim-naive.rds"</span>, <span class="st">"results/sim-split.rds"</span>]</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    output:</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>        <span class="co">"results/figure1.pdf"</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    shell:</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>        <span class="co">"Rscript {input.script} {output} {input.rds}"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Read <code>rule sim_naive</code> as a sentence: <em>to make <code>sim-naive.rds</code> in the results folder, given <code>sim.R</code>, run <code>Rscript sim.R naive</code> with that path.</em></p>
+<p>Read <code>rule sim_naive</code> as a sentence: <em>to make <code>results/sim-naive.rds</code>, given <code>sim.R</code>, run <code>Rscript sim.R naive results/sim-naive.rds</code>.</em></p>
 <p>A few mechanics:</p>
 <ul>
 <li><strong><code>{output}</code> and <code>{input}</code> are substituted into the shell command.</strong> You write the filename once, in the <code>output:</code> block, and refer to it after that. This is not just brevity — it makes it impossible for the rule to declare one file and write a different one.</li>
@@ -545,9 +540,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p></p><figure class="figure"><p></p>
 <div>
 <pre class="mermaid mermaid-js">flowchart LR
-  A[sim.R] --&gt; B["results/01-first-rules/&lt;br/&gt;sim-naive.rds"]
-  A --&gt; C["results/01-first-rules/&lt;br/&gt;sim-split.rds"]
-  D[figure.R] --&gt; E[out/figure1.pdf]
+  A[sim.R] --&gt; B[results/sim-naive.rds]
+  A --&gt; C[results/sim-split.rds]
+  D[figure.R] --&gt; E[results/figure1.pdf]
   B --&gt; E
   C --&gt; E
   E --&gt; F([rule all])
@@ -574,29 +569,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="ex">rule</span> sim_naive:</span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input:</span> sim.R</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="ex">output:</span> ../../results/01-first-rules/sim-naive.rds</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="ex">output:</span> results/sim-naive.rds</span>
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="ex">jobid:</span> 2</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Missing output files: ../../results/01-first-rules/sim-naive.rds</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Missing output files: results/sim-naive.rds</span>
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="ex">resources:</span> tmpdir=<span class="op">&lt;</span>TBD<span class="op">&gt;</span></span>
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="ex">rule</span> sim_split:</span>
 <span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input:</span> sim.R</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="ex">output:</span> ../../results/01-first-rules/sim-split.rds</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="ex">output:</span> results/sim-split.rds</span>
 <span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="ex">jobid:</span> 3</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Missing output files: ../../results/01-first-rules/sim-split.rds</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Missing output files: results/sim-split.rds</span>
 <span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    <span class="ex">resources:</span> tmpdir=<span class="op">&lt;</span>TBD<span class="op">&gt;</span></span>
 <span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="ex">rule</span> figure:</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input:</span> figure.R, ../../results/01-first-rules/sim-naive.rds, ../../results/01-first-rules/sim-split.rds</span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="ex">output:</span> out/figure1.pdf</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input:</span> figure.R, results/sim-naive.rds, results/sim-split.rds</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="ex">output:</span> results/figure1.pdf</span>
 <span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    <span class="ex">jobid:</span> 1</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Missing output files: out/figure1.pdf<span class="kw">;</span> <span class="ex">Input</span> files updated by another job: ../../results/01-first-rules/sim-naive.rds, ../../results/01-first-rules/sim-split.rds</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Missing output files: results/figure1.pdf<span class="kw">;</span> <span class="ex">Input</span> files updated by another job: results/sim-split.rds, results/sim-naive.rds</span>
 <span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    <span class="ex">resources:</span> tmpdir=<span class="op">&lt;</span>TBD<span class="op">&gt;</span></span>
 <span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="ex">rule</span> all:</span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input:</span> out/figure1.pdf</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input:</span> results/figure1.pdf</span>
 <span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    <span class="ex">jobid:</span> 0</span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Input files updated by another job: out/figure1.pdf</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Input files updated by another job: results/figure1.pdf</span>
 <span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    <span class="ex">resources:</span> tmpdir=<span class="op">&lt;</span>TBD<span class="op">&gt;</span></span>
 <span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="ex">Job</span> stats:</span>
 <span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="ex">job</span>          count</span>
@@ -634,19 +629,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="ex">localrule</span> sim_naive:</span>
 <span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input:</span> sim.R</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="ex">output:</span> ../../results/01-first-rules/sim-naive.rds</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="ex">output:</span> results/sim-naive.rds</span>
 <span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    <span class="ex">jobid:</span> 2</span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Missing output files: ../../results/01-first-rules/sim-naive.rds</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Missing output files: results/sim-naive.rds</span>
 <span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    <span class="ex">resources:</span> tmpdir=/var/folders/gz/hbrw64n97wb0vy5prhnxst400000gp/T</span>
 <span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="ex">localrule</span> sim_split:</span>
 <span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input:</span> sim.R</span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    <span class="ex">output:</span> ../../results/01-first-rules/sim-split.rds</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    <span class="ex">output:</span> results/sim-split.rds</span>
 <span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    <span class="ex">jobid:</span> 3</span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Missing output files: ../../results/01-first-rules/sim-split.rds</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Missing output files: results/sim-split.rds</span>
 <span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    <span class="ex">resources:</span> tmpdir=/var/folders/gz/hbrw64n97wb0vy5prhnxst400000gp/T</span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="ex">wrote</span> ../../results/01-first-rules/sim-naive.rds <span class="at">--</span> coverage: 0.828 </span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="ex">wrote</span> ../../results/01-first-rules/sim-split.rds <span class="at">--</span> coverage: 0.944 </span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="ex">wrote</span> results/sim-naive.rds <span class="at">--</span> coverage: 0.828 </span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="ex">wrote</span> results/sim-split.rds <span class="at">--</span> coverage: 0.944 </span>
 <span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="ex">Finished</span> jobid: 2 <span class="er">(</span><span class="ex">Rule:</span> sim_naive<span class="kw">)</span></span>
 <span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="ex">1</span> of 4 steps <span class="er">(</span><span class="ex">25%</span><span class="kw">)</span> <span class="cf">done</span></span>
@@ -657,12 +652,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a><span class="ex">Execute</span> 1 jobs...</span>
 <span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a><span class="ex">localrule</span> figure:</span>
-<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input:</span> figure.R, ../../results/01-first-rules/sim-naive.rds, ../../results/01-first-rules/sim-split.rds</span>
-<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>    <span class="ex">output:</span> out/figure1.pdf</span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input:</span> figure.R, results/sim-naive.rds, results/sim-split.rds</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>    <span class="ex">output:</span> results/figure1.pdf</span>
 <span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>    <span class="ex">jobid:</span> 1</span>
-<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Missing output files: out/figure1.pdf<span class="kw">;</span> <span class="ex">Input</span> files updated by another job: ../../results/01-first-rules/sim-naive.rds, ../../results/01-first-rules/sim-split.rds</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Missing output files: results/figure1.pdf<span class="kw">;</span> <span class="ex">Input</span> files updated by another job: results/sim-split.rds, results/sim-naive.rds</span>
 <span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>    <span class="ex">resources:</span> tmpdir=/var/folders/gz/hbrw64n97wb0vy5prhnxst400000gp/T</span>
-<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a><span class="ex">wrote</span> out/figure1.pdf </span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a><span class="ex">wrote</span> results/figure1.pdf </span>
 <span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a><span class="ex">Finished</span> jobid: 1 <span class="er">(</span><span class="ex">Rule:</span> figure<span class="kw">)</span></span>
 <span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a><span class="ex">3</span> of 4 steps <span class="er">(</span><span class="ex">75%</span><span class="kw">)</span> <span class="cf">done</span></span>
@@ -670,9 +665,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a><span class="ex">Execute</span> 1 jobs...</span>
 <span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a><span class="ex">localrule</span> all:</span>
-<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input:</span> out/figure1.pdf</span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input:</span> results/figure1.pdf</span>
 <span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>    <span class="ex">jobid:</span> 0</span>
-<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Input files updated by another job: out/figure1.pdf</span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Input files updated by another job: results/figure1.pdf</span>
 <span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>    <span class="ex">resources:</span> tmpdir=/var/folders/gz/hbrw64n97wb0vy5prhnxst400000gp/T</span>
 <span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a><span class="ex">Finished</span> jobid: 0 <span class="er">(</span><span class="ex">Rule:</span> all<span class="kw">)</span></span>
@@ -685,7 +680,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">--cores</span> 2</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Nothing</span> to be done <span class="er">(</span><span class="ex">all</span> requested files are present and up to date<span class="kw">)</span><span class="bu">.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This is the point of the exercise. Ask for the figure a hundred more times and you will get that message a hundred times. Now delete the figure and ask again:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> rm out/figure1.pdf</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> rm results/figure1.pdf</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">--cores</span> 2</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Using</span> shell: /bin/bash</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="ex">Provided</span> cores: 2</span>
@@ -701,12 +696,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="ex">Execute</span> 1 jobs...</span>
 <span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="ex">localrule</span> figure:</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input:</span> figure.R, ../../results/01-first-rules/sim-naive.rds, ../../results/01-first-rules/sim-split.rds</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="ex">output:</span> out/figure1.pdf</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input:</span> figure.R, results/sim-naive.rds, results/sim-split.rds</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="ex">output:</span> results/figure1.pdf</span>
 <span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="ex">jobid:</span> 1</span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Missing output files: out/figure1.pdf</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Missing output files: results/figure1.pdf</span>
 <span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    <span class="ex">resources:</span> tmpdir=/var/folders/gz/hbrw64n97wb0vy5prhnxst400000gp/T</span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="ex">wrote</span> out/figure1.pdf </span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="ex">wrote</span> results/figure1.pdf </span>
 <span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="ex">Finished</span> jobid: 1 <span class="er">(</span><span class="ex">Rule:</span> figure<span class="kw">)</span></span>
 <span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="ex">1</span> of 2 steps <span class="er">(</span><span class="ex">50%</span><span class="kw">)</span> <span class="cf">done</span></span>
@@ -714,9 +709,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="ex">Execute</span> 1 jobs...</span>
 <span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a><span class="ex">localrule</span> all:</span>
-<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input:</span> out/figure1.pdf</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input:</span> results/figure1.pdf</span>
 <span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>    <span class="ex">jobid:</span> 0</span>
-<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Input files updated by another job: out/figure1.pdf</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Input files updated by another job: results/figure1.pdf</span>
 <span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>    <span class="ex">resources:</span> tmpdir=/var/folders/gz/hbrw64n97wb0vy5prhnxst400000gp/T</span>
 <span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a><span class="ex">Finished</span> jobid: 0 <span class="er">(</span><span class="ex">Rule:</span> all<span class="kw">)</span></span>
@@ -759,15 +754,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="building-one-thing" class="level2" data-number="2.7">
 <h2 data-number="2.7" class="anchored" data-anchor-id="building-one-thing"><span class="header-section-number">2.7</span> Building one thing</h2>
 <p>You can also name a target directly, which is invaluable when you are developing and want to check one piece:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">--cores</span> 1 ../../results/01-first-rules/sim-naive.rds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">--cores</span> 1 results/sim-naive.rds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Snakemake finds the rule that can produce that file, builds whatever it needs, and stops. You can also name a <em>rule</em> — <code>snakemake --cores 1 figure</code> — which asks for that rule’s outputs.</p>
 </section>
-<section id="try-it" class="level2" data-number="2.8">
-<h2 data-number="2.8" class="anchored" data-anchor-id="try-it"><span class="header-section-number">2.8</span> Try it</h2>
+<section id="sec-shape" class="level2" data-number="2.8">
+<h2 data-number="2.8" class="anchored" data-anchor-id="sec-shape"><span class="header-section-number">2.8</span> One Snakefile, one project</h2>
+<p>Before going further, it is worth being explicit about what a “project” is here, because every example in this book is one and your own work should be too.</p>
+<p><code>examples/01-first-rules</code> is a complete, self-contained project. Copy that directory anywhere on your disk, run <code>git init</code> inside it, and everything still works — it has no dependency on the rest of this repository. The same is true of each of the other four. They are laid out side by side for convenience, but each is a miniature of a real repository: one paper, one analysis, one thing.</p>
+<p>The layout that scales from these examples up to a real methods paper is:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>the shape of a project</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10" data-filename="the shape of a project"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>my-project/</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  Snakefile          &lt;- the map: every rule, in one file, at the root</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  config.yaml        &lt;- the settings (chapter 4)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  code/              &lt;- the scripts the rules call</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  results/           &lt;- everything the pipeline computes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Two of those deserve to be stated as rules rather than suggestions.</p>
+<p><strong>One Snakefile, at the root.</strong> Not one per subdirectory. The Snakefile is the only place that describes how the pieces of the project fit together, so a newcomer — a coauthor, a reviewer, you in a year — has exactly one file to open to find out what this project builds and what it builds it from. Snakemake does let you split rules across files with <code>include:</code>, and that is worth reaching for once a single file becomes genuinely unwieldy, but the default should be one file you can read top to bottom.</p>
+<p><strong>One results directory, at the root.</strong> Everything the pipeline computes goes there — simulation output, figures, tables — and nothing else does. That gives you a single directory that is safe to delete, a single directory to put in <code>.gitignore</code>, and a single directory to hand to somebody. <a href="10-scaling-up.html" class="quarto-xref"><span>Chapter 10</span></a> picks up that last point, which turns out to matter more than it sounds like it should.</p>
+<p>The corollary is that anything <em>not</em> in <code>results/</code> is either code, settings, or something a human wrote. That is a useful thing to be able to say about a directory.</p>
+</section>
+<section id="try-it" class="level2" data-number="2.9">
+<h2 data-number="2.9" class="anchored" data-anchor-id="try-it"><span class="header-section-number">2.9</span> Try it</h2>
 <ol type="1">
-<li>Delete <code>out/</code> and <code>../../results/01-first-rules/</code> and rebuild. Time it.</li>
+<li>Delete <code>results/</code> entirely and rebuild. Time it.</li>
 <li>Change the <code>n &lt;- 100</code> line in <code>sim.R</code> to <code>n &lt;- 200</code> and run <code>snakemake -n</code>. Which jobs are planned, and why?</li>
-<li>Add a line to <code>rule all</code> asking for <code>out/nonexistent.rds</code> and run <code>snakemake -n</code>. Read the error carefully — you will see it again.</li>
+<li>Add a line to <code>rule all</code> asking for <code>results/nonexistent.rds</code> and run <code>snakemake -n</code>. Read the error carefully — you will see it again.</li>
 </ol>
 
 

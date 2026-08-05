@@ -1,10 +1,10 @@
 $ snakemake --cores 4
-    input: figure.R, ../../results/02-wildcards/sim/n50_rho0_naive.rds, ../../results/02-wildcards/sim/n50_rho0_split.rds, ../../results/02-wildcards/sim/n50_rho50_naive.rds, ../../results/02-wildcards/sim/n50_rho50_split.rds, ../../results/02-wildcards/sim/n50_rho80_naive.rds, ../../results/02-wildcards/sim/n50_rho80_split.rds, ../../results/02-wildcards/sim/n100_rho0_naive.rds, ../../results/02-wildcards/sim/n100_rho0_split.rds, ../../results/02-wildcards/sim/n100_rho50_naive.rds, ../../results/02-wildcards/sim/n100_rho50_split.rds, ../../results/02-wildcards/sim/n100_rho80_naive.rds, ../../results/02-wildcards/sim/n100_rho80_split.rds, ../../results/02-wildcards/sim/n400_rho0_naive.rds, ../../results/02-wildcards/sim/n400_rho0_split.rds, ../../results/02-wildcards/sim/n400_rho50_naive.rds, ../../results/02-wildcards/sim/n400_rho50_split.rds, ../../results/02-wildcards/sim/n400_rho80_naive.rds, ../../results/02-wildcards/sim/n400_rho80_split.rds
-    output: out/figure1.pdf
+    input: figure.R, results/sim/n50_rho0_naive.rds, results/sim/n50_rho0_split.rds, results/sim/n50_rho50_naive.rds, results/sim/n50_rho50_split.rds, results/sim/n50_rho80_naive.rds, results/sim/n50_rho80_split.rds, results/sim/n100_rho0_naive.rds, results/sim/n100_rho0_split.rds, results/sim/n100_rho50_naive.rds, results/sim/n100_rho50_split.rds, results/sim/n100_rho80_naive.rds, results/sim/n100_rho80_split.rds, results/sim/n400_rho0_naive.rds, results/sim/n400_rho0_split.rds, results/sim/n400_rho50_naive.rds, results/sim/n400_rho50_split.rds, results/sim/n400_rho80_naive.rds, results/sim/n400_rho80_split.rds
+    output: results/figure1.pdf
     jobid: 1
-    reason: Missing output files: out/figure1.pdf; Input files updated by another job: ../../results/02-wildcards/sim/n50_rho80_split.rds, ../../results/02-wildcards/sim/n400_rho80_split.rds, ../../results/02-wildcards/sim/n400_rho50_naive.rds, ../../results/02-wildcards/sim/n50_rho50_split.rds, ../../results/02-wildcards/sim/n400_rho0_naive.rds, ../../results/02-wildcards/sim/n100_rho80_naive.rds, ../../results/02-wildcards/sim/n400_rho80_naive.rds, ../../results/02-wildcards/sim/n100_rho50_split.rds, ../../results/02-wildcards/sim/n400_rho0_split.rds, ../../results/02-wildcards/sim/n100_rho0_naive.rds, ../../results/02-wildcards/sim/n100_rho0_split.rds, ../../results/02-wildcards/sim/n100_rho80_split.rds, ../../results/02-wildcards/sim/n50_rho80_naive.rds, ../../results/02-wildcards/sim/n50_rho50_naive.rds, ../../results/02-wildcards/sim/n50_rho0_split.rds, ../../results/02-wildcards/sim/n100_rho50_naive.rds, ../../results/02-wildcards/sim/n400_rho50_split.rds
+    reason: Missing output files: results/figure1.pdf; Input files updated by another job: results/sim/n50_rho80_split.rds, results/sim/n50_rho50_naive.rds, results/sim/n50_rho50_split.rds, results/sim/n400_rho0_split.rds, results/sim/n100_rho50_naive.rds, results/sim/n100_rho80_split.rds, results/sim/n400_rho50_split.rds, results/sim/n400_rho80_naive.rds, results/sim/n400_rho0_naive.rds, results/sim/n100_rho0_naive.rds, results/sim/n400_rho50_naive.rds, results/sim/n400_rho80_split.rds, results/sim/n50_rho0_split.rds, results/sim/n100_rho80_naive.rds, results/sim/n100_rho50_split.rds, results/sim/n50_rho80_naive.rds, results/sim/n100_rho0_split.rds
     resources: tmpdir=/var/folders/gz/hbrw64n97wb0vy5prhnxst400000gp/T
-wrote out/figure1.pdf 
+wrote results/figure1.pdf 
 
 Finished jobid: 1 (Rule: figure)
 18 of 19 steps (95%) done
@@ -12,9 +12,9 @@ Select jobs to execute...
 Execute 1 jobs...
 
 localrule all:
-    input: out/figure1.pdf
+    input: results/figure1.pdf
     jobid: 0
-    reason: Input files updated by another job: out/figure1.pdf
+    reason: Input files updated by another job: results/figure1.pdf
     resources: tmpdir=/var/folders/gz/hbrw64n97wb0vy5prhnxst400000gp/T
 
 Finished jobid: 0 (Rule: all)

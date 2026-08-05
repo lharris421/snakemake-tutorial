@@ -12,10 +12,10 @@ snakemake --cores 4     # ends with report.html
 
 ```
 data/trial.csv     raw data (read-only, never modified)
-code/clean.R       -> ../../results/05-analysis/analysis.rds
-code/model.R       -> ../../results/05-analysis/models.rds
-code/table1.R      -> ../../results/05-analysis/table1.rds
-code/figure.R      -> out/figure1.png
+code/clean.R       -> results/analysis.rds
+code/model.R       -> results/models.rds
+code/table1.R      -> results/table1.rds
+code/figure.R      -> results/figure1.png
 report.qmd         -> report.html
 ```
 
@@ -23,3 +23,8 @@ report.qmd         -> report.html
 sent it to you. It is deliberately not a rule in the Snakefile; see chapter 8.
 
 Requires `quarto` on your PATH plus the R packages `optparse`, `ggplot2` and `knitr`.
+
+This directory is a complete, self-contained project: copy it anywhere, run
+`git init`, and it works. That is how each example in this book is meant to be
+read --- a miniature of a real repository, with one Snakefile and one `results/`
+folder at its root.
