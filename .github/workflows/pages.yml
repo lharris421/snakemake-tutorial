@@ -1,0 +1,41 @@
+# Publish the rendered book.
+#
+# docs/ is committed (see the README), so this deploys what is in the repository
+# rather than rendering it here: the site that goes live is byte-for-byte the one
+# built and checked locally with `quarto render`.
+#
+# This replaces GitHub's built-in branch/folder publishing, whose deploy step
+# repeatedly stalled in the queue and timed out.  The concurrency group is
+# deliberately not named "pages", so a wedged legacy run cannot block this one.
+
+name: Deploy docs to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
