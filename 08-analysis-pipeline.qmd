@@ -25,16 +25,20 @@ transcript("05-job-stats.txt")
 ```{mermaid}
 %%| fig-align: center
 flowchart LR
-  R[data/trial.csv] --> C[rds/clean.rds]
-  C --> T1["rds/table1.rds<br/>(who was studied)"]
-  C --> A["rds/analysis.rds<br/>(the models)"]
-  A --> T2["rds/table2.rds<br/>(what happened)"]
-  C --> F[out/figure1.png]
-  T1 --> P[report.html]
-  T2 --> P
-  F --> P
-  C --> P
+  clean(clean) --> table1(table1)
+  clean --> analysis(analysis)
+  clean --> figure1(figure1)
+  clean --> report(report)
+  analysis --> table2(table2)
+  table1 --> report
+  table2 --> report
+  figure1 --> report
+  report --> allrule(all)
 ```
+
+`clean` feeds nearly everything, because every product describes the same analysis
+set. `table1` says who was studied and `table2` what happened to them, which is why
+one hangs off the cleaned data and the other off the models.
 
 ## Cleaning once
 

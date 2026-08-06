@@ -485,21 +485,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p></p><figure class="figure"><p></p>
 <div>
 <pre class="mermaid mermaid-js">flowchart LR
-  R[data/trial.csv] --&gt; C[rds/clean.rds]
-  C --&gt; T1["rds/table1.rds&lt;br/&gt;(who was studied)"]
-  C --&gt; A["rds/analysis.rds&lt;br/&gt;(the models)"]
-  A --&gt; T2["rds/table2.rds&lt;br/&gt;(what happened)"]
-  C --&gt; F[out/figure1.png]
-  T1 --&gt; P[report.html]
-  T2 --&gt; P
-  F --&gt; P
-  C --&gt; P
+  clean(clean) --&gt; table1(table1)
+  clean --&gt; analysis(analysis)
+  clean --&gt; figure1(figure1)
+  clean --&gt; report(report)
+  analysis --&gt; table2(table2)
+  table1 --&gt; report
+  table2 --&gt; report
+  figure1 --&gt; report
+  report --&gt; allrule(all)
 </pre>
 </div>
 <p></p></figure><p></p>
 </div>
 </div>
 </div>
+<p><code>clean</code> feeds nearly everything, because every product describes the same analysis set. <code>table1</code> says who was studied and <code>table2</code> what happened to them, which is why one hangs off the cleaned data and the other off the models.</p>
 </section>
 <section id="cleaning-once" class="level2" data-number="7.2">
 <h2 data-number="7.2" class="anchored" data-anchor-id="cleaning-once"><span class="header-section-number">7.2</span> Cleaning once</h2>

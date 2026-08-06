@@ -31,27 +31,41 @@ times as it takes for references and citations to settle. Snakemake's contributi
 is the `input:` block: the PDF depends on the figure and the table, which depend on
 the simulations, which depend on the code. One command now walks the entire chain.
 
-Written out, that chain is the whole project:
+Written out, the rules make this shape:
 
 ```{mermaid}
 %%| fig-align: center
 flowchart LR
-  A["scripts/sim.R<br/>R/*.R"] --> S["rds/200/sim/<br/>18 files"]
-  S --> F[out/figure1.pdf]
-  S --> T[out/table1.tex]
-  B["scripts/figure.R<br/>scripts/setup.R"] --> F
-  C["scripts/table.R<br/>scripts/setup.R"] --> T
-  F --> P[build/paper.pdf]
-  T --> P
-  D["paper.tex, main.tex<br/>preamble.tex, config.yaml"] --> P
+  sim(sim) --> figure1(figure1)
+  sim --> table1(table1)
+  figure1 --> manuscript(manuscript)
+  table1 --> manuscript
+  manuscript --> allrule(all)
 ```
 
 Every arrow is a line in the Snakefile, and every one of them is a claim that
 Snakemake will enforce. Nothing reaches `build/paper.pdf` except through a rule.
 
-You do not have to draw this by hand for your own projects, incidentally ---
-`snakemake --rulegraph | dot -Tpdf > rules.pdf` produces it from the Snakefile
+That diagram is not hand-drawn: it is the graph Snakemake reports for this
+workflow, and you can get one for your own with
+
+```bash
+snakemake --rulegraph | dot -Tpdf > rules.pdf
+```
+
+One node per *rule*, which is the readable view. `snakemake --dag` draws one node
+per *job* instead, so `sim` becomes the eighteen separate boxes it really is
 (@sec-debugging).
+
+`paper.tex` itself is only a wrapper --- a document class, a preamble, and
+`\input{main.tex}` --- so that the prose lives in one file and the formatting in
+another:
+
+```{r}
+#| echo: false
+#| output: asis
+embed_file("examples/04-manuscript/paper.tex", filename = "paper.tex")
+```
 
 ::: {.callout-note}
 ## Journal versions, arXiv, supplements
