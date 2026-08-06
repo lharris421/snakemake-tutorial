@@ -1,11 +1,11 @@
-## rds/analysis.rds -> out/figure1.png
+## rds/clean.rds -> out/figure1.png
 ##
-## Usage: Rscript scripts/figure.R --in rds/analysis.rds --out out/figure1.png
+## Usage: Rscript scripts/figure.R --in rds/clean.rds --out out/figure1.png
 
 if (interactive()) source("setup.R") else source("scripts/setup.R")
 
 option_list <- list(
-  make_option("--in", type = "character", default = "rds/analysis.rds",
+  make_option("--in", type = "character", default = "rds/clean.rds",
               dest = "infile"),
   make_option("--out", type = "character", default = "out/figure1.png")
 )

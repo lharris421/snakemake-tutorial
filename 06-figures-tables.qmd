@@ -5,10 +5,6 @@
 source("_common.R")
 ```
 
-Everything so far has produced `.rds` files, which nobody reads. This chapter turns
-them into the two things a paper is actually made of. Move to
-`examples/04-manuscript`, which is the complete version of the simulation study.
-
 ## The aggregating rule
 
 ```{r}

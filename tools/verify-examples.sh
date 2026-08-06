@@ -44,8 +44,8 @@ run 03-config 4 out/figure1.pdf rds/200/sim/n50_rho0_naive.rds
 run 04-manuscript 4 out/figure1.pdf out/table1.tex build/paper.pdf \
   rds/200/sim/n50_rho0_naive.rds \
   logs/200/sim/n50_rho0_naive.log benchmarks/200/sim/n50_rho0_naive.tsv
-run 05-analysis 4 rds/analysis.rds rds/models.rds rds/table1.rds \
-  out/figure1.png report.html
+run 05-analysis 4 rds/clean.rds rds/analysis.rds rds/table1.rds \
+  rds/table2.rds out/figure1.png report.html
 
 ## The claim chapter 7 makes: editing the simulation rebuilds the PDF
 printf '\n== 04-manuscript: the cascade\n'

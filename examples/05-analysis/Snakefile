@@ -1,8 +1,8 @@
 ## A data analysis pipeline: raw data in, report out.
 ##
 ## The shape is the same as the simulation example -- rules whose inputs and
-## outputs are files -- but the chain is linear rather than a fan-out, and the
-## first input is a file you did not generate and must not modify.
+## outputs are files -- but the chain is mostly linear rather than a fan-out, and
+## the first input is a file you did not generate and must not modify.
 
 rule all:
     input:
@@ -13,28 +13,20 @@ rule clean:
         script = "scripts/clean.R",
         data = "data/trial.csv"
     output:
-        "rds/analysis.rds"
+        "rds/clean.rds"
     log:
         "logs/clean.log"
     shell:
         "Rscript {input.script} --in {input.data} --out {output} > {log} 2>&1"
 
-rule model:
-    input:
-        script = "scripts/model.R",
-        rds = "rds/analysis.rds"
-    output:
-        "rds/models.rds"
-    log:
-        "logs/model.log"
-    shell:
-        "Rscript {input.script} --in {input.rds} --out {output} > {log} 2>&1"
-
+## Table 1 in the usual sense: who was studied, not what happened to them.  It
+## describes the analysis set, so it hangs off the cleaned data and has nothing to
+## do with the models.
 rule table1:
     input:
         script = "scripts/table1.R",
         setup = "scripts/setup.R",
-        rds = "rds/analysis.rds"
+        rds = "rds/clean.rds"
     output:
         "rds/table1.rds"
     log:
@@ -42,11 +34,36 @@ rule table1:
     shell:
         "Rscript {input.script} --in {input.rds} --out {output} > {log} 2>&1"
 
+rule analysis:
+    input:
+        script = "scripts/analysis.R",
+        rds = "rds/clean.rds"
+    output:
+        "rds/analysis.rds"
+    log:
+        "logs/analysis.log"
+    shell:
+        "Rscript {input.script} --in {input.rds} --out {output} > {log} 2>&1"
+
+## Table 2: what happened.  Built from the fitted models, so a change to a
+## specification reaches it directly and a change to the cleaning reaches it
+## through them.
+rule table2:
+    input:
+        script = "scripts/table2.R",
+        rds = "rds/analysis.rds"
+    output:
+        "rds/table2.rds"
+    log:
+        "logs/table2.log"
+    shell:
+        "Rscript {input.script} --in {input.rds} --out {output} > {log} 2>&1"
+
 rule figure1:
     input:
         script = "scripts/figure.R",
         setup = "scripts/setup.R",
-        rds = "rds/analysis.rds"
+        rds = "rds/clean.rds"
     output:
         "out/figure1.png"
     log:
@@ -59,9 +76,9 @@ rule figure1:
 rule report:
     input:
         qmd = "report.qmd",
-        analysis = "rds/analysis.rds",
-        models = "rds/models.rds",
+        clean = "rds/clean.rds",
         table1 = "rds/table1.rds",
+        table2 = "rds/table2.rds",
         figure1 = "out/figure1.png"
     output:
         "report.html"

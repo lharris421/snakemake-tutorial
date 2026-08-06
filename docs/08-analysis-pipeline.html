@@ -393,7 +393,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./07-manuscript.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building the manuscript</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building a manuscript</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -438,12 +438,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#the-pipeline" id="toc-the-pipeline" class="nav-link active" data-scroll-target="#the-pipeline"><span class="header-section-number">8.1</span> The pipeline</a></li>
-  <li><a href="#raw-data-is-read-only" id="toc-raw-data-is-read-only" class="nav-link" data-scroll-target="#raw-data-is-read-only"><span class="header-section-number">8.2</span> Raw data is read-only</a></li>
-  <li><a href="#cleaning-once" id="toc-cleaning-once" class="nav-link" data-scroll-target="#cleaning-once"><span class="header-section-number">8.3</span> Cleaning once</a></li>
-  <li><a href="#the-report-is-a-view-not-a-computation" id="toc-the-report-is-a-view-not-a-computation" class="nav-link" data-scroll-target="#the-report-is-a-view-not-a-computation"><span class="header-section-number">8.4</span> The report is a view, not a computation</a></li>
-  <li><a href="#models-as-data" id="toc-models-as-data" class="nav-link" data-scroll-target="#models-as-data"><span class="header-section-number">8.5</span> Models as data</a></li>
-  <li><a href="#when-the-data-changes" id="toc-when-the-data-changes" class="nav-link" data-scroll-target="#when-the-data-changes"><span class="header-section-number">8.6</span> When the data changes</a></li>
-  <li><a href="#try-it" id="toc-try-it" class="nav-link" data-scroll-target="#try-it"><span class="header-section-number">8.7</span> Try it</a></li>
+  <li><a href="#cleaning-once" id="toc-cleaning-once" class="nav-link" data-scroll-target="#cleaning-once"><span class="header-section-number">8.2</span> Cleaning once</a></li>
+  <li><a href="#the-report-is-a-view-not-a-computation" id="toc-the-report-is-a-view-not-a-computation" class="nav-link" data-scroll-target="#the-report-is-a-view-not-a-computation"><span class="header-section-number">8.3</span> The report is a view, not a computation</a></li>
+  <li><a href="#models-as-data" id="toc-models-as-data" class="nav-link" data-scroll-target="#models-as-data"><span class="header-section-number">8.4</span> Models as data</a></li>
+  <li><a href="#when-the-data-changes" id="toc-when-the-data-changes" class="nav-link" data-scroll-target="#when-the-data-changes"><span class="header-section-number">8.5</span> When the data changes</a></li>
+  <li><a href="#try-it" id="toc-try-it" class="nav-link" data-scroll-target="#try-it"><span class="header-section-number">8.6</span> Try it</a></li>
   </ul>
 </nav>
     </div>
@@ -470,33 +469,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Most biostatisticians spend more time on analyses than on simulation studies, and the shape of the work is different: instead of a fan-out over a parameter grid, a mostly linear chain from a file someone emailed you to a report you send back. The Snakemake ideas transfer directly, and one of them — the report as a rule — addresses a problem specific to this kind of work.</p>
+<p>Many biostatisticians spend more time on analyses than on simulation studies, and the shape of the work is different: instead of a fan-out over a parameter grid, a mostly linear chain from a file someone emailed you to a report you send back. The Snakemake ideas transfer directly, and one of them — the report as a rule — addresses a problem specific to this kind of work.</p>
 <p>Move to <code>examples/05-analysis</code>. It is a small randomized trial: 200 participants, two arms, FEV1 measured at baseline and week 12.</p>
 <section id="the-pipeline" class="level2" data-number="8.1">
 <h2 data-number="8.1" class="anchored" data-anchor-id="the-pipeline"><span class="header-section-number">8.1</span> The pipeline</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">--cores</span> 4</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Job</span> stats:</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">job</span>        count</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-------</span>  <span class="at">-------</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">all</span>            1</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">clean</span>          1</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="ex">figure1</span>        1</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">model</span>          1</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ex">report</span>         1</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="ex">table1</span>         1</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="ex">total</span>          6</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">job</span>         count</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">--------</span>  <span class="at">-------</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">all</span>             1</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">analysis</span>        1</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="ex">clean</span>           1</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">figure1</span>         1</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ex">report</span>          1</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="ex">table1</span>          1</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="ex">table2</span>          1</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="ex">total</span>           7</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div>
 <p></p><figure class="figure"><p></p>
 <div>
 <pre class="mermaid mermaid-js">flowchart LR
-  R[data/trial.csv] --&gt; C[rds/analysis.rds]
-  C --&gt; M[rds/models.rds]
-  C --&gt; T[rds/table1.rds]
+  R[data/trial.csv] --&gt; C[rds/clean.rds]
+  C --&gt; T1["rds/table1.rds&lt;br/&gt;(who was studied)"]
+  C --&gt; A["rds/analysis.rds&lt;br/&gt;(the models)"]
+  A --&gt; T2["rds/table2.rds&lt;br/&gt;(what happened)"]
   C --&gt; F[out/figure1.png]
-  M --&gt; P[report.html]
-  T --&gt; P
+  T1 --&gt; P[report.html]
+  T2 --&gt; P
   F --&gt; P
   C --&gt; P
 </pre>
@@ -506,13 +507,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="raw-data-is-read-only" class="level2" data-number="8.2">
-<h2 data-number="8.2" class="anchored" data-anchor-id="raw-data-is-read-only"><span class="header-section-number">8.2</span> Raw data is read-only</h2>
-<p>The first rule reads <code>data/trial.csv</code> and never writes to it. That is not a Snakemake requirement; it is the convention that makes everything else work, and it deserves stating plainly: <strong>the raw file stays exactly as it arrived.</strong> Every correction, exclusion and recoding happens in code, downstream, where it can be read and argued with.</p>
-<p>Note also what is <em>not</em> in the Snakefile. <code>data/make-raw-data.R</code>, which generated the CSV for this example, is not a rule. If it were, Snakemake would treat the raw data as something it could regenerate, and would do so — silently discarding the real file the moment it decided it was out of date. Anything you cannot afford to lose should be an input to your pipeline and never an output of it.</p>
-</section>
-<section id="cleaning-once" class="level2" data-number="8.3">
-<h2 data-number="8.3" class="anchored" data-anchor-id="cleaning-once"><span class="header-section-number">8.3</span> Cleaning once</h2>
+<section id="cleaning-once" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="cleaning-once"><span class="header-section-number">8.2</span> Cleaning once</h2>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>scripts/clean.R (excerpt)</strong></pre>
@@ -549,12 +545,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">after</span> dropping duplicate patient records      n = 200</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="ex">with</span> a usable age                             n = 199</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="ex">with</span> a week 12 measurement <span class="er">(</span><span class="ex">analysis</span> set<span class="kw">)</span>     <span class="ex">n</span> = 191</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="ex">wrote</span> rds/analysis.rds </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="ex">wrote</span> rds/clean.rds </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>That is the participant flow for your CONSORT diagram, produced as a side effect of the pipeline rather than counted by hand, and regenerated every time the data changes. When the coordinator sends an updated export in June, <code>snakemake</code> reruns everything downstream and this log tells you immediately whether the exclusions still look the way they did in March.</p>
 <p>The alternative — each analysis script starting with its own <code>read.csv()</code> and its own quiet decisions about who to drop — is how two tables in the same report end up with different denominators.</p>
 </section>
-<section id="the-report-is-a-view-not-a-computation" class="level2" data-number="8.4">
-<h2 data-number="8.4" class="anchored" data-anchor-id="the-report-is-a-view-not-a-computation"><span class="header-section-number">8.4</span> The report is a view, not a computation</h2>
+<section id="the-report-is-a-view-not-a-computation" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="the-report-is-a-view-not-a-computation"><span class="header-section-number">8.3</span> The report is a view, not a computation</h2>
 <p>Here is the part specific to analysis work. It is normal to put everything in one <code>.qmd</code> file: read the data, fit the models, print the tables, write the text. It works, and it has two failure modes that get worse as the project grows.</p>
 <p>The first is time. A report that refits everything takes as long as the slowest model <em>every time you fix a typo</em>, and the temptation is to start caching chunks, at which point you no longer know whether the numbers in the output correspond to the code in the file.</p>
 <p>The second is scope. Rendering becomes all-or-nothing — you cannot ask for just the models — and the results exist only inside the rendered HTML, so the next project that needs them starts by copying and pasting.</p>
@@ -566,15 +562,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" data-filename="report.qmd (excerpt)"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>analysis <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"rds/analysis.rds"</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"rds/clean.rds"</span>)</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>tab1 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"rds/table1.rds"</span>)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>models <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"rds/models.rds"</span>)</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>eff <span class="ot">&lt;-</span> models<span class="sc">$</span>effects</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>The report does no computing of its own. It reads the objects the pipeline</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>produced and displays them, so that rendering it can never quietly change a</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>result.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>tab2 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"rds/table2.rds"</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>The report does no computing of its own. It reads the objects the pipeline</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>produced and displays them, so that rendering it can never quietly change a</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>result.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
@@ -585,9 +580,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>rule report:</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span>:</span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        qmd <span class="op">=</span> <span class="st">"report.qmd"</span>,</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        analysis <span class="op">=</span> <span class="st">"rds/analysis.rds"</span>,</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        models <span class="op">=</span> <span class="st">"rds/models.rds"</span>,</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        table1 <span class="op">=</span> <span class="st">"rds/table1.rds"</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        clean <span class="op">=</span> <span class="st">"rds/clean.rds"</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        table1 <span class="op">=</span> <span class="st">"rds/table1.rds"</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        table2 <span class="op">=</span> <span class="st">"rds/table2.rds"</span>,</span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        figure1 <span class="op">=</span> <span class="st">"out/figure1.png"</span></span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    output:</span>
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        <span class="co">"report.html"</span></span>
@@ -596,25 +591,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    shell:</span>
 <span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>        <span class="co">"quarto render {input.qmd} --to html &gt; {log} 2&gt;&amp;1"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Listing each object the report reads is what makes the report trustworthy. Rendering it cannot use a stale table, because Snakemake will rebuild the table first. And the models are in <code>rds/models.rds</code>, so the manuscript you write next year can load them without rerunning anything.</p>
+<p>Listing each object the report reads is what makes the report trustworthy. Rendering it cannot use a stale table, because Snakemake will rebuild the table first. And the fitted models are in <code>rds/analysis.rds</code>, so the manuscript you write next year can load them without rerunning anything.</p>
 <p>Everything the report needs to say in prose comes through inline R:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>report.qmd (excerpt)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" data-filename="report.qmd (excerpt)"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>The estimated treatment effect is</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="in">`r sprintf("%.3f L (95%% CI %.3f to %.3f)", eff$estimate[eff$model == "adjusted"], eff$lower[eff$model == "adjusted"], eff$upper[eff$model == "adjusted"])`</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>in the adjusted model, and is insensitive to which covariates are included.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" data-filename="report.qmd (excerpt)"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>The estimated treatment effect is <span class="in">`r attr(tab2, "headline")`</span> L in the adjusted</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>model, and is insensitive to which covariates are included.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>so the sentence and the table cannot disagree.</p>
 </section>
-<section id="models-as-data" class="level2" data-number="8.5">
-<h2 data-number="8.5" class="anchored" data-anchor-id="models-as-data"><span class="header-section-number">8.5</span> Models as data</h2>
+<section id="models-as-data" class="level2" data-number="8.4">
+<h2 data-number="8.4" class="anchored" data-anchor-id="models-as-data"><span class="header-section-number">8.4</span> Models as data</h2>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
-<pre><strong>scripts/model.R (excerpt)</strong></pre>
+<pre><strong>scripts/analysis.R (excerpt)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" data-filename="scripts/model.R (excerpt)"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>specs <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" data-filename="scripts/analysis.R (excerpt)"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>specs <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">unadjusted =</span> change <span class="sc">~</span> arm,</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">adjusted   =</span> change <span class="sc">~</span> arm <span class="sc">+</span> age <span class="sc">+</span> sex <span class="sc">+</span> fev1_base,</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">full       =</span> change <span class="sc">~</span> arm <span class="sc">+</span> age <span class="sc">+</span> sex <span class="sc">+</span> bmi <span class="sc">+</span> smoker <span class="sc">+</span> fev1_base</span>
@@ -635,25 +629,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>}))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Two things worth copying here. The model specifications are a named list, so adding a sensitivity analysis means adding one line and touching nothing else. And the script saves both the fitted objects and a tidy data frame of the estimand — the first for anything you did not anticipate, the second so the report does not need to know how to dig a confidence interval out of an <code>lm</code>.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> cat logs/model.log</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> cat logs/analysis.log</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>       <span class="ex">model</span> estimate  lower upper        p   n</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="ex">1</span> unadjusted    0.161 0.0876 0.234 2.41e-05 191</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="ex">2</span>   adjusted    0.162 0.0875 0.236 2.79e-05 190</span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="ex">3</span>       full    0.176 0.0994 0.252 1.01e-05 178</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="ex">wrote</span> rds/models.rds </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="ex">wrote</span> rds/analysis.rds </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="when-the-data-changes" class="level2" data-number="8.6">
-<h2 data-number="8.6" class="anchored" data-anchor-id="when-the-data-changes"><span class="header-section-number">8.6</span> When the data changes</h2>
-<p>Which it will, usually the week after you send the report. Drop in the new export and:</p>
+<section id="when-the-data-changes" class="level2" data-number="8.5">
+<h2 data-number="8.5" class="anchored" data-anchor-id="when-the-data-changes"><span class="header-section-number">8.5</span> When the data changes</h2>
+<p>Which it will, usually the week after you send the report. Drop in the new data and:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">--cores</span> 4</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Cleaning reruns, the models refit, Table 1 and the figure regenerate, the report re-renders, and the participant-flow log tells you what changed about the analysis set. The work of a data update goes from an afternoon of retracing your steps to one command and a careful look at one log file.</p>
 </section>
-<section id="try-it" class="level2" data-number="8.7">
-<h2 data-number="8.7" class="anchored" data-anchor-id="try-it"><span class="header-section-number">8.7</span> Try it</h2>
+<section id="try-it" class="level2" data-number="8.6">
+<h2 data-number="8.6" class="anchored" data-anchor-id="try-it"><span class="header-section-number">8.6</span> Try it</h2>
 <ol type="1">
 <li>Edit a value in <code>data/trial.csv</code> and run <code>snakemake -n</code>. What reruns?</li>
 <li>Add a rule producing a subgroup analysis by smoking status, and show it in the report.</li>
-<li>Delete <code>rds/analysis.rds</code> but not the models. What does Snakemake do, and is that what you expected?</li>
+<li>Delete <code>rds/clean.rds</code> but not the things built from it. What does Snakemake do, and is that what you expected?</li>
 </ol>
 
 
@@ -1075,8 +1069,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./07-manuscript.html" class="pagination-link" aria-label="Building the manuscript">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building the manuscript</span></span>
+      <a href="./07-manuscript.html" class="pagination-link" aria-label="Building a manuscript">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building a manuscript</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

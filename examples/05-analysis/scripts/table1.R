@@ -1,6 +1,6 @@
-## rds/analysis.rds -> rds/table1.rds
+## rds/clean.rds -> rds/table1.rds
 ##
-## Usage: Rscript scripts/table1.R --in rds/analysis.rds --out rds/table1.rds
+## Usage: Rscript scripts/table1.R --in rds/clean.rds --out rds/table1.rds
 ##
 ## Baseline characteristics by arm, saved as a plain data frame.  The report
 ## formats it; this script decides what is in it.
@@ -8,7 +8,7 @@
 if (interactive()) source("setup.R") else source("scripts/setup.R")
 
 option_list <- list(
-  make_option("--in", type = "character", default = "rds/analysis.rds",
+  make_option("--in", type = "character", default = "rds/clean.rds",
               dest = "infile"),
   make_option("--out", type = "character", default = "rds/table1.rds")
 )

@@ -1,4 +1,4 @@
-## data/trial.csv -> rds/analysis.rds
+## data/trial.csv -> rds/clean.rds
 ##
 ## Usage: Rscript scripts/clean.R --in data/trial.csv --out rds/analysis.rds
 ##
@@ -13,7 +13,7 @@ arm_levels <- c("Placebo", "Treatment")
 option_list <- list(
   make_option("--in", type = "character", default = "data/trial.csv",
               dest = "infile"),
-  make_option("--out", type = "character", default = "rds/analysis.rds")
+  make_option("--out", type = "character", default = "rds/clean.rds")
 )
 opt <- parse_args(OptionParser(option_list = option_list))
 

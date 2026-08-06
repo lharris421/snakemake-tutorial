@@ -5,7 +5,7 @@
 source("_common.R")
 ```
 
-Most biostatisticians spend more time on analyses than on simulation studies, and
+Many biostatisticians spend more time on analyses than on simulation studies, and
 the shape of the work is different: instead of a fan-out over a parameter grid, a
 mostly linear chain from a file someone emailed you to a report you send back. The
 Snakemake ideas transfer directly, and one of them --- the report as a rule ---
@@ -25,29 +25,16 @@ transcript("05-job-stats.txt")
 ```{mermaid}
 %%| fig-align: center
 flowchart LR
-  R[data/trial.csv] --> C[rds/analysis.rds]
-  C --> M[rds/models.rds]
-  C --> T[rds/table1.rds]
+  R[data/trial.csv] --> C[rds/clean.rds]
+  C --> T1["rds/table1.rds<br/>(who was studied)"]
+  C --> A["rds/analysis.rds<br/>(the models)"]
+  A --> T2["rds/table2.rds<br/>(what happened)"]
   C --> F[out/figure1.png]
-  M --> P[report.html]
-  T --> P
+  T1 --> P[report.html]
+  T2 --> P
   F --> P
   C --> P
 ```
-
-## Raw data is read-only
-
-The first rule reads `data/trial.csv` and never writes to it. That is not a
-Snakemake requirement; it is the convention that makes everything else work, and it
-deserves stating plainly: **the raw file stays exactly as it arrived.** Every
-correction, exclusion and recoding happens in code, downstream, where it can be read
-and argued with.
-
-Note also what is *not* in the Snakefile. `data/make-raw-data.R`, which generated
-the CSV for this example, is not a rule. If it were, Snakemake would treat the raw
-data as something it could regenerate, and would do so --- silently discarding the
-real file the moment it decided it was out of date. Anything you cannot afford to
-lose should be an input to your pipeline and never an output of it.
 
 ## Cleaning once
 
@@ -110,8 +97,8 @@ embed_file("examples/05-analysis/Snakefile", from = "^## Listing every object",
 
 Listing each object the report reads is what makes the report trustworthy. Rendering
 it cannot use a stale table, because Snakemake will rebuild the table first. And
-the models are in `rds/models.rds`, so the manuscript you write next year can
-load them without rerunning anything.
+the fitted models are in `rds/analysis.rds`, so the manuscript you write next year
+can load them without rerunning anything.
 
 Everything the report needs to say in prose comes through inline R:
 
@@ -119,8 +106,8 @@ Everything the report needs to say in prose comes through inline R:
 #| echo: false
 #| output: asis
 embed_file("examples/05-analysis/report.qmd",
-           from = "^The estimated treatment effect is$",
-           to = "^in the adjusted model", filename = "report.qmd (excerpt)")
+           from = "^The estimated treatment effect is",
+           to = "^model, and is insensitive", filename = "report.qmd (excerpt)")
 ```
 
 so the sentence and the table cannot disagree.
@@ -130,8 +117,8 @@ so the sentence and the table cannot disagree.
 ```{r}
 #| echo: false
 #| output: asis
-embed_file("examples/05-analysis/scripts/model.R", from = "^specs <- list",
-           to = "^\\}\\)\\)", filename = "scripts/model.R (excerpt)")
+embed_file("examples/05-analysis/scripts/analysis.R", from = "^specs <- list",
+           to = "^\\}\\)\\)", filename = "scripts/analysis.R (excerpt)")
 ```
 
 Two things worth copying here. The model specifications are a named list, so adding
@@ -143,12 +130,12 @@ know how to dig a confidence interval out of an `lm`.
 ```{r}
 #| echo: false
 #| output: asis
-transcript("05-model-log.txt")
+transcript("05-analysis-log.txt")
 ```
 
 ## When the data changes
 
-Which it will, usually the week after you send the report. Drop in the new export
+Which it will, usually the week after you send the report. Drop in the new data
 and:
 
 ```bash
@@ -165,5 +152,5 @@ command and a careful look at one log file.
 1. Edit a value in `data/trial.csv` and run `snakemake -n`. What reruns?
 2. Add a rule producing a subgroup analysis by smoking status, and show it in the
    report.
-3. Delete `rds/analysis.rds` but not the models. What does Snakemake do, and is
-   that what you expected?
+3. Delete `rds/clean.rds` but not the things built from it. What does Snakemake
+   do, and is that what you expected?

@@ -1,4 +1,4 @@
-# Building the manuscript {#sec-manuscript}
+# Building a manuscript {#sec-manuscript}
 
 ```{r}
 #| include: false
@@ -27,30 +27,16 @@ times as it takes for references and citations to settle. Snakemake's contributi
 is the `input:` block: the PDF depends on the figure and the table, which depend on
 the simulations, which depend on the code. One command now walks the entire chain.
 
-`paper.tex` itself is only a wrapper --- a document class, a preamble, and
-`\input{main.tex}` --- so that the prose lives in one file and the formatting in
-another:
-
-```{r}
-#| echo: false
-#| output: asis
-embed_file("examples/04-manuscript/paper.tex", filename = "paper.tex")
-```
-
 ::: {.callout-note}
 ## Journal versions, arXiv, supplements
 
-A real paper is eventually built more than one way: a version for the journal, one
-for arXiv, one with the supplement bound in, one double-spaced for review. The
-separation above is what makes that cheap --- each variant is another wrapper
+A real paper is eventually built more than one way. The
+separation above is what makes multiple versions with different formats lightweight --- each variant is another wrapper
 around the same `main.tex`, and another rule producing its own PDF.
 
 Setting that up well is a LaTeX question rather than a Snakemake one, and
 [pbreheny/manuscript-template](https://github.com/pbreheny/manuscript-template)
-already answers it: a manuscript skeleton with the wrapper/content split, a
-supplement, an arXiv build, and a style guide worth reading on its own. The
-example here stays at one document so that the pipeline is the only thing you have
-to hold in your head.
+already covers it.
 :::
 
 ## The cascade
@@ -66,21 +52,10 @@ transcript("04-cascade.txt")
 
 Twenty-two jobs: eighteen simulations, the figure, the table and the PDF. In the
 right order, with no decisions from you, and --- the part that matters --- with no
-possibility of a version of the paper containing a figure from before the change.
+possibility of a version of the paper containing a figure from before the change (provided you've specified the Snakefile completely).
 
 Compare the alternative, which is remembering to run four things in order and being
-right about it every time, for the entire life of the project.
-
-## Making LaTeX quiet
-
-Two flags in that rule are there for the sake of your terminal:
-
-`-interaction=nonstopmode` stops LaTeX from halting at an error to ask you what to
-do. In a pipeline, an interactive prompt is a hang, not a question.
-
-`> {log} 2>&1` sends the several hundred lines LaTeX produces to `logs/paper-latexmk.log`.
-When the build fails, the error is in there, and `latexmk` also leaves the more
-readable `build/paper.log`.
+right about it every time, for the entire life of the project (and with the number being much greater than four as the manuscript grows).
 
 ::: {.callout-warning}
 ## LaTeX's own idea of what is up to date
@@ -88,43 +63,12 @@ readable `build/paper.log`.
 `latexmk` does its own dependency tracking and will sometimes decide there is
 nothing to do even when Snakemake has just asked it to rebuild. If a rerun leaves
 the PDF unchanged when you expected otherwise, delete the `build/` directory and
-try again --- and note that this is exactly why the compiled PDF should not be the
-only place a result appears.
+try again.
 :::
-
-## What goes in git
-
-The `.gitignore` for a project of this shape:
-
-```{.default filename=".gitignore"}
-.snakemake/
-rds/
-out/
-logs/
-benchmarks/
-build/
-```
-
-Same rule as @sec-shape --- git is for source, not output --- which puts the
-compiled PDF on the ignored side of the line along with everything else. It is
-produced by running `latexmk`, so it is output, however much it feels like the
-point of the project. Commit the code, the `.tex` files, and `config.yaml`; the
-claim that the rest is regenerable is now enforced by a program rather than by
-your recollection.
-
-The awkward case is a simulation that takes three days, which colleagues who clone
-the repository cannot rebuild over coffee. The answer is still not to commit it.
-Send them `rds/`, or keep it somewhere outside the repository that the Snakefile
-knows how to find; either way it travels beside the repository rather than inside
-it. This is the payoff for keeping `rds/` separate from `out/` --- you hand over
-the expensive half on its own, and every figure, table and PDF rebuilds from it in
-seconds. @sec-scaling covers the mechanics.
 
 ## Try it
 
 1. Change the figure's y-axis label and run `snakemake --cores 4`. Which jobs run?
    Which do not, and why not?
-2. Add a `supplement.tex` wrapper that `\input`s only the table, plus a rule to
-   build it, and add it to `rule all`.
 3. Introduce a deliberate LaTeX error in `main.tex` and run the build. Where does
    Snakemake tell you to look, and what is in that file?

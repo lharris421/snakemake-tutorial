@@ -1,0 +1,61 @@
+---
+title: "removed"
+format: html
+---
+
+## 7
+
+
+
+## What goes in git
+
+The `.gitignore` for a project of this shape:
+
+```{.default filename=".gitignore"}
+.snakemake/
+rds/
+out/
+logs/
+benchmarks/
+build/
+```
+
+Same rule as @sec-shape --- git is for source, not output --- which puts the
+compiled PDF on the ignored side of the line along with everything else. It is
+produced by running `latexmk`, so it is output, however much it feels like the
+point of the project. Commit the code, the `.tex` files, and `config.yaml`; the
+claim that the rest is regenerable is now enforced by a program rather than by
+your recollection.
+
+The awkward case is a simulation that takes three days, which colleagues who clone
+the repository cannot rebuild over coffee. The answer is still not to commit it.
+Send them `rds/`, or keep it somewhere outside the repository that the Snakefile
+knows how to find; either way it travels beside the repository rather than inside
+it. This is the payoff for keeping `rds/` separate from `out/` --- you hand over
+the expensive half on its own, and every figure, table and PDF rebuilds from it in
+seconds. @sec-scaling covers the mechanics.
+
+## Making LaTeX quiet
+
+Two flags in that rule are there for the sake of your terminal:
+
+`-interaction=nonstopmode` stops LaTeX from halting at an error to ask you what to
+do. In a pipeline, an interactive prompt is a hang, not a question.
+
+`> {log} 2>&1` sends the several hundred lines LaTeX produces to `logs/paper-latexmk.log`.
+When the build fails, the error is in there, and `latexmk` also leaves the more
+readable `build/paper.log`.
+
+## Raw data is read-only
+
+The first rule reads `data/trial.csv` and never writes to it. That is not a
+Snakemake requirement; it is the convention that makes everything else work, and it
+deserves stating plainly: **the raw file stays exactly as it arrived.** Every
+correction, exclusion and recoding happens in code, downstream, where it can be read
+and argued with.
+
+Note also what is *not* in the Snakefile. `data/make-raw-data.R`, which generated
+the CSV for this example, is not a rule. If it were, Snakemake would treat the raw
+data as something it could regenerate, and would do so --- silently discarding the
+real file the moment it decided it was out of date. Anything you cannot afford to
+lose should be an input to your pipeline and never an output of it.

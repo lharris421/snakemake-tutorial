@@ -146,7 +146,7 @@ clean
 { say "snakemake --cores 4"; snakemake --cores 4 2>&1 | filter | first_stats; } \
   > "$OUT/05-job-stats.txt"
 { say "cat logs/clean.log"; cat logs/clean.log; } > "$OUT/05-clean-log.txt"
-{ say "cat logs/model.log"; cat logs/model.log; } > "$OUT/05-model-log.txt"
+{ say "cat logs/analysis.log"; cat logs/analysis.log; } > "$OUT/05-analysis-log.txt"
 
 ## ---------------------------------------------------- errors, for chapter 09
 cd "$ROOT/examples/02-wildcards"

@@ -1,16 +1,16 @@
-## rds/analysis.rds -> rds/models.rds
+## rds/clean.rds -> rds/analysis.rds
 ##
-## Usage: Rscript scripts/model.R --in rds/analysis.rds --out rds/models.rds
+## Usage: Rscript scripts/analysis.R --in rds/clean.rds --out rds/analysis.rds
 ##
-## One model per named specification.  Adding a sensitivity analysis means adding
-## an entry to this list, not editing the report.
+## The analysis proper: one model per named specification.  Adding a sensitivity
+## analysis means adding an entry to this list and nothing else.
 
 library(optparse)
 
 option_list <- list(
-  make_option("--in", type = "character", default = "rds/analysis.rds",
+  make_option("--in", type = "character", default = "rds/clean.rds",
               dest = "infile"),
-  make_option("--out", type = "character", default = "rds/models.rds")
+  make_option("--out", type = "character", default = "rds/analysis.rds")
 )
 opt <- parse_args(OptionParser(option_list = option_list))
 

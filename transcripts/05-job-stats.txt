@@ -1,11 +1,12 @@
 $ snakemake --cores 4
 Job stats:
-job        count
--------  -------
-all            1
-clean          1
-figure1        1
-model          1
-report         1
-table1         1
-total          6
+job         count
+--------  -------
+all             1
+analysis        1
+clean           1
+figure1         1
+report          1
+table1          1
+table2          1
+total           7

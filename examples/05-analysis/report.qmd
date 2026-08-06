@@ -12,10 +12,9 @@ execute:
 ```{r}
 #| include: false
 library(knitr)
-analysis <- readRDS("rds/analysis.rds")
+d <- readRDS("rds/clean.rds")
 tab1 <- readRDS("rds/table1.rds")
-models <- readRDS("rds/models.rds")
-eff <- models$effects
+tab2 <- readRDS("rds/table2.rds")
 ```
 
 The report does no computing of its own. It reads the objects the pipeline
@@ -24,11 +23,11 @@ result.
 
 ## Analysis set
 
-`r nrow(analysis)` participants had a week 12 measurement:
-`r sum(analysis$arm == "Placebo")` on placebo and
-`r sum(analysis$arm == "Treatment")` on treatment.
+`r nrow(d)` participants had a week 12 measurement:
+`r sum(d$arm == "Placebo")` on placebo and
+`r sum(d$arm == "Treatment")` on treatment.
 
-## Table 1
+## Table 1: baseline characteristics
 
 ```{r}
 kable(tab1, col.names = c("Characteristic",
@@ -41,13 +40,11 @@ kable(tab1, col.names = c("Characteristic",
 
 ![](out/figure1.png)
 
-## Treatment effect
+## Table 2: treatment effect
 
 ```{r}
-kable(eff, digits = 3, col.names = c("Model", "Estimate", "Lower", "Upper", "p", "n"),
-      align = "lccccc")
+kable(tab2, col.names = c("Model", "Effect (95% CI)", "p", "n"), align = "lccc")
 ```
 
-The estimated treatment effect is
-`r sprintf("%.3f L (95%% CI %.3f to %.3f)", eff$estimate[eff$model == "adjusted"], eff$lower[eff$model == "adjusted"], eff$upper[eff$model == "adjusted"])`
-in the adjusted model, and is insensitive to which covariates are included.
+The estimated treatment effect is `r attr(tab2, "headline")` L in the adjusted
+model, and is insensitive to which covariates are included.
