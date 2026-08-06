@@ -73,39 +73,28 @@ Something still has to say which eighteen files we want. That is `expand()`:
 ```{r}
 #| echo: false
 #| output: asis
-embed_file("examples/02-wildcards/Snakefile", from = "^N = ", to = "^METHODS",
-           filename = "Snakefile (excerpt)")
-```
-
-```{r}
-#| echo: false
-#| output: asis
 embed_file("examples/02-wildcards/Snakefile", from = "^rule figure:",
            filename = "Snakefile (excerpt)")
 ```
 
 `expand()` takes a pattern and some lists and returns every combination of them, so
-
-```python
-expand("rds/sim/n{n}_rho{rho}_{method}.rds", n=N, rho=RHO, method=METHODS)
-```
-
-returns a list of 3 × 3 × 2 = 18 filenames. Those are the inputs of `rule figure`,
-which is what causes all eighteen simulations to run.
+that one call returns a list of 3 × 3 × 2 = 18 filenames. Those are the inputs of
+`rule figure`, which is what causes all eighteen simulations to run.
 
 ::: {.callout-note}
 ## The Python you need
 
-`N = [50, 100, 400]` is a list, the same idea as `c(50, 100, 400)` in R. That is
-essentially the entire Python vocabulary required to use Snakemake: lists, strings
-in quotes, and the occasional dictionary in @sec-config.
+`[50, 100, 400]` is a list, the same idea as `c(50, 100, 400)` in R, and
+`n = [50, 100, 400]` passes it to `expand()` by name. That is essentially the
+entire Python vocabulary required to use Snakemake: lists, strings in quotes, and
+the occasional dictionary in @sec-config.
 :::
 
-The `expand()` sits inside the rule that needs it, which is where a grid usually
-belongs: another rule is free to sweep a different one, and a supplementary figure
-covering only the large sample sizes would simply expand over fewer. When several
-rules genuinely share a grid, define it once above them and use the variable in
-each.
+The grid is written out inside the rule that needs it, rather than in variables at
+the top of the file, and that is usually where it belongs: another rule is free to
+sweep a different one, and a supplementary figure covering only the large sample
+sizes would simply expand over fewer. When several rules genuinely share a grid,
+define it once above them --- `N = [50, 100, 400]` --- and use the variable in each.
 
 The script on the other end receives all eighteen filenames as arguments and
 stacks them:
@@ -175,7 +164,8 @@ This is also extremely powerful, because now if you want a certain simulation...
 
 ## Try it
 
-1. Add `1000` to `N` and run `snakemake -n`. How many jobs? Which ones are new?
+1. Add `1000` to the sample sizes in `rule figure` and run `snakemake -n`. How many
+   jobs? Which ones are new?
 2. Ask for `rds/sim/n77_rho33_naive.rds`. It works --- explain why.
 3. Ask for `rds/sim/n50_rho0_bayes.rds` and watch it fail. Where does the error
    come from, and how would you have preferred to find out?

@@ -542,27 +542,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-with-filename-file">
 <pre><strong>Snakefile (excerpt)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-filename="Snakefile (excerpt)"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> [<span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">400</span>]</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>RHO <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">50</span>, <span class="dv">80</span>]</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>METHODS <span class="op">=</span> [<span class="st">"naive"</span>, <span class="st">"split"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-filename="Snakefile (excerpt)"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>rule figure:</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span>:</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>        script <span class="op">=</span> <span class="st">"figure.R"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        rds <span class="op">=</span> expand(<span class="st">"rds/sim/n</span><span class="sc">{n}</span><span class="st">_rho</span><span class="sc">{rho}</span><span class="st">_</span><span class="sc">{method}</span><span class="st">.rds"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                     n <span class="op">=</span> [<span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">400</span>],</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                     rho <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">50</span>, <span class="dv">80</span>],</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                     method <span class="op">=</span> [<span class="st">"naive"</span>, <span class="st">"split"</span>])</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    output:</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="co">"out/figure1.pdf"</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    shell:</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        <span class="co">"Rscript {input.script} {output} {input.rds}"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div class="code-with-filename">
-<div class="code-with-filename-file">
-<pre><strong>Snakefile (excerpt)</strong></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" data-filename="Snakefile (excerpt)"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>rule figure:</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span>:</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>        script <span class="op">=</span> <span class="st">"figure.R"</span>,</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        rds <span class="op">=</span> expand(<span class="st">"rds/sim/n</span><span class="sc">{n}</span><span class="st">_rho</span><span class="sc">{rho}</span><span class="st">_</span><span class="sc">{method}</span><span class="st">.rds"</span>,</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                     n<span class="op">=</span>N, rho<span class="op">=</span>RHO, method<span class="op">=</span>METHODS)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    output:</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        <span class="co">"out/figure1.pdf"</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    shell:</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        <span class="co">"Rscript {input.script} {output} {input.rds}"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p><code>expand()</code> takes a pattern and some lists and returns every combination of them, so</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>expand(<span class="st">"rds/sim/n</span><span class="sc">{n}</span><span class="st">_rho</span><span class="sc">{rho}</span><span class="st">_</span><span class="sc">{method}</span><span class="st">.rds"</span>, n<span class="op">=</span>N, rho<span class="op">=</span>RHO, method<span class="op">=</span>METHODS)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>returns a list of 3 × 3 × 2 = 18 filenames. Those are the inputs of <code>rule figure</code>, which is what causes all eighteen simulations to run.</p>
+<p><code>expand()</code> takes a pattern and some lists and returns every combination of them, so that one call returns a list of 3 × 3 × 2 = 18 filenames. Those are the inputs of <code>rule figure</code>, which is what causes all eighteen simulations to run.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -573,55 +565,55 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><code>N = [50, 100, 400]</code> is a list, the same idea as <code>c(50, 100, 400)</code> in R. That is essentially the entire Python vocabulary required to use Snakemake: lists, strings in quotes, and the occasional dictionary in <a href="05-config.html" class="quarto-xref"><span>Chapter 5</span></a>.</p>
+<p><code>[50, 100, 400]</code> is a list, the same idea as <code>c(50, 100, 400)</code> in R, and <code>n = [50, 100, 400]</code> passes it to <code>expand()</code> by name. That is essentially the entire Python vocabulary required to use Snakemake: lists, strings in quotes, and the occasional dictionary in <a href="05-config.html" class="quarto-xref"><span>Chapter 5</span></a>.</p>
 </div>
 </div>
-<p>The <code>expand()</code> sits inside the rule that needs it, which is where a grid usually belongs: another rule is free to sweep a different one, and a supplementary figure covering only the large sample sizes would simply expand over fewer. When several rules genuinely share a grid, define it once above them and use the variable in each.</p>
+<p>The grid is written out inside the rule that needs it, rather than in variables at the top of the file, and that is usually where it belongs: another rule is free to sweep a different one, and a supplementary figure covering only the large sample sizes would simply expand over fewer. When several rules genuinely share a grid, define it once above them — <code>N = [50, 100, 400]</code> — and use the variable in each.</p>
 <p>The script on the other end receives all eighteen filenames as arguments and stacks them:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>figure.R (excerpt)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" data-filename="figure.R (excerpt)"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>args <span class="ot">&lt;-</span> <span class="fu">commandArgs</span>(<span class="at">trailingOnly =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>outfile <span class="ot">&lt;-</span> args[<span class="dv">1</span>]</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>infiles <span class="ot">&lt;-</span> args[<span class="sc">-</span><span class="dv">1</span>]</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(infiles, readRDS))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" data-filename="figure.R (excerpt)"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>args <span class="ot">&lt;-</span> <span class="fu">commandArgs</span>(<span class="at">trailingOnly =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>outfile <span class="ot">&lt;-</span> args[<span class="dv">1</span>]</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>infiles <span class="ot">&lt;-</span> args[<span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(infiles, readRDS))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Note that <code>expand()</code> fills wildcards in, and <code>{wildcards.n}</code> reads them back out. These are opposite operations, and it is worth being clear about which one you are doing: <code>expand()</code> appears in the rule that <em>consumes</em> many files, and <code>{wildcards.…}</code> in the rule that <em>produces</em> one.</p>
 </section>
 <section id="running-it" class="level2" data-number="4.4">
 <h2 data-number="4.4" class="anchored" data-anchor-id="running-it"><span class="header-section-number">4.4</span> Running it</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">-n</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Job</span> stats:</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ex">job</span>       count</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="ex">------</span>  <span class="at">-------</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="ex">all</span>           1</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="ex">figure</span>        1</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="ex">sim</span>          18</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="ex">total</span>        20</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">-n</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Job</span> stats:</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ex">job</span>       count</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="ex">------</span>  <span class="at">-------</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="ex">all</span>           1</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="ex">figure</span>        1</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="ex">sim</span>          18</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="ex">total</span>        20</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Twenty jobs from three rules. On four cores:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">--cores</span> 4</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input:</span> figure.R, rds/sim/n50_rho0_naive.rds, rds/sim/n50_rho0_split.rds, rds/sim/n50_rho50_naive.rds, rds/sim/n50_rho50_split.rds, rds/sim/n50_rho80_naive.rds, rds/sim/n50_rho80_split.rds, rds/sim/n100_rho0_naive.rds, rds/sim/n100_rho0_split.rds, rds/sim/n100_rho50_naive.rds, rds/sim/n100_rho50_split.rds, rds/sim/n100_rho80_naive.rds, rds/sim/n100_rho80_split.rds, rds/sim/n400_rho0_naive.rds, rds/sim/n400_rho0_split.rds, rds/sim/n400_rho50_naive.rds, rds/sim/n400_rho50_split.rds, rds/sim/n400_rho80_naive.rds, rds/sim/n400_rho80_split.rds</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="ex">output:</span> out/figure1.pdf</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="ex">jobid:</span> 1</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Missing output files: out/figure1.pdf<span class="kw">;</span> <span class="ex">Input</span> files updated by another job: rds/sim/n100_rho50_naive.rds, rds/sim/n100_rho80_split.rds, rds/sim/n100_rho0_split.rds, rds/sim/n100_rho0_naive.rds, rds/sim/n400_rho50_split.rds, rds/sim/n100_rho50_split.rds, rds/sim/n400_rho80_naive.rds, rds/sim/n50_rho50_split.rds, rds/sim/n50_rho0_split.rds, rds/sim/n50_rho50_naive.rds, rds/sim/n100_rho80_naive.rds, rds/sim/n400_rho0_split.rds, rds/sim/n400_rho80_split.rds, rds/sim/n400_rho50_naive.rds, rds/sim/n400_rho0_naive.rds, rds/sim/n50_rho80_naive.rds, rds/sim/n50_rho80_split.rds</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="ex">resources:</span> tmpdir=/var/folders/gz/hbrw64n97wb0vy5prhnxst400000gp/T</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="ex">wrote</span> out/figure1.pdf </span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="ex">Finished</span> jobid: 1 <span class="er">(</span><span class="ex">Rule:</span> figure<span class="kw">)</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="ex">18</span> of 19 steps <span class="er">(</span><span class="ex">95%</span><span class="kw">)</span> <span class="cf">done</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="ex">Select</span> jobs to execute...</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="ex">Execute</span> 1 jobs...</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="ex">localrule</span> all:</span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input:</span> out/figure1.pdf</span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    <span class="ex">jobid:</span> 0</span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Input files updated by another job: out/figure1.pdf</span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    <span class="ex">resources:</span> tmpdir=/var/folders/gz/hbrw64n97wb0vy5prhnxst400000gp/T</span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="ex">Finished</span> jobid: 0 <span class="er">(</span><span class="ex">Rule:</span> all<span class="kw">)</span></span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="ex">19</span> of 19 steps <span class="er">(</span><span class="ex">100%</span><span class="kw">)</span> <span class="cf">done</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">--cores</span> 4</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input:</span> figure.R, rds/sim/n50_rho0_naive.rds, rds/sim/n50_rho0_split.rds, rds/sim/n50_rho50_naive.rds, rds/sim/n50_rho50_split.rds, rds/sim/n50_rho80_naive.rds, rds/sim/n50_rho80_split.rds, rds/sim/n100_rho0_naive.rds, rds/sim/n100_rho0_split.rds, rds/sim/n100_rho50_naive.rds, rds/sim/n100_rho50_split.rds, rds/sim/n100_rho80_naive.rds, rds/sim/n100_rho80_split.rds, rds/sim/n400_rho0_naive.rds, rds/sim/n400_rho0_split.rds, rds/sim/n400_rho50_naive.rds, rds/sim/n400_rho50_split.rds, rds/sim/n400_rho80_naive.rds, rds/sim/n400_rho80_split.rds</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="ex">output:</span> out/figure1.pdf</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="ex">jobid:</span> 1</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Missing output files: out/figure1.pdf<span class="kw">;</span> <span class="ex">Input</span> files updated by another job: rds/sim/n100_rho50_naive.rds, rds/sim/n100_rho80_split.rds, rds/sim/n100_rho0_split.rds, rds/sim/n100_rho0_naive.rds, rds/sim/n400_rho50_split.rds, rds/sim/n100_rho50_split.rds, rds/sim/n400_rho80_naive.rds, rds/sim/n50_rho50_split.rds, rds/sim/n50_rho0_split.rds, rds/sim/n50_rho50_naive.rds, rds/sim/n100_rho80_naive.rds, rds/sim/n400_rho0_split.rds, rds/sim/n400_rho80_split.rds, rds/sim/n400_rho50_naive.rds, rds/sim/n400_rho0_naive.rds, rds/sim/n50_rho80_naive.rds, rds/sim/n50_rho80_split.rds</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="ex">resources:</span> tmpdir=/var/folders/gz/hbrw64n97wb0vy5prhnxst400000gp/T</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="ex">wrote</span> out/figure1.pdf </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="ex">Finished</span> jobid: 1 <span class="er">(</span><span class="ex">Rule:</span> figure<span class="kw">)</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="ex">18</span> of 19 steps <span class="er">(</span><span class="ex">95%</span><span class="kw">)</span> <span class="cf">done</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="ex">Select</span> jobs to execute...</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="ex">Execute</span> 1 jobs...</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="ex">localrule</span> all:</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input:</span> out/figure1.pdf</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="ex">jobid:</span> 0</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Input files updated by another job: out/figure1.pdf</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="ex">resources:</span> tmpdir=/var/folders/gz/hbrw64n97wb0vy5prhnxst400000gp/T</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="ex">Finished</span> jobid: 0 <span class="er">(</span><span class="ex">Rule:</span> all<span class="kw">)</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="ex">19</span> of 19 steps <span class="er">(</span><span class="ex">100%</span><span class="kw">)</span> <span class="cf">done</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The DAG has changed shape: one rule now stands for eighteen independent jobs, all of which must finish before the figure runs.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
@@ -645,37 +637,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="building-one-cell-of-the-grid" class="level2" data-number="4.5">
 <h2 data-number="4.5" class="anchored" data-anchor-id="building-one-cell-of-the-grid"><span class="header-section-number">4.5</span> Building one cell of the grid</h2>
 <p>Because the output is a pattern, you can ask for any file it can match, whether or not anything else wants it:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">--cores</span> 1 rds/sim/n50_rho0_naive.rds</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Using</span> shell: /bin/bash</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Provided</span> cores: 1 <span class="er">(</span><span class="ex">use</span> <span class="at">--cores</span> to define parallelism<span class="kw">)</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="ex">Rules</span> claiming more threads will be scaled down.</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Job</span> stats:</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="ex">job</span>      count</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="ex">-----</span>  <span class="at">-------</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="ex">sim</span>          1</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="ex">total</span>        1</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="ex">Select</span> jobs to execute...</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="ex">Execute</span> 1 jobs...</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="ex">localrule</span> sim:</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input:</span> sim.R</span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    <span class="ex">output:</span> rds/sim/n50_rho0_naive.rds</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    <span class="ex">jobid:</span> 0</span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Missing output files: rds/sim/n50_rho0_naive.rds</span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>    <span class="ex">wildcards:</span> n=50, rho=0, method=naive</span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>    <span class="ex">resources:</span> tmpdir=/var/folders/gz/hbrw64n97wb0vy5prhnxst400000gp/T</span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="ex">wrote</span> rds/sim/n50_rho0_naive.rds <span class="at">--</span> coverage: 0.823 </span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="ex">Finished</span> jobid: 0 <span class="er">(</span><span class="ex">Rule:</span> sim<span class="kw">)</span></span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a><span class="ex">1</span> of 1 steps <span class="er">(</span><span class="ex">100%</span><span class="kw">)</span> <span class="cf">done</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">--cores</span> 1 rds/sim/n50_rho0_naive.rds</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Using</span> shell: /bin/bash</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Provided</span> cores: 1 <span class="er">(</span><span class="ex">use</span> <span class="at">--cores</span> to define parallelism<span class="kw">)</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="ex">Rules</span> claiming more threads will be scaled down.</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Job</span> stats:</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="ex">job</span>      count</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="ex">-----</span>  <span class="at">-------</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="ex">sim</span>          1</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="ex">total</span>        1</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="ex">Select</span> jobs to execute...</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="ex">Execute</span> 1 jobs...</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="ex">localrule</span> sim:</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input:</span> sim.R</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="ex">output:</span> rds/sim/n50_rho0_naive.rds</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="ex">jobid:</span> 0</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Missing output files: rds/sim/n50_rho0_naive.rds</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="ex">wildcards:</span> n=50, rho=0, method=naive</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="ex">resources:</span> tmpdir=/var/folders/gz/hbrw64n97wb0vy5prhnxst400000gp/T</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="ex">wrote</span> rds/sim/n50_rho0_naive.rds <span class="at">--</span> coverage: 0.823 </span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="ex">Finished</span> jobid: 0 <span class="er">(</span><span class="ex">Rule:</span> sim<span class="kw">)</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="ex">1</span> of 1 steps <span class="er">(</span><span class="ex">100%</span><span class="kw">)</span> <span class="cf">done</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This is how you develop. Rather than running the whole grid to find out whether your new method works, ask for one small scenario, look at it, and only then let the rest go.</p>
 <p>This is also extremely powerful, because now if you want a certain simulation… you just ahve to ask for it rather than edit an R file and run it.</p>
 </section>
 <section id="try-it" class="level2" data-number="4.6">
 <h2 data-number="4.6" class="anchored" data-anchor-id="try-it"><span class="header-section-number">4.6</span> Try it</h2>
 <ol type="1">
-<li>Add <code>1000</code> to <code>N</code> and run <code>snakemake -n</code>. How many jobs? Which ones are new?</li>
+<li>Add <code>1000</code> to the sample sizes in <code>rule figure</code> and run <code>snakemake -n</code>. How many jobs? Which ones are new?</li>
 <li>Ask for <code>rds/sim/n77_rho33_naive.rds</code>. It works — explain why.</li>
 <li>Ask for <code>rds/sim/n50_rho0_bayes.rds</code> and watch it fail. Where does the error come from, and how would you have preferred to find out?</li>
 </ol>

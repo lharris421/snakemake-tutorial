@@ -6,8 +6,7 @@ source("_common.R")
 ```
 
 Most of the trouble people have with Snakemake comes from one of two questions:
-*why is it doing that?* and *why is it not doing that?* This chapter is a reference
-for both, plus the errors you will actually see.
+*why is it doing that?* and *why is it not doing that?* This chapter provides some useful tools for debugging.
 
 ## Look before you run
 
@@ -16,8 +15,6 @@ what it would do, and does none of it:
 
 ```bash
 snakemake -n              # what would you do?
-snakemake -n --quiet      # just the summary table
-snakemake -p              # print the shell commands as they run
 ```
 
 Each planned job comes with a `reason:` line:
@@ -28,19 +25,9 @@ Each planned job comes with a `reason:` line:
 transcript("04-reason.txt")
 ```
 
-::: {.callout-note}
-## `-r`/`--reason` no longer exists
+## Why is the status of each file?
 
-Reasons are printed by default now, and the flag was removed --- on 9.13 it is a
-hard error, not a deprecation warning. If you find a tutorial recommending
-`snakemake -n -r`, it predates version 8, and whatever else it tells you about
-cluster execution is likely out of date too.
-:::
-
-## Why is it rebuilding?
-
-@sec-rerun covers what makes an output stale; `--summary` is how you inspect it
-after the fact, one row per file Snakemake knows about:
+@sec-rerun covers what makes an output stale. `--summary` lets you inspect the files statuses, one row per file Snakemake knows about:
 
 ```{r}
 #| echo: false
@@ -50,22 +37,6 @@ transcript("09-summary.txt")
 
 The `plan` column tells you what would happen and the `status` column whether the
 recorded provenance still matches.
-
-The usual surprises:
-
-**A whole grid reruns after a cosmetic edit.** You changed a comment in `sim.R`, and
-`sim.R` is an input to eighteen jobs. Snakemake compares content, so *any* change
-counts, including whitespace. There is no way to say "this edit does not matter";
-if you are sure, `--touch` (below) is the escape hatch.
-
-**A rule reruns after you edited its shell command.** Expected, and desirable ---
-the command is part of the provenance.
-
-**Nothing reruns after you edit a script that is not listed as an input.** This one
-is silent and it is the dangerous one. If a rule calls `Rscript scripts/figure.R`
-but only lists `{input.rds}`, then editing `figure.R` changes nothing as far as
-Snakemake is concerned, and your figure quietly stays stale. **List your scripts as
-inputs**, and whatever they source (@sec-rerun).
 
 ## Making it rerun anyway
 
@@ -78,8 +49,7 @@ inputs**, and whatever they source (@sec-rerun).
 | `snakemake --delete-all-output` | delete everything the workflow produced |
 
 `-R` is the one you will use. It is the right response to "I changed something
-Snakemake cannot see" --- a package upgrade, an edit to a script you forgot to list,
-a change to a data file that lives outside the project.
+Snakemake cannot see". E.g. a package upgrade (more on this in the future).
 
 ## Making it stop rerunning
 

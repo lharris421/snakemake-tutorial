@@ -1,7 +1,3 @@
-N = [50, 100, 400]
-RHO = [0, 50, 80]
-METHODS = ["naive", "split"]
-
 rule all:
     input:
         "out/figure1.pdf"
@@ -22,7 +18,9 @@ rule figure:
     input:
         script = "figure.R",
         rds = expand("rds/sim/n{n}_rho{rho}_{method}.rds",
-                     n=N, rho=RHO, method=METHODS)
+                     n = [50, 100, 400],
+                     rho = [0, 50, 80],
+                     method = ["naive", "split"])
     output:
         "out/figure1.pdf"
     shell:
