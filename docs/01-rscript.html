@@ -341,6 +341,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">A first Snakefile</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-rerun.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Rebuilding only what changed</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -354,20 +360,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03-wildcards.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">One rule, many jobs</span></span></a>
+  <a href="./04-wildcards.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">One rule, many jobs</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04-config.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Configuration</span></span></a>
+  <a href="./05-config.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Configuration</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05-parallel-and-logs.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Parallelism, logs and benchmarks</span></span></a>
+  <a href="./06-parallel-and-logs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Parallelism, logs and benchmarks</span></span></a>
   </div>
 </li>
       </ul>
@@ -384,13 +390,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./07-manuscript.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Building a manuscript</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building a manuscript</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./08-analysis-pipeline.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></span></a>
   </div>
 </li>
       </ul>
@@ -407,13 +413,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./09-debugging.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">When things go wrong</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">When things go wrong</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./10-scaling-up.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Scaling up</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Scaling up</span></span></a>
   </div>
 </li>
       </ul>
@@ -490,7 +496,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> sim.R</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Two things change when your code runs this way rather than in RStudio.</p>
 <p>The first is that the working directory is wherever your terminal is, not wherever the file is. If <code>sim.R</code> says <code>readRDS("rds/thing.rds")</code>, that path is resolved relative to the directory you were sitting in when you typed the command. Pick a convention and hold to it; the one used throughout this book is <strong>always run from the project root</strong>, so every path in every script is relative to the top of the project. Snakemake follows the same convention by default, which is convenient.</p>
-<p>The second is that nothing prints unless you ask. Auto-printing at the top level is an interactive feature, so <code>head(d)</code> on its own line produces no output under <code>Rscript</code>; you need <code>print(head(d))</code> or <code>cat()</code>. This matters more than it sounds like it should, because those prints become your log file in <a href="05-parallel-and-logs.html" class="quarto-xref"><span>Chapter 5</span></a>.</p>
+<p>The second is that nothing prints unless you ask. Auto-printing at the top level is an interactive feature, so <code>head(d)</code> on its own line produces no output under <code>Rscript</code>; you need <code>print(head(d))</code> or <code>cat()</code>. This matters more than it sounds like it should, because those prints become your log file in <a href="06-parallel-and-logs.html" class="quarto-xref"><span>Chapter 6</span></a>.</p>
 </section>
 <section id="taking-arguments" class="level2" data-number="1.3">
 <h2 data-number="1.3" class="anchored" data-anchor-id="taking-arguments"><span class="header-section-number">1.3</span> Taking arguments</h2>
@@ -563,7 +569,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Two decisions that will save you pain later:</p>
 <p><strong>Results are files, and files are named for what produced them.</strong> A file called <code>n400_rho80_split.rds</code> tells you the sample size, the correlation, and the method. A file called <code>results2_final.rds</code> tells you nothing, and in six months neither will you.</p>
 <p><strong>Git is for source, not output.</strong> Commit the scripts and the inputs; let everything the code produces be rebuilt. That covers figures and tables as firmly as it covers a 200 MB <code>.rds</code> file — a figure is output no matter how small it is.</p>
-<p><strong>Computed results and finished products live in separate directories.</strong> Every example in this book writes serialized results — the expensive part — to <code>rds/</code>, and figures and tables to <code>out/</code>. Nothing is written anywhere else, and neither directory is tracked. It draws a clean line between the things that took an afternoon to compute and the things that can be redrawn in a second. <a href="02-first-snakefile.html#sec-shape" class="quarto-xref"><span>Section 2.8</span></a> says more about the layout once you have seen a Snakefile.</p>
+<p><strong>Computed results and finished products live in separate directories.</strong> Every example in this book writes serialized results — the expensive part — to <code>rds/</code>, and figures and tables to <code>out/</code>. Nothing is written anywhere else, and neither directory is tracked. It draws a clean line between the things that took an afternoon to compute and the things that can be redrawn in a second. <a href="02-first-snakefile.html#sec-shape" class="quarto-xref"><span>Section 2.6</span></a> says more about the layout once you have seen a Snakefile.</p>
 
 
 </section>

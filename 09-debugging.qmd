@@ -39,9 +39,8 @@ cluster execution is likely out of date too.
 
 ## Why is it rebuilding?
 
-Snakemake stores, for every output file, a record of how it was made: the checksums
-of the inputs, the shell command, and the params. Any of them changing makes the
-output stale. `--summary` prints the table:
+@sec-rerun covers what makes an output stale; `--summary` is how you inspect it
+after the fact, one row per file Snakemake knows about:
 
 ```{r}
 #| echo: false
@@ -63,10 +62,10 @@ if you are sure, `--touch` (below) is the escape hatch.
 the command is part of the provenance.
 
 **Nothing reruns after you edit a script that is not listed as an input.** This one
-is silent and it is the dangerous one. If a rule calls `Rscript scripts/figure.R` but
-only lists `{input.rds}`, then editing `figure.R` changes nothing as far as
+is silent and it is the dangerous one. If a rule calls `Rscript scripts/figure.R`
+but only lists `{input.rds}`, then editing `figure.R` changes nothing as far as
 Snakemake is concerned, and your figure quietly stays stale. **List your scripts as
-inputs.** Every example in this book does.
+inputs**, and whatever they source (@sec-rerun).
 
 ## Making it rerun anyway
 
@@ -113,7 +112,7 @@ rebuilding each time.
 Snakemake's own help text offers `--rerun-triggers mtime` as "the traditional way
 of just considering file modification dates". It does not behave that way: on
 9.13, `touch`ing an input under `--rerun-triggers mtime` still does not cause a
-rerun, because the checksum comparison described in @sec-first-snakefile applies
+rerun, because the checksum comparison described in @sec-rerun applies
 regardless. If you want a rebuild, ask for one with `-R` rather than trying to
 manufacture one through timestamps.
 :::

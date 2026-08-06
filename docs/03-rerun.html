@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>5&nbsp; Parallelism, logs and benchmarks – Snakemake for biostatisticians</title>
+<title>3&nbsp; Rebuilding only what changed – Snakemake for biostatisticians</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -68,8 +68,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./07-manuscript.html" rel="next">
-<link href="./04-config.html" rel="prev">
+<link href="./04-wildcards.html" rel="next">
+<link href="./02-first-snakefile.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -286,7 +286,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03-wildcards.html">Doing it at scale</a></li><li class="breadcrumb-item"><a href="./05-parallel-and-logs.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Parallelism, logs and benchmarks</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-rscript.html">Getting started</a></li><li class="breadcrumb-item"><a href="./03-rerun.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Rebuilding only what changed</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -341,6 +341,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">A first Snakefile</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-rerun.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Rebuilding only what changed</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -354,20 +360,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03-wildcards.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">One rule, many jobs</span></span></a>
+  <a href="./04-wildcards.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">One rule, many jobs</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04-config.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Configuration</span></span></a>
+  <a href="./05-config.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Configuration</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05-parallel-and-logs.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Parallelism, logs and benchmarks</span></span></a>
+  <a href="./06-parallel-and-logs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Parallelism, logs and benchmarks</span></span></a>
   </div>
 </li>
       </ul>
@@ -384,13 +390,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./07-manuscript.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Building a manuscript</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building a manuscript</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./08-analysis-pipeline.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></span></a>
   </div>
 </li>
       </ul>
@@ -407,13 +413,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./09-debugging.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">When things go wrong</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">When things go wrong</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./10-scaling-up.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Scaling up</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Scaling up</span></span></a>
   </div>
 </li>
       </ul>
@@ -428,11 +434,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#cores" id="toc-cores" class="nav-link active" data-scroll-target="#cores"><span class="header-section-number">5.1</span> –cores</a></li>
-  <li><a href="#logs" id="toc-logs" class="nav-link" data-scroll-target="#logs"><span class="header-section-number">5.2</span> Logs</a></li>
-  <li><a href="#benchmarks" id="toc-benchmarks" class="nav-link" data-scroll-target="#benchmarks"><span class="header-section-number">5.3</span> Benchmarks</a></li>
-  <li><a href="#interrupting-and-resuming" id="toc-interrupting-and-resuming" class="nav-link" data-scroll-target="#interrupting-and-resuming"><span class="header-section-number">5.4</span> Interrupting and resuming</a></li>
-  <li><a href="#try-it" id="toc-try-it" class="nav-link" data-scroll-target="#try-it"><span class="header-section-number">5.5</span> Try it</a></li>
+  <li><a href="#doing-nothing-quickly" id="toc-doing-nothing-quickly" class="nav-link active" data-scroll-target="#doing-nothing-quickly"><span class="header-section-number">3.1</span> Doing nothing, quickly</a></li>
+  <li><a href="#what-counts-as-out-of-date" id="toc-what-counts-as-out-of-date" class="nav-link" data-scroll-target="#what-counts-as-out-of-date"><span class="header-section-number">3.2</span> What counts as out of date</a></li>
+  <li><a href="#try-it" id="toc-try-it" class="nav-link" data-scroll-target="#try-it"><span class="header-section-number">3.3</span> Try it</a></li>
   </ul>
 </nav>
     </div>
@@ -440,9 +444,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <main class="content" id="quarto-document-content">
 
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03-wildcards.html">Doing it at scale</a></li><li class="breadcrumb-item"><a href="./05-parallel-and-logs.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Parallelism, logs and benchmarks</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-rscript.html">Getting started</a></li><li class="breadcrumb-item"><a href="./03-rerun.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Rebuilding only what changed</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-parallel" class="quarto-section-identifier"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Parallelism, logs and benchmarks</span></span></h1>
+<h1 class="title"><span id="sec-rerun" class="quarto-section-identifier"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Rebuilding only what changed</span></span></h1>
 </div>
 
 
@@ -459,105 +463,127 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Once your work is expressed as a DAG, you get the parallelism for free — Snakemake already knows which jobs do not depend on each other.</p>
-<section id="cores" class="level2" data-number="5.1">
-<h2 data-number="5.1" class="anchored" data-anchor-id="cores"><span class="header-section-number">5.1</span> –cores</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">--cores</span> 4</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>With eighteen independent simulations and four cores, four run, and as each finishes another starts, until all eighteen are done and the figure can go. There is nothing to configure — the ordering falls out of the DAG.</p>
-<p><code>--cores all</code> uses every core you have. On a laptop you are also using for other things, leave one or two free; on a shared server, be a good citizen and pick a reasonable number.</p>
+<p><a href="02-first-snakefile.html" class="quarto-xref"><span>Chapter 2</span></a> ended with a working pipeline. What makes one worth having is not that it runs, but what it does the <em>second</em> time you ask — and, once a project is real, what it decides to leave alone.</p>
+<section id="doing-nothing-quickly" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="doing-nothing-quickly"><span class="header-section-number">3.1</span> Doing nothing, quickly</h2>
+<p>Still in <code>examples/01-first-rules</code>, run it again:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">--cores</span> 2</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Nothing</span> to be done <span class="er">(</span><span class="ex">all</span> requested files are present and up to date<span class="kw">)</span><span class="bu">.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This is the point of the exercise. Ask for the figure a hundred more times and you will get that message a hundred times. Now delete the figure and ask again:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> rm out/figure1.pdf</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">--cores</span> 2</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Using</span> shell: /bin/bash</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">Provided</span> cores: 2</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Rules</span> claiming more threads will be scaled down.</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="ex">Job</span> stats:</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="ex">job</span>       count</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="ex">------</span>  <span class="at">-------</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="ex">all</span>           1</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="ex">figure</span>        1</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="ex">total</span>         2</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="ex">Select</span> jobs to execute...</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="ex">Execute</span> 1 jobs...</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="ex">localrule</span> figure:</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input:</span> figure.R, rds/sim-naive.rds, rds/sim-split.rds</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    <span class="ex">output:</span> out/figure1.pdf</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="ex">jobid:</span> 1</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Missing output files: out/figure1.pdf</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="ex">resources:</span> tmpdir=/var/folders/gz/hbrw64n97wb0vy5prhnxst400000gp/T</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="ex">wrote</span> out/figure1.pdf </span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="ex">Finished</span> jobid: 1 <span class="er">(</span><span class="ex">Rule:</span> figure<span class="kw">)</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="ex">1</span> of 2 steps <span class="er">(</span><span class="ex">50%</span><span class="kw">)</span> <span class="cf">done</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="ex">Select</span> jobs to execute...</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="ex">Execute</span> 1 jobs...</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="ex">localrule</span> all:</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input:</span> out/figure1.pdf</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    <span class="ex">jobid:</span> 0</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Input files updated by another job: out/figure1.pdf</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    <span class="ex">resources:</span> tmpdir=/var/folders/gz/hbrw64n97wb0vy5prhnxst400000gp/T</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="ex">Finished</span> jobid: 0 <span class="er">(</span><span class="ex">Rule:</span> all<span class="kw">)</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="ex">2</span> of 2 steps <span class="er">(</span><span class="ex">100%</span><span class="kw">)</span> <span class="cf">done</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Only the figure was rebuilt. The simulations were still there and still current, so they were left alone — Snakemake rebuilds what is out of date and nothing else.</p>
+</section>
+<section id="what-counts-as-out-of-date" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="what-counts-as-out-of-date"><span class="header-section-number">3.2</span> What counts as out of date</h2>
+<p>Here is where Snakemake differs from <code>make</code>, and from most people’s expectations.</p>
+<p><code>make</code> asks one question: is the input newer than the output? If so, rebuild.</p>
+<p>Snakemake asks two, and needs both answers to be yes. It keeps a record of every output it has ever made — in a directory called <code>.snakemake/</code> — including a SHA-256 checksum of each input that went into it. A job is out of date when</p>
+<ol type="1">
+<li>an input’s timestamp is newer than the output’s, <strong>and</strong></li>
+<li>that input’s contents differ from what was recorded.</li>
+</ol>
+<p>The timestamp is the gate and the checksum is the confirmation. So:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> touch scripts/sim.R <span class="kw">&amp;&amp;</span> <span class="ex">snakemake</span> <span class="at">-n</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Nothing</span> to be done <span class="er">(</span><span class="ex">all</span> requested files are present and up to date<span class="kw">)</span><span class="bu">.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Touching a file does not trigger a rebuild, because the contents did not change. Change one character of <code>sim.R</code>, though, and everything downstream of it goes:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> echo <span class="st">'## a real edit'</span> <span class="op">&gt;&gt;</span> scripts/sim.R <span class="kw">&amp;&amp;</span> <span class="ex">snakemake</span> <span class="at">-n</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Job</span> stats:</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">job</span>           count</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="ex">----------</span>  <span class="at">-------</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="ex">all</span>               1</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="ex">figure1</span>           1</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="ex">manuscript</span>        1</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="ex">sim</span>              18</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="ex">table1</span>            1</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="ex">total</span>            22</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>(That transcript comes from the larger example of <a href="07-manuscript.html" class="quarto-xref"><span>Chapter 7</span></a>, which is why there are 22 jobs rather than 4.)</p>
+<p>Content is not the only trigger. Snakemake also stores the shell command and the parameters used for each output, so editing a rule’s command — not just the script it calls — makes the affected outputs stale too. <a href="09-debugging.html" class="quarto-xref"><span>Chapter 9</span></a> covers how to inspect and override all of this.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>The timestamp really is a gate
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Because the check is an <em>and</em>, a changed file whose timestamp is not newer than the output is invisible: Snakemake never gets as far as comparing the checksum. You will not produce that situation by editing a file — editing sets the timestamp to now — but you can arrive at it by other routes, because several common tools preserve timestamps deliberately:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> <span class="at">-p</span> old/sim.R scripts/sim.R      <span class="co"># -p preserves the original mtime</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rsync</span> <span class="at">-a</span> backup/ .              <span class="co"># -a implies -t</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tar</span> xf archive.tar              <span class="co"># restores the archived mtimes</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Restore a script from a backup or an archive that way and the pipeline can sit there insisting everything is up to date. If you have moved files around by any means other than editing them, <code>touch</code> the ones you restored, or force the issue with <code>snakemake -R</code> (<a href="09-debugging.html" class="quarto-xref"><span>Chapter 9</span></a>).</p>
+</div>
+</div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Two kinds of parallel
+<span class="screen-reader-only">Note</span>Deleting <code>.snakemake/</code> is safe
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><code>--cores</code> controls how many <em>jobs</em> run at once, and that is usually the only kind of parallelism you need for a simulation study. It is unrelated to parallelism <em>inside</em> a job (<code>mclapply</code>, <code>future</code>, a multithreaded BLAS). If a rule does use threads internally, tell Snakemake with <code>threads:</code> so its accounting stays honest:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>rule sim:</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    threads: <span class="dv">4</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    shell: <span class="st">"Rscript sim.R --cores </span><span class="sc">{threads}</span><span class="st"> ..."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Then <code>--cores 8</code> runs two such jobs at a time rather than eight.</p>
+<p>It is a cache of metadata, not results. Delete it and the next run rebuilds everything, because Snakemake no longer has any record of how the existing files were made. Add it to <code>.gitignore</code> and otherwise ignore it.</p>
 </div>
 </div>
-</section>
-<section id="logs" class="level2" data-number="5.2">
-<h2 data-number="5.2" class="anchored" data-anchor-id="logs"><span class="header-section-number">5.2</span> Logs</h2>
-<p>Once eighteen jobs are interleaving their output, the terminal becomes unreadable, and the run you actually want to look at scrolled past an hour ago. The <code>log:</code> directive gives each job its own file:</p>
-<div class="code-with-filename">
-<div class="code-with-filename-file">
-<pre><strong>Snakefile (excerpt)</strong></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-filename="Snakefile (excerpt)"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>rule sim:</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span>:</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>        script <span class="op">=</span> <span class="st">"scripts/sim.R"</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        functions <span class="op">=</span> glob.glob(<span class="st">"R/*.R"</span>)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    output:</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="co">"rds/{iterations}/sim/n{n}_rho{rho}_{method}.rds"</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    log:</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="co">"logs/{iterations}/sim/n{n}_rho{rho}_{method}.log"</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    benchmark:</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        <span class="co">"benchmarks/{iterations}/sim/n{n}_rho{rho}_{method}.tsv"</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    shell:</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="co">"Rscript {input.script} "</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--n {wildcards.n} "</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--rho {wildcards.rho} "</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--method {wildcards.method} "</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--iterations {wildcards.iterations} "</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--out {output} &gt; {log} 2&gt;&amp;1"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Two details. The log file is <em>declared</em> by <code>log:</code> but nothing writes to it automatically — the redirection <code>&gt; {log} 2&gt;&amp;1</code> at the end of the shell command is what does it (<code>2&gt;&amp;1</code> catches errors as well as normal output). And the log path carries the same wildcards as the output, so each job gets its own file rather than eighteen jobs overwriting one.</p>
-<p>Anything the script prints lands there:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> cat logs/200/sim/n400_rho80_naive.log</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">wrote</span> rds/200/sim/n400_rho80_naive.rds <span class="at">--</span> coverage: 0.78 </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Which is worth designing for. A script that prints its parameters, its sample size after exclusions, and a summary of what it computed gives you a log directory that answers most questions without rerunning anything. <a href="08-analysis-pipeline.html" class="quarto-xref"><span>Chapter 7</span></a> leans on this heavily.</p>
-<p>Logs also survive failure. When a job dies, Snakemake tells you which log to read, and the R error message is sitting in it — as opposed to being lost in the scrollback of a parallel run.</p>
-<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Important</span>Snakemake will not delete a log file
+<span class="screen-reader-only">Note</span>Declare what a script sources
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Outputs of a failed job are removed so that a half-written file is never mistaken for a real one. Logs are deliberately kept, because they are the evidence. This also means a log from a successful run sticks around until the job runs again.</p>
+<p>Scripts grow to the point where they share things — a set of functions, the labels and colors several figures use — and those live in files of their own, which is what <code>R/</code> is for in <a href="02-first-snakefile.html#sec-shape" class="quarto-xref"><span>Section 2.6</span></a>. Snakemake has no way to know that a script reads another file, so a shared file has to be listed as an input to every rule whose script sources it. An undeclared dependency is the one failure mode Snakemake cannot warn you about: edit a shared function and every result built from it stays quietly stale.</p>
+<p>That is also an argument for keeping such files narrow, because the declaration is all-or-nothing. In the larger example of <a href="07-manuscript.html" class="quarto-xref"><span>Chapter 7</span></a> the simulation functions are in <code>R/</code> and the plot labels and colors are in <code>scripts/setup.R</code>, listed separately: editing a hex code plans four jobs and leaves the simulations alone, while editing a function plans all twenty-two. Had both lived in one file, the color change would have rerun eighteen simulations, because Snakemake cannot tell which half of a file you touched.</p>
 </div>
 </div>
 </section>
-<section id="benchmarks" class="level2" data-number="5.3">
-<h2 data-number="5.3" class="anchored" data-anchor-id="benchmarks"><span class="header-section-number">5.3</span> Benchmarks</h2>
-<p><code>benchmark:</code> records how long a job took:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>rule sim:</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    benchmark: <span class="st">"benchmarks/sim/n</span><span class="sc">{n}</span><span class="st">_rho</span><span class="sc">{rho}</span><span class="st">_</span><span class="sc">{method}</span><span class="st">.tsv"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> cat benchmarks/200/sim/n400_rho80_naive.tsv</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">s</span>   h:m:s   max_rss max_vms max_uss max_pss io_in   io_out  mean_load   cpu_time</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">1.60</span>    0:00:01 0   0   0   0   0.00    0.00    64.44   0</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The first column is seconds. This is how you find out that one corner of your parameter grid takes forty times as long as the rest, which is worth knowing before you scale the whole grid up by a factor of ten.</p>
-</section>
-<section id="interrupting-and-resuming" class="level2" data-number="5.4">
-<h2 data-number="5.4" class="anchored" data-anchor-id="interrupting-and-resuming"><span class="header-section-number">5.4</span> Interrupting and resuming</h2>
-<p>Snakemake is designed to handle being stopped.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Terminating processes on user request, this might take some time.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>What survives is everything that had already <em>finished</em>. Those outputs stay on disk, and the next run does not rebuild them; it starts from wherever the interruption left the pipeline. So the cost of stopping a twelve-hour run after four hours is only the handful of jobs that were in flight at that moment.</p>
-<p>The jobs that were in flight need one more thought, because a killed job may have got as far as writing part of its output. Snakemake tracks that, and rather than letting a truncated file pass for a real result it stops the next run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>IncompleteFilesException:</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>The files below seem to be incomplete. …</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>Incomplete files:</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>rds/200/sim/n400_rho80_split.rds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The fix is to say so explicitly:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">--cores</span> 4 <span class="at">--rerun-incomplete</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>which discards the suspect files and rebuilds them.</p>
-</section>
-<section id="try-it" class="level2" data-number="5.5">
-<h2 data-number="5.5" class="anchored" data-anchor-id="try-it"><span class="header-section-number">5.5</span> Try it</h2>
+<section id="try-it" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="try-it"><span class="header-section-number">3.3</span> Try it</h2>
 <ol type="1">
-<li>In <code>examples/03-config</code>, run with <code>--cores 1</code>, then <code>--cores 4</code>, and compare. Why is the speedup less than four?</li>
-<li>Delete one simulation’s <code>.rds</code> file and run again. How many jobs run?</li>
-<li>Add a <code>log:</code> directive to the <code>figure</code> rule in <code>examples/03-config</code> and check that <code>ggsave</code>’s output ends up in it.</li>
+<li>Delete <code>out/</code> and rebuild. Time it. Then delete <code>rds/</code> as well and compare.</li>
+<li>Change the <code>n &lt;- 100</code> line in <code>sim.R</code> to <code>n &lt;- 200</code> and run <code>snakemake -n</code>. Which jobs are planned, and why?</li>
+<li>Change a comment in <code>figure.R</code>, then run <code>snakemake -n</code>. Does the simulation rerun? Should it?</li>
 </ol>
 
 
@@ -979,13 +1005,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./04-config.html" class="pagination-link" aria-label="Configuration">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Configuration</span></span>
+      <a href="./02-first-snakefile.html" class="pagination-link" aria-label="A first Snakefile">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">A first Snakefile</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./07-manuscript.html" class="pagination-link" aria-label="Building a manuscript">
-        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Building a manuscript</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./04-wildcards.html" class="pagination-link" aria-label="One rule, many jobs">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">One rule, many jobs</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

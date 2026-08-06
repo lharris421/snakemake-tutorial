@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>9&nbsp; Scaling up – Snakemake for biostatisticians</title>
+<title>10&nbsp; Scaling up – Snakemake for biostatisticians</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -288,7 +288,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./09-debugging.html">In practice</a></li><li class="breadcrumb-item"><a href="./10-scaling-up.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Scaling up</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./09-debugging.html">In practice</a></li><li class="breadcrumb-item"><a href="./10-scaling-up.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Scaling up</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -343,6 +343,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">A first Snakefile</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-rerun.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Rebuilding only what changed</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -356,20 +362,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03-wildcards.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">One rule, many jobs</span></span></a>
+  <a href="./04-wildcards.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">One rule, many jobs</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04-config.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Configuration</span></span></a>
+  <a href="./05-config.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Configuration</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05-parallel-and-logs.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Parallelism, logs and benchmarks</span></span></a>
+  <a href="./06-parallel-and-logs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Parallelism, logs and benchmarks</span></span></a>
   </div>
 </li>
       </ul>
@@ -386,13 +392,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./07-manuscript.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Building a manuscript</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building a manuscript</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./08-analysis-pipeline.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></span></a>
   </div>
 </li>
       </ul>
@@ -409,13 +415,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./09-debugging.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">When things go wrong</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">When things go wrong</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./10-scaling-up.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Scaling up</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Scaling up</span></span></a>
   </div>
 </li>
       </ul>
@@ -430,20 +436,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#two-repositories" id="toc-two-repositories" class="nav-link active" data-scroll-target="#two-repositories"><span class="header-section-number">9.1</span> Two repositories</a></li>
-  <li><a href="#pointing-at-the-other-repository" id="toc-pointing-at-the-other-repository" class="nav-link" data-scroll-target="#pointing-at-the-other-repository"><span class="header-section-number">9.2</span> Pointing at the other repository</a>
+  <li><a href="#two-repositories" id="toc-two-repositories" class="nav-link active" data-scroll-target="#two-repositories"><span class="header-section-number">10.1</span> Two repositories</a></li>
+  <li><a href="#pointing-at-the-other-repository" id="toc-pointing-at-the-other-repository" class="nav-link" data-scroll-target="#pointing-at-the-other-repository"><span class="header-section-number">10.2</span> Pointing at the other repository</a>
   <ul class="collapse">
-  <li><a href="#sec-fstrings" id="toc-sec-fstrings" class="nav-link" data-scroll-target="#sec-fstrings"><span class="header-section-number">9.2.1</span> When you need an f-string, and when you must not</a></li>
+  <li><a href="#sec-fstrings" id="toc-sec-fstrings" class="nav-link" data-scroll-target="#sec-fstrings"><span class="header-section-number">10.2.1</span> When you need an f-string, and when you must not</a></li>
   </ul></li>
-  <li><a href="#results-outside-the-repository" id="toc-results-outside-the-repository" class="nav-link" data-scroll-target="#results-outside-the-repository"><span class="header-section-number">9.3</span> Results outside the repository</a>
+  <li><a href="#results-outside-the-repository" id="toc-results-outside-the-repository" class="nav-link" data-scroll-target="#results-outside-the-repository"><span class="header-section-number">10.3</span> Results outside the repository</a>
   <ul class="collapse">
-  <li><a href="#sharing-the-folder" id="toc-sharing-the-folder" class="nav-link" data-scroll-target="#sharing-the-folder"><span class="header-section-number">9.3.1</span> Sharing the folder</a></li>
-  <li><a href="#telling-snakemake-the-results-are-fine" id="toc-telling-snakemake-the-results-are-fine" class="nav-link" data-scroll-target="#telling-snakemake-the-results-are-fine"><span class="header-section-number">9.3.2</span> Telling Snakemake the results are fine</a></li>
+  <li><a href="#sharing-the-folder" id="toc-sharing-the-folder" class="nav-link" data-scroll-target="#sharing-the-folder"><span class="header-section-number">10.3.1</span> Sharing the folder</a></li>
+  <li><a href="#telling-snakemake-the-results-are-fine" id="toc-telling-snakemake-the-results-are-fine" class="nav-link" data-scroll-target="#telling-snakemake-the-results-are-fine"><span class="header-section-number">10.3.2</span> Telling Snakemake the results are fine</a></li>
   </ul></li>
-  <li><a href="#chained-rules" id="toc-chained-rules" class="nav-link" data-scroll-target="#chained-rules"><span class="header-section-number">9.4</span> Chained rules</a></li>
-  <li><a href="#optional-expensive-pieces" id="toc-optional-expensive-pieces" class="nav-link" data-scroll-target="#optional-expensive-pieces"><span class="header-section-number">9.5</span> Optional expensive pieces</a></li>
-  <li><a href="#what-this-buys-you" id="toc-what-this-buys-you" class="nav-link" data-scroll-target="#what-this-buys-you"><span class="header-section-number">9.6</span> What this buys you</a></li>
-  <li><a href="#sec-next" id="toc-sec-next" class="nav-link" data-scroll-target="#sec-next"><span class="header-section-number">9.7</span> Where to go next</a></li>
+  <li><a href="#chained-rules" id="toc-chained-rules" class="nav-link" data-scroll-target="#chained-rules"><span class="header-section-number">10.4</span> Chained rules</a></li>
+  <li><a href="#optional-expensive-pieces" id="toc-optional-expensive-pieces" class="nav-link" data-scroll-target="#optional-expensive-pieces"><span class="header-section-number">10.5</span> Optional expensive pieces</a></li>
+  <li><a href="#what-this-buys-you" id="toc-what-this-buys-you" class="nav-link" data-scroll-target="#what-this-buys-you"><span class="header-section-number">10.6</span> What this buys you</a></li>
+  <li><a href="#sec-next" id="toc-sec-next" class="nav-link" data-scroll-target="#sec-next"><span class="header-section-number">10.7</span> Where to go next</a></li>
   </ul>
 </nav>
     </div>
@@ -451,9 +457,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <main class="content" id="quarto-document-content">
 
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./09-debugging.html">In practice</a></li><li class="breadcrumb-item"><a href="./10-scaling-up.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Scaling up</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./09-debugging.html">In practice</a></li><li class="breadcrumb-item"><a href="./10-scaling-up.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Scaling up</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-scaling" class="quarto-section-identifier"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Scaling up</span></span></h1>
+<h1 class="title"><span id="sec-scaling" class="quarto-section-identifier"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Scaling up</span></span></h1>
 </div>
 
 
@@ -470,10 +476,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>The example in <a href="07-manuscript.html" class="quarto-xref"><span>Chapter 6</span></a> is a real pipeline in miniature: eighteen simulations, a figure, a table, two documents. A real methods paper is the same shape with the numbers changed — a few hundred simulation jobs, seventeen figures and tables, results measured in days of compute rather than seconds. This chapter is about what changes and what does not.</p>
+<p>The example in <a href="07-manuscript.html" class="quarto-xref"><span>Chapter 7</span></a> is a real pipeline in miniature: eighteen simulations, a figure, a table, two documents. A real methods paper is the same shape with the numbers changed — a few hundred simulation jobs, seventeen figures and tables, results measured in days of compute rather than seconds. This chapter is about what changes and what does not.</p>
 <p>Almost nothing about the Snakefile changes. What changes is where things live.</p>
-<section id="two-repositories" class="level2" data-number="9.1">
-<h2 data-number="9.1" class="anchored" data-anchor-id="two-repositories"><span class="header-section-number">9.1</span> Two repositories</h2>
+<section id="two-repositories" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="two-repositories"><span class="header-section-number">10.1</span> Two repositories</h2>
 <p>The natural instinct is to put everything in the manuscript’s repository. That works until the second paper, at which point you find yourself copying the estimator into a new directory and maintaining two versions of it.</p>
 <p>The structure that holds up splits the work in two:</p>
 <div class="cell" data-layout-align="center">
@@ -505,8 +511,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>The manuscript repository holds the paper</strong>: the <code>.tex</code> files, the scripts that draw each figure, and the Snakefile that ties it together. Its rules call the <em>other</em> repository’s scripts.</p>
 <p>The payoff is that the estimator has one home. The next paper gets a new manuscript repository and reuses the package; a reader who wants the method installs the package and ignores the paper entirely.</p>
 </section>
-<section id="pointing-at-the-other-repository" class="level2" data-number="9.2">
-<h2 data-number="9.2" class="anchored" data-anchor-id="pointing-at-the-other-repository"><span class="header-section-number">9.2</span> Pointing at the other repository</h2>
+<section id="pointing-at-the-other-repository" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="pointing-at-the-other-repository"><span class="header-section-number">10.2</span> Pointing at the other repository</h2>
 <p>The Snakefile needs to know where the methods repository is, and coauthors keep it in different places. The straightforward approach is a config value:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
@@ -531,8 +537,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        <span class="co">"--loc {LOC}"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Note <code>--loc {LOC}</code> in the shell command: it passes the location to the R script too, so that it can find the package and write its results in the right place.</p>
-<section id="sec-fstrings" class="level3" data-number="9.2.1">
-<h3 data-number="9.2.1" class="anchored" data-anchor-id="sec-fstrings"><span class="header-section-number">9.2.1</span> When you need an f-string, and when you must not</h3>
+<section id="sec-fstrings" class="level3" data-number="10.2.1">
+<h3 data-number="10.2.1" class="anchored" data-anchor-id="sec-fstrings"><span class="header-section-number">10.2.1</span> When you need an f-string, and when you must not</h3>
 <p>This is the first rule in the book whose paths are f-strings, and the reason is worth understanding, because getting it wrong fails quietly.</p>
 <p><strong>In <code>input:</code>, <code>output:</code>, <code>log:</code> and <code>benchmark:</code>, braces mean wildcards.</strong> Snakemake reads those strings as patterns, so a plain <code>"{LOC}/rds/x.rds"</code> does not insert your variable — it declares a wildcard <em>named</em> <code>LOC</code>, which matches anything at all:</p>
 <div class="code-with-filename">
@@ -592,17 +598,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>This is what <code>man-avg-cov</code> does, and it is genuinely convenient for a small group. It also stops working the moment someone new joins, so treat it as a default that the config can override rather than the only mechanism.</p>
 </section>
 </section>
-<section id="results-outside-the-repository" class="level2" data-number="9.3">
-<h2 data-number="9.3" class="anchored" data-anchor-id="results-outside-the-repository"><span class="header-section-number">9.3</span> Results outside the repository</h2>
+<section id="results-outside-the-repository" class="level2" data-number="10.3">
+<h2 data-number="10.3" class="anchored" data-anchor-id="results-outside-the-repository"><span class="header-section-number">10.3</span> Results outside the repository</h2>
 <p>Notice that the <code>.rds</code> files in that layout live in the <em>methods</em> repository, not the manuscript’s. This is deliberate, and it is the main structural difference from the toy example.</p>
 <p>A simulation that takes two days to run is not a build artifact in the way a figure is. You do not want it deleted when you clean the manuscript directory, you want it shared between the paper and the talk and the grant renewal, and you do not want it in git. Keeping the cache in one place outside the manuscript — keyed by parameters, so a run for <code>n = 400</code> is never confused with a run for <code>n = 100</code> — gets you all three.</p>
 <p>The iteration count is part of the path for the same reason:</p>
 <pre><code>rds/1000/original/laplace_autoregressive_0_100_101_gaussian_100_pipep.rds
     ^^^^</code></pre>
-<p>so the 20-iteration smoke test and the 1000-iteration final run coexist, and switching between them is a config edit rather than an act of destruction. This is the idea from <a href="04-config.html#sec-iterations-path" class="quarto-xref"><span>Section 4.2</span></a> at the scale where it earns its keep: were the iteration count merely passed to the script rather than naming the directory, a smoke test would cost you two days of compute to undo.</p>
-<section id="sharing-the-folder" class="level3" data-number="9.3.1">
-<h3 data-number="9.3.1" class="anchored" data-anchor-id="sharing-the-folder"><span class="header-section-number">9.3.1</span> Sharing the folder</h3>
-<p>This is where the discipline of <a href="02-first-snakefile.html#sec-shape" class="quarto-xref"><span>Section 2.8</span></a> — computed results in <code>rds/</code>, figures and tables in <code>out/</code> — stops being tidiness and starts paying rent. What you share is <code>rds/</code>, on its own: it is the expensive half, and a collaborator who has it can regenerate every figure and table in seconds. The question is how.</p>
+<p>so the 20-iteration smoke test and the 1000-iteration final run coexist, and switching between them is a config edit rather than an act of destruction. This is the idea from <a href="05-config.html#sec-iterations-path" class="quarto-xref"><span>Section 5.2</span></a> at the scale where it earns its keep: were the iteration count merely passed to the script rather than naming the directory, a smoke test would cost you two days of compute to undo.</p>
+<section id="sharing-the-folder" class="level3" data-number="10.3.1">
+<h3 data-number="10.3.1" class="anchored" data-anchor-id="sharing-the-folder"><span class="header-section-number">10.3.1</span> Sharing the folder</h3>
+<p>This is where the discipline of <a href="02-first-snakefile.html#sec-shape" class="quarto-xref"><span>Section 2.6</span></a> — computed results in <code>rds/</code>, figures and tables in <code>out/</code> — stops being tidiness and starts paying rent. What you share is <code>rds/</code>, on its own: it is the expensive half, and a collaborator who has it can regenerate every figure and table in seconds. The question is how.</p>
 <p>Email and Dropbox both work, and both fail the same way: somebody overwrites a file you were about to change, and the loser never finds out. Git is the tool you would reach for otherwise, except that git is bad at exactly this kind of content. A few hundred megabytes of <code>.rds</code> files bloats the repository permanently, diff and merge do nothing useful on serialized objects, and results derived from protected health information have no business on GitHub at all.</p>
 <p><a href="https://github.com/pbreheny/dat"><code>dat</code></a> is built for that gap. It gives a directory a git-style push/pull workflow backed by S3, without the version history:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> rds</span>
@@ -614,8 +620,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>What makes it more than a wrapper around <code>rsync</code> is that it detects conflicts: if someone has modified a file you are about to overwrite, it says so rather than silently clobbering their work. It hashes file contents, so pushing a directory in which one of four hundred simulations changed transfers one file, and <code>dat status</code> will tell you whether you are in sync without touching the network.</p>
 <p>The division of labor is natural. Git holds the code: small, textual, and wanting history. <code>dat</code> holds the results: large, binary, and only ever wanting to be <em>current</em>. Each is one command to push, and a collaborator with both has your entire project.</p>
 </section>
-<section id="telling-snakemake-the-results-are-fine" class="level3" data-number="9.3.2">
-<h3 data-number="9.3.2" class="anchored" data-anchor-id="telling-snakemake-the-results-are-fine"><span class="header-section-number">9.3.2</span> Telling Snakemake the results are fine</h3>
+<section id="telling-snakemake-the-results-are-fine" class="level3" data-number="10.3.2">
+<h3 data-number="10.3.2" class="anchored" data-anchor-id="telling-snakemake-the-results-are-fine"><span class="header-section-number">10.3.2</span> Telling Snakemake the results are fine</h3>
 <p>There is a catch, and it bites the first time you use any of this.</p>
 <p>Your coauthor clones the repository and pulls the results folder. Every <code>.rds</code> file is sitting there. But Snakemake’s record of how those files were made — <code>.snakemake/</code>, which is local and was never shared — does not exist on their machine, so it has nothing to compare against and assumes the worst:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">-n</span></span>
@@ -629,7 +635,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="ex">table1</span>            1</span>
 <span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="ex">total</span>            22</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Twenty-three jobs, eighteen of them the simulations that just arrived. On a real project that is the two days of compute the sharing was supposed to avoid.</p>
-<p><code>--touch</code> is the escape hatch: it marks outputs as up to date without running anything. Reaching for it on its own, though, is a coin flip. Of the two conditions in <a href="02-first-snakefile.html" class="quarto-xref"><span>Chapter 2</span></a> only the first survives here — there are no recorded checksums to compare against, so the timestamp gate is all that is left — and <code>--touch</code> acts only on jobs it would otherwise have run. So if the incoming <code>.rds</code> files happen to be newer than the scripts, nothing looks out of date, nothing gets touched, and you are left with no provenance at all — which Snakemake mentions, quietly, at the end of the next dry run:</p>
+<p><code>--touch</code> is the escape hatch: it marks outputs as up to date without running anything. Reaching for it on its own, though, is a coin flip. Of the two conditions in <a href="03-rerun.html" class="quarto-xref"><span>Chapter 3</span></a> only the first survives here — there are no recorded checksums to compare against, so the timestamp gate is all that is left — and <code>--touch</code> acts only on jobs it would otherwise have run. So if the incoming <code>.rds</code> files happen to be newer than the scripts, nothing looks out of date, nothing gets touched, and you are left with no provenance at all — which Snakemake mentions, quietly, at the end of the next dry run:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>the branch you do not want</strong></pre>
@@ -665,8 +671,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section>
 </section>
-<section id="chained-rules" class="level2" data-number="9.4">
-<h2 data-number="9.4" class="anchored" data-anchor-id="chained-rules"><span class="header-section-number">9.4</span> Chained rules</h2>
+<section id="chained-rules" class="level2" data-number="10.4">
+<h2 data-number="10.4" class="anchored" data-anchor-id="chained-rules"><span class="header-section-number">10.4</span> Chained rules</h2>
 <p>Expensive intermediate steps become their own rules, rather than being folded into the script that needs them:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
@@ -684,8 +690,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>The smoothing step reads the simulation output and writes its own file, so re-tuning the smoother does not rerun the simulation. Every stage you can afford to separate is a stage you will not have to repeat — and in a project where the first stage takes a day, that is the difference between iterating on a figure in minutes and iterating on it overnight.</p>
 </section>
-<section id="optional-expensive-pieces" class="level2" data-number="9.5">
-<h2 data-number="9.5" class="anchored" data-anchor-id="optional-expensive-pieces"><span class="header-section-number">9.5</span> Optional expensive pieces</h2>
+<section id="optional-expensive-pieces" class="level2" data-number="10.5">
+<h2 data-number="10.5" class="anchored" data-anchor-id="optional-expensive-pieces"><span class="header-section-number">10.5</span> Optional expensive pieces</h2>
 <p>Some comparisons are too slow to run by default. Make them a switch:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
@@ -709,16 +715,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>The list of inputs is computed by Python, so a flag in the config changes which jobs exist at all. The figure script gets the same flag and adjusts its legend accordingly. Someone reproducing your results gets something in an hour by default, and everything if they are willing to wait.</p>
 </section>
-<section id="what-this-buys-you" class="level2" data-number="9.6">
-<h2 data-number="9.6" class="anchored" data-anchor-id="what-this-buys-you"><span class="header-section-number">9.6</span> What this buys you</h2>
+<section id="what-this-buys-you" class="level2" data-number="10.6">
+<h2 data-number="10.6" class="anchored" data-anchor-id="what-this-buys-you"><span class="header-section-number">10.6</span> What this buys you</h2>
 <p>A <code>README</code> for a project of this shape can honestly say:</p>
 <blockquote class="blockquote">
 <p>With Snakemake installed, <code>snakemake --cores=1</code> runs the simulations and builds the manuscript. Start with <code>snakemake figure1</code> to confirm your setup works.</p>
 </blockquote>
 <p>Which is a strong claim, and it is checkable — by a reviewer, by a reader, and by you in eighteen months when someone asks where a number came from.</p>
 </section>
-<section id="sec-next" class="level2" data-number="9.7">
-<h2 data-number="9.7" class="anchored" data-anchor-id="sec-next"><span class="header-section-number">9.7</span> Where to go next</h2>
+<section id="sec-next" class="level2" data-number="10.7">
+<h2 data-number="10.7" class="anchored" data-anchor-id="sec-next"><span class="header-section-number">10.7</span> Where to go next</h2>
 <p>Everything in this book runs locally. Three directions to read about when you outgrow that:</p>
 <p><strong>Clusters.</strong> Snakemake can submit each job to SLURM or SGE instead of running it locally. This is a <em>profile</em> — a directory containing a <code>config.yaml</code> with the submit command and resource defaults — plus an executor plugin (<code>snakemake-executor-plugin-slurm</code>, or <code>-cluster-generic</code> for SGE). The Snakefile does not change; you add <code>--profile slurm</code> to the command line. Per-rule <code>resources: mem_mb=..., runtime=...</code> become the memory and walltime requests. Note that this changed substantially in Snakemake 8, so check the version of anything you read. The <a href="https://iowabiostat.github.io/hpc/12.html">Iowa HPC tutorial</a> has a worked SGE example.</p>
 <p><strong>Containers.</strong> A <code>container:</code> directive at the top of the Snakefile runs every job inside a Docker or Apptainer image, which pins your R version and every package along with it. This is the piece that turns “reproducible on my machine” into “reproducible”.</p>
@@ -1145,7 +1151,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./09-debugging.html" class="pagination-link" aria-label="When things go wrong">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">When things go wrong</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">When things go wrong</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

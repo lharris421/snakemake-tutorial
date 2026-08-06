@@ -144,16 +144,17 @@ which must finish before the figure runs.
 ```{mermaid}
 %%| fig-align: center
 flowchart LR
-  A[sim.R] --> B1[n50_rho0_naive.rds]
-  A --> B2[n50_rho0_split.rds]
-  A --> B3["(15 more)"]
-  A --> B4[n400_rho80_split.rds]
-  B1 --> F[out/figure1.pdf]
-  B2 --> F
-  B3 --> F
-  B4 --> F
-  G[figure.R] --> F
+  s1["sim<br/>n: 50, rho: 0<br/>method: naive"] --> figure(figure)
+  s2["sim<br/>n: 50, rho: 0<br/>method: split"] --> figure
+  s3["(15 more sim jobs)"] --> figure
+  s4["sim<br/>n: 400, rho: 80<br/>method: split"] --> figure
+  figure --> allrule(all)
 ```
+
+That is the shape `snakemake --dag` reports, abbreviated in the middle: one node
+per *job*, each `sim` node carrying the wildcard values it was matched with.
+`snakemake --rulegraph` collapses all eighteen back into a single `sim` box, which
+is the view you want once a workflow has more than a few rules (@sec-debugging).
 
 ## Building one cell of the grid
 

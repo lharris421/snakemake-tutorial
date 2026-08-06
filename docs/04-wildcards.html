@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>3&nbsp; One rule, many jobs – Snakemake for biostatisticians</title>
+<title>4&nbsp; One rule, many jobs – Snakemake for biostatisticians</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -68,8 +68,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./04-config.html" rel="next">
-<link href="./02-first-snakefile.html" rel="prev">
+<link href="./05-config.html" rel="next">
+<link href="./03-rerun.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -289,7 +289,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03-wildcards.html">Doing it at scale</a></li><li class="breadcrumb-item"><a href="./03-wildcards.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">One rule, many jobs</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04-wildcards.html">Doing it at scale</a></li><li class="breadcrumb-item"><a href="./04-wildcards.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">One rule, many jobs</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -344,6 +344,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">A first Snakefile</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-rerun.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Rebuilding only what changed</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -357,20 +363,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03-wildcards.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">One rule, many jobs</span></span></a>
+  <a href="./04-wildcards.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">One rule, many jobs</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04-config.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Configuration</span></span></a>
+  <a href="./05-config.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Configuration</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05-parallel-and-logs.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Parallelism, logs and benchmarks</span></span></a>
+  <a href="./06-parallel-and-logs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Parallelism, logs and benchmarks</span></span></a>
   </div>
 </li>
       </ul>
@@ -387,13 +393,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./07-manuscript.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Building a manuscript</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building a manuscript</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./08-analysis-pipeline.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></span></a>
   </div>
 </li>
       </ul>
@@ -410,13 +416,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./09-debugging.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">When things go wrong</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">When things go wrong</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./10-scaling-up.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Scaling up</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Scaling up</span></span></a>
   </div>
 </li>
       </ul>
@@ -431,12 +437,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#a-wildcard-is-a-hole-in-a-filename" id="toc-a-wildcard-is-a-hole-in-a-filename" class="nav-link active" data-scroll-target="#a-wildcard-is-a-hole-in-a-filename"><span class="header-section-number">3.1</span> A wildcard is a hole in a filename</a></li>
-  <li><a href="#naming-files-so-this-works" id="toc-naming-files-so-this-works" class="nav-link" data-scroll-target="#naming-files-so-this-works"><span class="header-section-number">3.2</span> Naming files so this works</a></li>
-  <li><a href="#expand" id="toc-expand" class="nav-link" data-scroll-target="#expand"><span class="header-section-number">3.3</span> expand()</a></li>
-  <li><a href="#running-it" id="toc-running-it" class="nav-link" data-scroll-target="#running-it"><span class="header-section-number">3.4</span> Running it</a></li>
-  <li><a href="#building-one-cell-of-the-grid" id="toc-building-one-cell-of-the-grid" class="nav-link" data-scroll-target="#building-one-cell-of-the-grid"><span class="header-section-number">3.5</span> Building one cell of the grid</a></li>
-  <li><a href="#try-it" id="toc-try-it" class="nav-link" data-scroll-target="#try-it"><span class="header-section-number">3.6</span> Try it</a></li>
+  <li><a href="#a-wildcard-is-a-hole-in-a-filename" id="toc-a-wildcard-is-a-hole-in-a-filename" class="nav-link active" data-scroll-target="#a-wildcard-is-a-hole-in-a-filename"><span class="header-section-number">4.1</span> A wildcard is a hole in a filename</a></li>
+  <li><a href="#naming-files-so-this-works" id="toc-naming-files-so-this-works" class="nav-link" data-scroll-target="#naming-files-so-this-works"><span class="header-section-number">4.2</span> Naming files so this works</a></li>
+  <li><a href="#expand" id="toc-expand" class="nav-link" data-scroll-target="#expand"><span class="header-section-number">4.3</span> expand()</a></li>
+  <li><a href="#running-it" id="toc-running-it" class="nav-link" data-scroll-target="#running-it"><span class="header-section-number">4.4</span> Running it</a></li>
+  <li><a href="#building-one-cell-of-the-grid" id="toc-building-one-cell-of-the-grid" class="nav-link" data-scroll-target="#building-one-cell-of-the-grid"><span class="header-section-number">4.5</span> Building one cell of the grid</a></li>
+  <li><a href="#try-it" id="toc-try-it" class="nav-link" data-scroll-target="#try-it"><span class="header-section-number">4.6</span> Try it</a></li>
   </ul>
 </nav>
     </div>
@@ -444,9 +450,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <main class="content" id="quarto-document-content">
 
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03-wildcards.html">Doing it at scale</a></li><li class="breadcrumb-item"><a href="./03-wildcards.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">One rule, many jobs</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04-wildcards.html">Doing it at scale</a></li><li class="breadcrumb-item"><a href="./04-wildcards.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">One rule, many jobs</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-wildcards" class="quarto-section-identifier"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">One rule, many jobs</span></span></h1>
+<h1 class="title"><span id="sec-wildcards" class="quarto-section-identifier"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">One rule, many jobs</span></span></h1>
 </div>
 
 
@@ -486,8 +492,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Two rules, identical but for the word <code>naive</code> versus <code>split</code>. Now imagine the real version of this simulation: three sample sizes, three correlation levels, two methods. Eighteen rules, all the same, and one typo away from a figure that silently mixes up two scenarios.</p>
 <p>Wildcards fix this. Move to <code>examples/02-wildcards</code>.</p>
-<section id="a-wildcard-is-a-hole-in-a-filename" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="a-wildcard-is-a-hole-in-a-filename"><span class="header-section-number">3.1</span> A wildcard is a hole in a filename</h2>
+<section id="a-wildcard-is-a-hole-in-a-filename" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="a-wildcard-is-a-hole-in-a-filename"><span class="header-section-number">4.1</span> A wildcard is a hole in a filename</h2>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>Snakefile (excerpt)</strong></pre>
@@ -516,12 +522,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>A wildcard is a regular expression, <code>.+</code> by default. Nothing in the rule above says <code>method</code> has to be <code>naive</code> or <code>split</code>, so asking for <code>rds/sim/n50_rho0_bayes.rds</code> produces a perfectly valid job that runs <code>sim.R --method bayes</code> and fails inside R. <a href="04-config.html" class="quarto-xref"><span>Chapter 4</span></a> shows how to constrain wildcards, and <a href="09-debugging.html" class="quarto-xref"><span>Chapter 8</span></a> shows what that failure looks like.</p>
+<p>A wildcard is a regular expression, <code>.+</code> by default. Nothing in the rule above says <code>method</code> has to be <code>naive</code> or <code>split</code>, so asking for <code>rds/sim/n50_rho0_bayes.rds</code> produces a perfectly valid job that runs <code>sim.R --method bayes</code> and fails inside R. <a href="05-config.html" class="quarto-xref"><span>Chapter 5</span></a> shows how to constrain wildcards, and <a href="09-debugging.html" class="quarto-xref"><span>Chapter 9</span></a> shows what that failure looks like.</p>
 </div>
 </div>
 </section>
-<section id="naming-files-so-this-works" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="naming-files-so-this-works"><span class="header-section-number">3.2</span> Naming files so this works</h2>
+<section id="naming-files-so-this-works" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="naming-files-so-this-works"><span class="header-section-number">4.2</span> Naming files so this works</h2>
 <p>Wildcards make your file-naming scheme part of the pipeline’s logic, which is worth two minutes of thought up front:</p>
 <ul>
 <li><strong>Put every parameter that changes into the name.</strong> If two runs differ in anything, their outputs must differ in name, or one will overwrite the other and Snakemake will believe both are up to date.</li>
@@ -529,8 +535,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>The scheme here is <code>n{n}_rho{rho}_{method}.rds</code>, with <code>rho</code> as a percentage so that it stays an integer — <code>rho50</code> rather than <code>rho0.5</code>, because a decimal point in a filename is an invitation to trouble.</p>
 </section>
-<section id="expand" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="expand"><span class="header-section-number">3.3</span> expand()</h2>
+<section id="expand" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="expand"><span class="header-section-number">4.3</span> expand()</h2>
 <p>Something still has to say which eighteen files we want. That is <code>expand()</code>:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
@@ -567,7 +573,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><code>N = [50, 100, 400]</code> is a list, the same idea as <code>c(50, 100, 400)</code> in R. That is essentially the entire Python vocabulary required to use Snakemake: lists, strings in quotes, and the occasional dictionary in <a href="04-config.html" class="quarto-xref"><span>Chapter 4</span></a>.</p>
+<p><code>N = [50, 100, 400]</code> is a list, the same idea as <code>c(50, 100, 400)</code> in R. That is essentially the entire Python vocabulary required to use Snakemake: lists, strings in quotes, and the occasional dictionary in <a href="05-config.html" class="quarto-xref"><span>Chapter 5</span></a>.</p>
 </div>
 </div>
 <p>The <code>expand()</code> sits inside the rule that needs it, which is where a grid usually belongs: another rule is free to sweep a different one, and a supplementary figure covering only the large sample sizes would simply expand over fewer. When several rules genuinely share a grid, define it once above them and use the variable in each.</p>
@@ -584,8 +590,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Note that <code>expand()</code> fills wildcards in, and <code>{wildcards.n}</code> reads them back out. These are opposite operations, and it is worth being clear about which one you are doing: <code>expand()</code> appears in the rule that <em>consumes</em> many files, and <code>{wildcards.…}</code> in the rule that <em>produces</em> one.</p>
 </section>
-<section id="running-it" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="running-it"><span class="header-section-number">3.4</span> Running it</h2>
+<section id="running-it" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="running-it"><span class="header-section-number">4.4</span> Running it</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">-n</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Job</span> stats:</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ex">job</span>       count</span>
@@ -623,24 +629,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p></p><figure class="figure"><p></p>
 <div>
 <pre class="mermaid mermaid-js">flowchart LR
-  A[sim.R] --&gt; B1[n50_rho0_naive.rds]
-  A --&gt; B2[n50_rho0_split.rds]
-  A --&gt; B3["(15 more)"]
-  A --&gt; B4[n400_rho80_split.rds]
-  B1 --&gt; F[out/figure1.pdf]
-  B2 --&gt; F
-  B3 --&gt; F
-  B4 --&gt; F
-  G[figure.R] --&gt; F
+  s1["sim&lt;br/&gt;n: 50, rho: 0&lt;br/&gt;method: naive"] --&gt; figure(figure)
+  s2["sim&lt;br/&gt;n: 50, rho: 0&lt;br/&gt;method: split"] --&gt; figure
+  s3["(15 more sim jobs)"] --&gt; figure
+  s4["sim&lt;br/&gt;n: 400, rho: 80&lt;br/&gt;method: split"] --&gt; figure
+  figure --&gt; allrule(all)
 </pre>
 </div>
 <p></p></figure><p></p>
 </div>
 </div>
 </div>
+<p>That is the shape <code>snakemake --dag</code> reports, abbreviated in the middle: one node per <em>job</em>, each <code>sim</code> node carrying the wildcard values it was matched with. <code>snakemake --rulegraph</code> collapses all eighteen back into a single <code>sim</code> box, which is the view you want once a workflow has more than a few rules (<a href="09-debugging.html" class="quarto-xref"><span>Chapter 9</span></a>).</p>
 </section>
-<section id="building-one-cell-of-the-grid" class="level2" data-number="3.5">
-<h2 data-number="3.5" class="anchored" data-anchor-id="building-one-cell-of-the-grid"><span class="header-section-number">3.5</span> Building one cell of the grid</h2>
+<section id="building-one-cell-of-the-grid" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="building-one-cell-of-the-grid"><span class="header-section-number">4.5</span> Building one cell of the grid</h2>
 <p>Because the output is a pattern, you can ask for any file it can match, whether or not anything else wants it:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">--cores</span> 1 rds/sim/n50_rho0_naive.rds</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Using</span> shell: /bin/bash</span>
@@ -669,8 +672,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>This is how you develop. Rather than running the whole grid to find out whether your new method works, ask for one small scenario, look at it, and only then let the rest go.</p>
 <p>This is also extremely powerful, because now if you want a certain simulation… you just ahve to ask for it rather than edit an R file and run it.</p>
 </section>
-<section id="try-it" class="level2" data-number="3.6">
-<h2 data-number="3.6" class="anchored" data-anchor-id="try-it"><span class="header-section-number">3.6</span> Try it</h2>
+<section id="try-it" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="try-it"><span class="header-section-number">4.6</span> Try it</h2>
 <ol type="1">
 <li>Add <code>1000</code> to <code>N</code> and run <code>snakemake -n</code>. How many jobs? Which ones are new?</li>
 <li>Ask for <code>rds/sim/n77_rho33_naive.rds</code>. It works — explain why.</li>
@@ -1096,13 +1099,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./02-first-snakefile.html" class="pagination-link" aria-label="A first Snakefile">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">A first Snakefile</span></span>
+      <a href="./03-rerun.html" class="pagination-link" aria-label="Rebuilding only what changed">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Rebuilding only what changed</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./04-config.html" class="pagination-link" aria-label="Configuration">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Configuration</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./05-config.html" class="pagination-link" aria-label="Configuration">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Configuration</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

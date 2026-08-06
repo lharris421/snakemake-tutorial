@@ -46,11 +46,11 @@ for figures and tables --- the layout the book argues for.
 
 | | Chapter | Adds |
 |---|---|---|
-| `examples/01-first-rules` | 2 | rules, `rule all`, dry runs |
-| `examples/02-wildcards` | 3 | wildcards, `expand()` |
-| `examples/03-config` | 4 | `config.yaml`, results keyed by iteration count |
-| `examples/04-manuscript` | 6 | figure and table rules, `latexmk`, logs, benchmarks |
-| `examples/05-analysis` | 7 | cleaning → models → tables → Quarto report |
+| `examples/01-first-rules` | 2–3 | rules, `rule all`, dry runs, what triggers a rerun |
+| `examples/02-wildcards` | 4 | wildcards, `expand()` |
+| `examples/03-config` | 5 | `config.yaml`, results keyed by iteration count |
+| `examples/04-manuscript` | 7 | figure and table rules, `latexmk`, logs, benchmarks |
+| `examples/05-analysis` | 8 | cleaning → models → tables → Quarto report |
 
 ```bash
 cd examples/01-first-rules
@@ -77,5 +77,5 @@ or earlier.
 
 The format and spirit are modeled on the [University of Iowa Biostatistics HPC
 tutorial](https://iowabiostat.github.io/hpc/) by Patrick Breheny and Grant Brown.
-The manuscript conventions in chapter 6 follow Patrick Breheny's [manuscript
+The manuscript conventions in chapter 7 follow Patrick Breheny's [manuscript
 template](https://github.com/pbreheny/manuscript-template).

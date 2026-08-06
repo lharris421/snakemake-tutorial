@@ -1,6 +1,6 @@
 # 01: A first Snakefile
 
-Accompanies [chapter 2](../../02-first-snakefile.qmd).
+Accompanies chapters [2](../../02-first-snakefile.qmd) and [3](../../03-rerun.qmd).
 
 Three rules and a `rule all`: two simulations and a figure that depends on both.
 

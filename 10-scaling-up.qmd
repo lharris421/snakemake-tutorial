@@ -256,7 +256,7 @@ project that is the two days of compute the sharing was supposed to avoid.
 
 `--touch` is the escape hatch: it marks outputs as up to date without running
 anything. Reaching for it on its own, though, is a coin flip. Of the two conditions
-in @sec-first-snakefile only the first survives here --- there are no recorded
+in @sec-rerun only the first survives here --- there are no recorded
 checksums to compare against, so the timestamp gate is all that is left --- and
 `--touch` acts only on jobs it would otherwise have run. So if the incoming `.rds`
 files happen to be

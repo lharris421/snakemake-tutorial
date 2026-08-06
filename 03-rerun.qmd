@@ -1,0 +1,128 @@
+# Rebuilding only what changed {#sec-rerun}
+
+```{r}
+#| include: false
+source("_common.R")
+```
+
+@sec-first-snakefile ended with a working pipeline. What makes one worth having is
+not that it runs, but what it does the *second* time you ask --- and, once a
+project is real, what it decides to leave alone.
+
+## Doing nothing, quickly
+
+Still in `examples/01-first-rules`, run it again:
+
+```{r}
+#| echo: false
+#| output: asis
+transcript("01-up-to-date.txt")
+```
+
+This is the point of the exercise. Ask for the figure a hundred more times and you
+will get that message a hundred times. Now delete the figure and ask again:
+
+```{r}
+#| echo: false
+#| output: asis
+transcript("01-rebuild-figure.txt")
+```
+
+Only the figure was rebuilt. The simulations were still there and still current, so
+they were left alone --- Snakemake rebuilds what is out of date and nothing else.
+
+## What counts as out of date
+
+Here is where Snakemake differs from `make`, and from most people's expectations.
+
+`make` asks one question: is the input newer than the output? If so, rebuild.
+
+Snakemake asks two, and needs both answers to be yes. It keeps a record of every
+output it has ever made --- in a directory called `.snakemake/` --- including a
+SHA-256 checksum of each input that went into it. A job is out of date when
+
+1. an input's timestamp is newer than the output's, **and**
+2. that input's contents differ from what was recorded.
+
+The timestamp is the gate and the checksum is the confirmation. So:
+
+```{r}
+#| echo: false
+#| output: asis
+transcript("04-touch-is-not-enough.txt")
+```
+
+Touching a file does not trigger a rebuild, because the contents did not change.
+Change one character of `sim.R`, though, and everything downstream of it goes:
+
+```{r}
+#| echo: false
+#| output: asis
+transcript("04-cascade.txt")
+```
+
+(That transcript comes from the larger example of @sec-manuscript, which is why
+there are 22 jobs rather than 4.)
+
+Content is not the only trigger. Snakemake also stores the shell command and the
+parameters used for each output, so editing a rule's command --- not just the
+script it calls --- makes the affected outputs stale too. @sec-debugging covers how
+to inspect and override all of this.
+
+::: {.callout-warning}
+## The timestamp really is a gate
+
+Because the check is an *and*, a changed file whose timestamp is not newer than
+the output is invisible: Snakemake never gets as far as comparing the checksum. You
+will not produce that situation by editing a file --- editing sets the timestamp to
+now --- but you can arrive at it by other routes, because several common tools
+preserve timestamps deliberately:
+
+```bash
+cp -p old/sim.R scripts/sim.R      # -p preserves the original mtime
+rsync -a backup/ .              # -a implies -t
+tar xf archive.tar              # restores the archived mtimes
+```
+
+Restore a script from a backup or an archive that way and the pipeline can sit
+there insisting everything is up to date. If you have moved files around by any
+means other than editing them, `touch` the ones you restored, or force the issue
+with `snakemake -R` (@sec-debugging).
+:::
+
+::: {.callout-note}
+## Deleting `.snakemake/` is safe
+
+It is a cache of metadata, not results. Delete it and the next run rebuilds
+everything, because Snakemake no longer has any record of how the existing files
+were made. Add it to `.gitignore` and otherwise ignore it.
+:::
+
+
+::: {.callout-note}
+## Declare what a script sources
+
+Scripts grow to the point where they share things --- a set of functions, the
+labels and colors several figures use --- and those live in files of their own,
+which is what `R/` is for in @sec-shape. Snakemake has no way to know that a script
+reads another file, so a shared file has to be listed as an input to every rule
+whose script sources it. An undeclared dependency is the one failure mode Snakemake
+cannot warn you about: edit a shared function and every result built from it stays
+quietly stale.
+
+That is also an argument for keeping such files narrow, because the declaration is
+all-or-nothing. In the larger example of @sec-manuscript the simulation functions
+are in `R/` and the plot labels and colors are in `scripts/setup.R`, listed
+separately: editing a hex code plans four jobs and leaves the simulations alone,
+while editing a function plans all twenty-two. Had both lived in one file, the
+color change would have rerun eighteen simulations, because Snakemake cannot tell
+which half of a file you touched.
+:::
+
+## Try it
+
+1. Delete `out/` and rebuild. Time it. Then delete `rds/` as well and compare.
+2. Change the `n <- 100` line in `sim.R` to `n <- 200` and run `snakemake -n`.
+   Which jobs are planned, and why?
+3. Change a comment in `figure.R`, then run `snakemake -n`. Does the simulation
+   rerun? Should it?

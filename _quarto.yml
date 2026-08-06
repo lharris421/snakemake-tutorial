@@ -23,11 +23,12 @@ book:
       chapters:
         - 01-rscript.qmd
         - 02-first-snakefile.qmd
+        - 03-rerun.qmd
     - part: "Doing it at scale"
       chapters:
-        - 03-wildcards.qmd
-        - 04-config.qmd
-        - 05-parallel-and-logs.qmd
+        - 04-wildcards.qmd
+        - 05-config.qmd
+        - 06-parallel-and-logs.qmd
     - part: "Products"
       chapters:
         - 07-manuscript.qmd

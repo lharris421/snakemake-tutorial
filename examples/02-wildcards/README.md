@@ -1,6 +1,6 @@
 # 02: Wildcards
 
-Accompanies [chapter 3](../../03-wildcards.qmd).
+Accompanies [chapter 4](../../04-wildcards.qmd).
 
 The two near-identical `sim_naive` / `sim_split` rules from example 01 have collapsed
 into one `sim` rule with wildcards, and `expand()` turns the parameter grid into the
