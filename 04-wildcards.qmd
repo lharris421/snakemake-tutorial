@@ -5,8 +5,8 @@
 source("_common.R")
 ```
 
-Look again at the Snakefile from the last chapter and notice how much of it is
-copied and pasted:
+Look again at the Snakefile from @sec-first-snakefile and notice how much of it
+is copied and pasted:
 
 ```{r}
 #| echo: false
