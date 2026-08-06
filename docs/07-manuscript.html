@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>7&nbsp; Building a manuscript – Snakemake for biostatisticians</title>
+<title>6&nbsp; Building a manuscript – Snakemake for biostatisticians</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -69,7 +69,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
 <link href="./08-analysis-pipeline.html" rel="next">
-<link href="./06-figures-tables.html" rel="prev">
+<link href="./05-parallel-and-logs.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -289,7 +289,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06-figures-tables.html">Products</a></li><li class="breadcrumb-item"><a href="./07-manuscript.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building a manuscript</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07-manuscript.html">Products</a></li><li class="breadcrumb-item"><a href="./07-manuscript.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Building a manuscript</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -386,20 +386,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06-figures-tables.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Figures (and tables)</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./07-manuscript.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building a manuscript</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Building a manuscript</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./08-analysis-pipeline.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></span></a>
   </div>
 </li>
       </ul>
@@ -416,13 +410,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./09-debugging.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">When things go wrong</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">When things go wrong</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./10-scaling-up.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Scaling up</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Scaling up</span></span></a>
   </div>
 </li>
       </ul>
@@ -437,9 +431,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#the-rule" id="toc-the-rule" class="nav-link active" data-scroll-target="#the-rule"><span class="header-section-number">7.1</span> The rule</a></li>
-  <li><a href="#the-cascade" id="toc-the-cascade" class="nav-link" data-scroll-target="#the-cascade"><span class="header-section-number">7.2</span> The cascade</a></li>
-  <li><a href="#try-it" id="toc-try-it" class="nav-link" data-scroll-target="#try-it"><span class="header-section-number">7.3</span> Try it</a></li>
+  <li><a href="#the-rule" id="toc-the-rule" class="nav-link active" data-scroll-target="#the-rule"><span class="header-section-number">6.1</span> The rule</a></li>
+  <li><a href="#the-cascade" id="toc-the-cascade" class="nav-link" data-scroll-target="#the-cascade"><span class="header-section-number">6.2</span> The cascade</a></li>
+  <li><a href="#try-it" id="toc-try-it" class="nav-link" data-scroll-target="#try-it"><span class="header-section-number">6.3</span> Try it</a></li>
   </ul>
 </nav>
     </div>
@@ -447,9 +441,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <main class="content" id="quarto-document-content">
 
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06-figures-tables.html">Products</a></li><li class="breadcrumb-item"><a href="./07-manuscript.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building a manuscript</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07-manuscript.html">Products</a></li><li class="breadcrumb-item"><a href="./07-manuscript.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Building a manuscript</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-manuscript" class="quarto-section-identifier"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building a manuscript</span></span></h1>
+<h1 class="title"><span id="sec-manuscript" class="quarto-section-identifier"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Building a manuscript</span></span></h1>
 </div>
 
 
@@ -466,10 +460,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<p>Move to <code>examples/04-manuscript</code>. It is the simulation study of the last three chapters with two things added: rules that turn the eighteen result files into a figure and a table, and a rule that compiles a paper out of them.</p>
 <p>Here is the situation this chapter is about. You are using an editor that rebuilds your PDF every time you save, so the document always matches its LaTeX source. It does not match its <em>figures</em>: <code>out/figure1.pdf</code> was made by some script at some point, and if you change the simulation nothing tells the manuscript about it. The document is only as current as the last time you remembered to rerun things.</p>
 <p>Making the manuscript a rule closes that gap.</p>
-<section id="the-rule" class="level2" data-number="7.1">
-<h2 data-number="7.1" class="anchored" data-anchor-id="the-rule"><span class="header-section-number">7.1</span> The rule</h2>
+<section id="the-rule" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="the-rule"><span class="header-section-number">6.1</span> The rule</h2>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>Snakefile (excerpt)</strong></pre>
@@ -515,7 +510,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Every arrow is a line in the Snakefile, and every one of them is a claim that Snakemake will enforce. Nothing reaches <code>build/paper.pdf</code> except through a rule.</p>
-<p>You do not have to draw this by hand for your own projects, incidentally — <code>snakemake --rulegraph | dot -Tpdf &gt; rules.pdf</code> produces it from the Snakefile (<a href="09-debugging.html" class="quarto-xref"><span>Chapter 9</span></a>).</p>
+<p>You do not have to draw this by hand for your own projects, incidentally — <code>snakemake --rulegraph | dot -Tpdf &gt; rules.pdf</code> produces it from the Snakefile (<a href="09-debugging.html" class="quarto-xref"><span>Chapter 8</span></a>).</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -531,8 +526,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="the-cascade" class="level2" data-number="7.2">
-<h2 data-number="7.2" class="anchored" data-anchor-id="the-cascade"><span class="header-section-number">7.2</span> The cascade</h2>
+<section id="the-cascade" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="the-cascade"><span class="header-section-number">6.2</span> The cascade</h2>
 <p>This is the payoff, so it is worth watching happen. Everything is currently built and up to date. Now change one line in the simulation code:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> echo <span class="st">'## a real edit'</span> <span class="op">&gt;&gt;</span> scripts/sim.R <span class="kw">&amp;&amp;</span> <span class="ex">snakemake</span> <span class="at">-n</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Job</span> stats:</span>
@@ -560,8 +555,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="try-it" class="level2" data-number="7.3">
-<h2 data-number="7.3" class="anchored" data-anchor-id="try-it"><span class="header-section-number">7.3</span> Try it</h2>
+<section id="try-it" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="try-it"><span class="header-section-number">6.3</span> Try it</h2>
 <ol type="1">
 <li>Change the figure’s y-axis label and run <code>snakemake --cores 4</code>. Which jobs run? Which do not, and why not?</li>
 <li>Introduce a deliberate LaTeX error in <code>main.tex</code> and run the build. Where does Snakemake tell you to look, and what is in that file?</li>
@@ -986,13 +981,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./06-figures-tables.html" class="pagination-link" aria-label="Figures (and tables)">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Figures (and tables)</span></span>
+      <a href="./05-parallel-and-logs.html" class="pagination-link" aria-label="Parallelism, logs and benchmarks">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Parallelism, logs and benchmarks</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./08-analysis-pipeline.html" class="pagination-link" aria-label="A data analysis pipeline">
-        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

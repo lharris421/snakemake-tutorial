@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>8&nbsp; A data analysis pipeline – Snakemake for biostatisticians</title>
+<title>7&nbsp; A data analysis pipeline – Snakemake for biostatisticians</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -289,7 +289,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06-figures-tables.html">Products</a></li><li class="breadcrumb-item"><a href="./08-analysis-pipeline.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07-manuscript.html">Products</a></li><li class="breadcrumb-item"><a href="./08-analysis-pipeline.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -386,20 +386,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06-figures-tables.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Figures (and tables)</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./07-manuscript.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building a manuscript</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Building a manuscript</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./08-analysis-pipeline.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></span></a>
   </div>
 </li>
       </ul>
@@ -416,13 +410,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./09-debugging.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">When things go wrong</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">When things go wrong</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./10-scaling-up.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Scaling up</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Scaling up</span></span></a>
   </div>
 </li>
       </ul>
@@ -437,12 +431,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#the-pipeline" id="toc-the-pipeline" class="nav-link active" data-scroll-target="#the-pipeline"><span class="header-section-number">8.1</span> The pipeline</a></li>
-  <li><a href="#cleaning-once" id="toc-cleaning-once" class="nav-link" data-scroll-target="#cleaning-once"><span class="header-section-number">8.2</span> Cleaning once</a></li>
-  <li><a href="#the-report-is-a-view-not-a-computation" id="toc-the-report-is-a-view-not-a-computation" class="nav-link" data-scroll-target="#the-report-is-a-view-not-a-computation"><span class="header-section-number">8.3</span> The report is a view, not a computation</a></li>
-  <li><a href="#models-as-data" id="toc-models-as-data" class="nav-link" data-scroll-target="#models-as-data"><span class="header-section-number">8.4</span> Models as data</a></li>
-  <li><a href="#when-the-data-changes" id="toc-when-the-data-changes" class="nav-link" data-scroll-target="#when-the-data-changes"><span class="header-section-number">8.5</span> When the data changes</a></li>
-  <li><a href="#try-it" id="toc-try-it" class="nav-link" data-scroll-target="#try-it"><span class="header-section-number">8.6</span> Try it</a></li>
+  <li><a href="#the-pipeline" id="toc-the-pipeline" class="nav-link active" data-scroll-target="#the-pipeline"><span class="header-section-number">7.1</span> The pipeline</a></li>
+  <li><a href="#cleaning-once" id="toc-cleaning-once" class="nav-link" data-scroll-target="#cleaning-once"><span class="header-section-number">7.2</span> Cleaning once</a></li>
+  <li><a href="#the-report-is-a-view-not-a-computation" id="toc-the-report-is-a-view-not-a-computation" class="nav-link" data-scroll-target="#the-report-is-a-view-not-a-computation"><span class="header-section-number">7.3</span> The report is a view, not a computation</a></li>
+  <li><a href="#models-as-data" id="toc-models-as-data" class="nav-link" data-scroll-target="#models-as-data"><span class="header-section-number">7.4</span> Models as data</a></li>
+  <li><a href="#when-the-data-changes" id="toc-when-the-data-changes" class="nav-link" data-scroll-target="#when-the-data-changes"><span class="header-section-number">7.5</span> When the data changes</a></li>
+  <li><a href="#try-it" id="toc-try-it" class="nav-link" data-scroll-target="#try-it"><span class="header-section-number">7.6</span> Try it</a></li>
   </ul>
 </nav>
     </div>
@@ -450,9 +444,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <main class="content" id="quarto-document-content">
 
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06-figures-tables.html">Products</a></li><li class="breadcrumb-item"><a href="./08-analysis-pipeline.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07-manuscript.html">Products</a></li><li class="breadcrumb-item"><a href="./08-analysis-pipeline.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-analysis" class="quarto-section-identifier"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></span></h1>
+<h1 class="title"><span id="sec-analysis" class="quarto-section-identifier"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></span></h1>
 </div>
 
 
@@ -471,8 +465,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <p>Many biostatisticians spend more time on analyses than on simulation studies, and the shape of the work is different: instead of a fan-out over a parameter grid, a mostly linear chain from a file someone emailed you to a report you send back. The Snakemake ideas transfer directly, and one of them — the report as a rule — addresses a problem specific to this kind of work.</p>
 <p>Move to <code>examples/05-analysis</code>. It is a small randomized trial: 200 participants, two arms, FEV1 measured at baseline and week 12.</p>
-<section id="the-pipeline" class="level2" data-number="8.1">
-<h2 data-number="8.1" class="anchored" data-anchor-id="the-pipeline"><span class="header-section-number">8.1</span> The pipeline</h2>
+<section id="the-pipeline" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="the-pipeline"><span class="header-section-number">7.1</span> The pipeline</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">--cores</span> 4</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Job</span> stats:</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">job</span>         count</span>
@@ -507,8 +501,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="cleaning-once" class="level2" data-number="8.2">
-<h2 data-number="8.2" class="anchored" data-anchor-id="cleaning-once"><span class="header-section-number">8.2</span> Cleaning once</h2>
+<section id="cleaning-once" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="cleaning-once"><span class="header-section-number">7.2</span> Cleaning once</h2>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>scripts/clean.R (excerpt)</strong></pre>
@@ -549,8 +543,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>That is the participant flow for your CONSORT diagram, produced as a side effect of the pipeline rather than counted by hand, and regenerated every time the data changes. When the coordinator sends an updated export in June, <code>snakemake</code> reruns everything downstream and this log tells you immediately whether the exclusions still look the way they did in March.</p>
 <p>The alternative — each analysis script starting with its own <code>read.csv()</code> and its own quiet decisions about who to drop — is how two tables in the same report end up with different denominators.</p>
 </section>
-<section id="the-report-is-a-view-not-a-computation" class="level2" data-number="8.3">
-<h2 data-number="8.3" class="anchored" data-anchor-id="the-report-is-a-view-not-a-computation"><span class="header-section-number">8.3</span> The report is a view, not a computation</h2>
+<section id="the-report-is-a-view-not-a-computation" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="the-report-is-a-view-not-a-computation"><span class="header-section-number">7.3</span> The report is a view, not a computation</h2>
 <p>Here is the part specific to analysis work. It is normal to put everything in one <code>.qmd</code> file: read the data, fit the models, print the tables, write the text. It works, and it has two failure modes that get worse as the project grows.</p>
 <p>The first is time. A report that refits everything takes as long as the slowest model <em>every time you fix a typo</em>, and the temptation is to start caching chunks, at which point you no longer know whether the numbers in the output correspond to the code in the file.</p>
 <p>The second is scope. Rendering becomes all-or-nothing — you cannot ask for just the models — and the results exist only inside the rendered HTML, so the next project that needs them starts by copying and pasting.</p>
@@ -602,8 +596,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>so the sentence and the table cannot disagree.</p>
 </section>
-<section id="models-as-data" class="level2" data-number="8.4">
-<h2 data-number="8.4" class="anchored" data-anchor-id="models-as-data"><span class="header-section-number">8.4</span> Models as data</h2>
+<section id="models-as-data" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="models-as-data"><span class="header-section-number">7.4</span> Models as data</h2>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>scripts/analysis.R (excerpt)</strong></pre>
@@ -636,14 +630,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="ex">3</span>       full    0.176 0.0994 0.252 1.01e-05 178</span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="ex">wrote</span> rds/analysis.rds </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="when-the-data-changes" class="level2" data-number="8.5">
-<h2 data-number="8.5" class="anchored" data-anchor-id="when-the-data-changes"><span class="header-section-number">8.5</span> When the data changes</h2>
+<section id="when-the-data-changes" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="when-the-data-changes"><span class="header-section-number">7.5</span> When the data changes</h2>
 <p>Which it will, usually the week after you send the report. Drop in the new data and:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">--cores</span> 4</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Cleaning reruns, the models refit, Table 1 and the figure regenerate, the report re-renders, and the participant-flow log tells you what changed about the analysis set. The work of a data update goes from an afternoon of retracing your steps to one command and a careful look at one log file.</p>
 </section>
-<section id="try-it" class="level2" data-number="8.6">
-<h2 data-number="8.6" class="anchored" data-anchor-id="try-it"><span class="header-section-number">8.6</span> Try it</h2>
+<section id="try-it" class="level2" data-number="7.6">
+<h2 data-number="7.6" class="anchored" data-anchor-id="try-it"><span class="header-section-number">7.6</span> Try it</h2>
 <ol type="1">
 <li>Edit a value in <code>data/trial.csv</code> and run <code>snakemake -n</code>. What reruns?</li>
 <li>Add a rule producing a subgroup analysis by smoking status, and show it in the report.</li>
@@ -1070,12 +1064,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./07-manuscript.html" class="pagination-link" aria-label="Building a manuscript">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building a manuscript</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Building a manuscript</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./09-debugging.html" class="pagination-link" aria-label="When things go wrong">
-        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">When things go wrong</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">When things go wrong</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -68,7 +68,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./06-figures-tables.html" rel="next">
+<link href="./07-manuscript.html" rel="next">
 <link href="./04-config.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -383,20 +383,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06-figures-tables.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Figures (and tables)</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./07-manuscript.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building a manuscript</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Building a manuscript</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./08-analysis-pipeline.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></span></a>
   </div>
 </li>
       </ul>
@@ -413,13 +407,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./09-debugging.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">When things go wrong</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">When things go wrong</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./10-scaling-up.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Scaling up</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Scaling up</span></span></a>
   </div>
 </li>
       </ul>
@@ -518,7 +512,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Anything the script prints lands there:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> cat logs/200/sim/n400_rho80_naive.log</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">wrote</span> rds/200/sim/n400_rho80_naive.rds <span class="at">--</span> coverage: 0.78 </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Which is worth designing for. A script that prints its parameters, its sample size after exclusions, and a summary of what it computed gives you a log directory that answers most questions without rerunning anything. <a href="08-analysis-pipeline.html" class="quarto-xref"><span>Chapter 8</span></a> leans on this heavily.</p>
+<p>Which is worth designing for. A script that prints its parameters, its sample size after exclusions, and a summary of what it computed gives you a log directory that answers most questions without rerunning anything. <a href="08-analysis-pipeline.html" class="quarto-xref"><span>Chapter 7</span></a> leans on this heavily.</p>
 <p>Logs also survive failure. When a job dies, Snakemake tells you which log to read, and the R error message is sitting in it — as opposed to being lost in the scrollback of a parallel run.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -990,8 +984,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./06-figures-tables.html" class="pagination-link" aria-label="Figures (and tables)">
-        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Figures (and tables)</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./07-manuscript.html" class="pagination-link" aria-label="Building a manuscript">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Building a manuscript</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

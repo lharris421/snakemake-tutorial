@@ -1,6 +1,6 @@
 # 04: Simulation to manuscript
 
-Accompanies chapters [6](../../06-figures-tables.qmd) and [7](../../07-manuscript.qmd).
+Accompanies [chapter 6](../../07-manuscript.qmd).
 
 The capstone. 18 simulations feed a figure and a table, which feed two LaTeX
 documents (a journal version and a double-spaced review version) that share all of

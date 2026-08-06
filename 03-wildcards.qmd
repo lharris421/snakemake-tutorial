@@ -101,6 +101,22 @@ essentially the entire Python vocabulary required to use Snakemake: lists, strin
 in quotes, and the occasional dictionary in @sec-config.
 :::
 
+The `expand()` sits inside the rule that needs it, which is where a grid usually
+belongs: another rule is free to sweep a different one, and a supplementary figure
+covering only the large sample sizes would simply expand over fewer. When several
+rules genuinely share a grid, define it once above them and use the variable in
+each.
+
+The script on the other end receives all eighteen filenames as arguments and
+stacks them:
+
+```{r}
+#| echo: false
+#| output: asis
+embed_file("examples/02-wildcards/figure.R", from = "^args <- commandArgs",
+           to = "^res <- do.call", filename = "figure.R (excerpt)")
+```
+
 Note that `expand()` fills wildcards in, and `{wildcards.n}` reads them back out.
 These are opposite operations, and it is worth being clear about which one you are
 doing: `expand()` appears in the rule that *consumes* many files, and

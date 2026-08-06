@@ -383,20 +383,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06-figures-tables.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Figures (and tables)</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./07-manuscript.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building a manuscript</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Building a manuscript</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./08-analysis-pipeline.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></span></a>
   </div>
 </li>
       </ul>
@@ -413,13 +407,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./09-debugging.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">When things go wrong</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">When things go wrong</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./10-scaling-up.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Scaling up</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Scaling up</span></span></a>
   </div>
 </li>
       </ul>
@@ -545,7 +539,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    rho <span class="op">=</span> <span class="vs">r"</span><span class="dv">\d</span><span class="op">+</span><span class="vs">"</span>,</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    method <span class="op">=</span> <span class="st">"[a-z]+"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p><code>r"\d+"</code> is a regular expression matching one or more digits; the <code>r</code> prefix marks a raw string, so the backslash reaches the regex intact. Declared at the top level they apply to every rule, and they can also be attached to a single rule, as <a href="07-manuscript.html" class="quarto-xref"><span>Chapter 7</span></a> does.</p>
+<p><code>r"\d+"</code> is a regular expression matching one or more digits; the <code>r</code> prefix marks a raw string, so the backslash reaches the regex intact. Declared at the top level they apply to every rule, and they can also be attached to a single rule, as <a href="07-manuscript.html" class="quarto-xref"><span>Chapter 6</span></a> does.</p>
 <p>Two reasons to bother:</p>
 <p><strong>Ambiguity.</strong> With unconstrained wildcards there is more than one way to match <code>n{n}_rho{rho}_{method}.rds</code> against a name containing extra underscores, and Snakemake resolves it by its rules rather than yours.</p>
 <p><strong>Failing early.</strong> Without the <code>\d+</code> on <code>{n}</code>, asking for <code>rds/200/sim/nfifty_rho0_naive.rds</code> matches quite happily —</p>
@@ -585,7 +579,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>Dropping a sample size from a rule’s <code>expand()</code></strong> is a Snakefile edit rather than a config one, and it reruns no simulations at all — the remaining results are still perfectly valid. The figure does rerun, with the reason <code>Set of input files has changed since last execution</code>, because it is now summarizing twelve files instead of eighteen.</li>
 </ul>
 <p>Note that <code>--config</code> wants one <code>key=value</code> per setting and will not take a list on the command line (<code>--config n=[50,100]</code> is a parse error on 9.13). Change the grid in <code>config.yaml</code>, or point <code>--configfile</code> at a second YAML file whose values override the first.</p>
-<p>When you want to force the issue, <code>snakemake --forcerun sim</code> reruns every job of that rule regardless. See <a href="09-debugging.html" class="quarto-xref"><span>Chapter 9</span></a>.</p>
+<p>When you want to force the issue, <code>snakemake --forcerun sim</code> reruns every job of that rule regardless. See <a href="09-debugging.html" class="quarto-xref"><span>Chapter 8</span></a>.</p>
 </div>
 </div>
 </section>

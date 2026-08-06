@@ -386,20 +386,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06-figures-tables.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Figures (and tables)</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./07-manuscript.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building a manuscript</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Building a manuscript</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./08-analysis-pipeline.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></span></a>
   </div>
 </li>
       </ul>
@@ -416,13 +410,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./09-debugging.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">When things go wrong</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">When things go wrong</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./10-scaling-up.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Scaling up</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Scaling up</span></span></a>
   </div>
 </li>
       </ul>
@@ -522,6 +516,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>Indentation matters</strong>, as in Python. Use four spaces and stay consistent.</li>
 <li><strong><code>sim.R</code> is listed as an input</strong>, even though it is code rather than data. This is important. It is what makes “the script changed” a reason to rerun.</li>
 </ul>
+<p>Notice what is <em>not</em> here. Nothing about <code>sim.R</code> or <code>figure.R</code> is Snakemake-specific — <code>figure.R</code> ends in the <code>ggsave()</code> call you would have written anyway. Snakemake does not ask you to write your analysis differently; it asks you to say, in one file, which command turns which inputs into which outputs.</p>
 </section>
 <section id="rule-all" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="rule-all"><span class="header-section-number">2.2</span> rule all</h2>
@@ -741,8 +736,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="ex">sim</span>              18</span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="ex">table1</span>            1</span>
 <span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="ex">total</span>            22</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>(That transcript comes from the larger example of <a href="07-manuscript.html" class="quarto-xref"><span>Chapter 7</span></a>, which is why there are 22 jobs rather than 4.)</p>
-<p>Content is not the only trigger. Snakemake also stores the shell command and the parameters used for each output, so editing a rule’s command — not just the script it calls — makes the affected outputs stale too. <a href="09-debugging.html" class="quarto-xref"><span>Chapter 9</span></a> covers how to inspect and override all of this.</p>
+<p>(That transcript comes from the larger example of <a href="07-manuscript.html" class="quarto-xref"><span>Chapter 6</span></a>, which is why there are 22 jobs rather than 4.)</p>
+<p>Content is not the only trigger. Snakemake also stores the shell command and the parameters used for each output, so editing a rule’s command — not just the script it calls — makes the affected outputs stale too. <a href="09-debugging.html" class="quarto-xref"><span>Chapter 8</span></a> covers how to inspect and override all of this.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -757,7 +752,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> <span class="at">-p</span> old/sim.R scripts/sim.R      <span class="co"># -p preserves the original mtime</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rsync</span> <span class="at">-a</span> backup/ .              <span class="co"># -a implies -t</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tar</span> xf archive.tar              <span class="co"># restores the archived mtimes</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Restore a script from a backup or an archive that way and the pipeline can sit there insisting everything is up to date. If you have moved files around by any means other than editing them, <code>touch</code> the ones you restored, or force the issue with <code>snakemake -R</code> (<a href="09-debugging.html" class="quarto-xref"><span>Chapter 9</span></a>).</p>
+<p>Restore a script from a backup or an archive that way and the pipeline can sit there insisting everything is up to date. If you have moved files around by any means other than editing them, <code>touch</code> the ones you restored, or force the issue with <code>snakemake -R</code> (<a href="09-debugging.html" class="quarto-xref"><span>Chapter 8</span></a>).</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -800,15 +795,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13" data-filename="the shape of a project"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>my-project/</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  Snakefile          &lt;- the map: every rule, in one file, at the root</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  config.yaml        &lt;- the settings (chapter 4)</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  scripts/              &lt;- the scripts the rules call</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  rds/               &lt;- computed results</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  out/               &lt;- figures and tables</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  scripts/           &lt;- the scripts the rules call</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  R/                 &lt;- functions the scripts share, one per file</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  rds/               &lt;- computed results</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  out/               &lt;- figures and tables</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Three of those deserve to be stated as rules rather than suggestions.</p>
 <p><strong>One Snakefile, at the root.</strong> Not one per subdirectory. The Snakefile is the only place that describes how the pieces of the project fit together, so a newcomer — a coauthor, a reviewer, you in a year — has exactly one file to open to find out what this project builds and what it builds it from. Snakemake does let you split rules across files with <code>include:</code>, and that is worth reaching for once a single file becomes genuinely unwieldy, but the default should be one file you can read top to bottom.</p>
 <p><strong><code>rds/</code> holds what the pipeline computes.</strong> Simulation output, fitted models, cleaned data — the objects that took time to produce and that everything else is derived from. They are serialized R objects, hence the name; use whatever name you like, but use one directory.</p>
 <p><strong><code>out/</code> holds what a human looks at.</strong> Figures and tables: the things that end up in the manuscript or the report.</p>
-<p>The reason to split these rather than pile everything into one <code>results/</code> folder is that the two halves behave completely differently. <code>rds/</code> is expensive, is reused across a paper and a talk and a grant renewal, and may take days to regenerate — it is the thing worth backing up and worth sending to a coauthor. <code>out/</code> is cheap: delete it and <code>snakemake</code> puts it back in seconds, from the contents of <code>rds/</code>. Once they are separate directories you can treat them differently, and <a href="10-scaling-up.html" class="quarto-xref"><span>Chapter 10</span></a> does exactly that.</p>
+<p>The reason to split these rather than pile everything into one <code>results/</code> folder is that the two halves behave completely differently. <code>rds/</code> is expensive, is reused across a paper and a talk and a grant renewal, and may take days to regenerate — it is the thing worth backing up and worth sending to a coauthor. <code>out/</code> is cheap: delete it and <code>snakemake</code> puts it back in seconds, from the contents of <code>rds/</code>. Once they are separate directories you can treat them differently, and <a href="10-scaling-up.html" class="quarto-xref"><span>Chapter 9</span></a> does exactly that.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Declare what a script sources
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Scripts grow to the point where they share things — a set of functions, the labels and colors several figures use — and those live in files of their own, which is what <code>R/</code> is for above. Snakemake has no way to know that a script reads another file, so a shared file has to be listed as an input to every rule whose script sources it. An undeclared dependency is the one failure mode Snakemake cannot warn you about: edit a shared function and every result built from it stays quietly stale (<a href="09-debugging.html" class="quarto-xref"><span>Chapter 8</span></a>).</p>
+<p>That is also an argument for keeping such files narrow, because the declaration is all-or-nothing. In the larger example of <a href="07-manuscript.html" class="quarto-xref"><span>Chapter 6</span></a> the simulation functions are in <code>R/</code> and the plot labels and colors are in <code>scripts/setup.R</code>, listed separately: editing a hex code plans four jobs and leaves the simulations alone, while editing a function plans all twenty-two. Had both lived in one file, the color change would have rerun eighteen simulations, because Snakemake cannot tell which half of a file you touched.</p>
+</div>
+</div>
 <p>The corollary is that anything <em>not</em> in <code>rds/</code> or <code>out/</code> is either code, settings, or something a human wrote. That is a useful thing to be able to say about a directory — and it is what makes the next rule easy to apply.</p>
 <p><strong>Neither <code>rds/</code> nor <code>out/</code> is tracked by git.</strong> Not because they are large, or binary, or likely to go stale — those are consequences, and reasoning from them means relitigating the question for every new kind of file. The rule is simpler than that:</p>
 <blockquote class="blockquote">
@@ -824,7 +834,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>.snakemake/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Stated that way it also settles the case people otherwise talk themselves out of. A figure is small and it is genuinely convenient to look at a PDF on GitHub — but size has nothing to do with whether something is source, and <code>out/figure1.pdf</code> is as much an output as a four hundred megabyte <code>.rds</code>. If you want to see the figures, run <code>snakemake</code>. It takes seconds, and what you get is guaranteed to match the code you are looking at.</p>
-<p>The one thing this costs you is that a fresh clone cannot show anybody a result until it has been rebuilt. When the rebuild takes days rather than seconds that is a real cost, and <a href="10-scaling-up.html" class="quarto-xref"><span>Chapter 10</span></a> deals with it — by sharing <code>rds/</code> outside of git, not by committing it.</p>
+<p>The one thing this costs you is that a fresh clone cannot show anybody a result until it has been rebuilt. When the rebuild takes days rather than seconds that is a real cost, and <a href="10-scaling-up.html" class="quarto-xref"><span>Chapter 9</span></a> deals with it — by sharing <code>rds/</code> outside of git, not by committing it.</p>
 </section>
 <section id="try-it" class="level2" data-number="2.9">
 <h2 data-number="2.9" class="anchored" data-anchor-id="try-it"><span class="header-section-number">2.9</span> Try it</h2>

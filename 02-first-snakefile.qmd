@@ -48,6 +48,11 @@ A few mechanics:
 - **`sim.R` is listed as an input**, even though it is code rather than data. This
   is important. It is what makes "the script changed" a reason to rerun.
 
+Notice what is *not* here. Nothing about `sim.R` or `figure.R` is
+Snakemake-specific --- `figure.R` ends in the `ggsave()` call you would have
+written anyway. Snakemake does not ask you to write your analysis differently; it
+asks you to say, in one file, which command turns which inputs into which outputs.
+
 ## rule all
 
 `rule all` is different. It has no output and no command --- only inputs. It exists
@@ -247,7 +252,8 @@ The layout that scales from these examples up to a real methods paper is:
 my-project/
   Snakefile          <- the map: every rule, in one file, at the root
   config.yaml        <- the settings (chapter 4)
-  scripts/              <- the scripts the rules call
+  scripts/           <- the scripts the rules call
+  R/                 <- functions the scripts share, one per file
   rds/               <- computed results
   out/               <- figures and tables
 ```
@@ -277,6 +283,27 @@ it is the thing worth backing up and worth sending to a coauthor. `out/` is chea
 delete it and `snakemake` puts it back in seconds, from the contents of `rds/`.
 Once they are separate directories you can treat them differently, and
 @sec-scaling does exactly that.
+
+::: {.callout-note}
+## Declare what a script sources
+
+Scripts grow to the point where they share things --- a set of functions, the
+labels and colors several figures use --- and those live in files of their own,
+which is what `R/` is for above. Snakemake has no way to know that a script reads
+another file, so a shared file has to be listed as an input to every rule whose
+script sources it. An undeclared dependency is the one failure mode Snakemake
+cannot warn you about: edit a shared function and every result built from it stays
+quietly stale (@sec-debugging).
+
+That is also an argument for keeping such files narrow, because the declaration is
+all-or-nothing. In the larger example of @sec-manuscript the simulation functions
+are in `R/` and the plot labels and colors are in `scripts/setup.R`, listed
+separately: editing a hex code plans four jobs and leaves the simulations alone,
+while editing a function plans all twenty-two. Had both lived in one file, the
+color change would have rerun eighteen simulations, because Snakemake cannot tell
+which half of a file you touched.
+
+:::
 
 The corollary is that anything *not* in `rds/` or `out/` is either code, settings,
 or something a human wrote. That is a useful thing to be able to say about a

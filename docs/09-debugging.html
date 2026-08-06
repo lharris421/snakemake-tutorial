@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>9&nbsp; When things go wrong – Snakemake for biostatisticians</title>
+<title>8&nbsp; When things go wrong – Snakemake for biostatisticians</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -286,7 +286,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./09-debugging.html">In practice</a></li><li class="breadcrumb-item"><a href="./09-debugging.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">When things go wrong</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./09-debugging.html">In practice</a></li><li class="breadcrumb-item"><a href="./09-debugging.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">When things go wrong</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -383,20 +383,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06-figures-tables.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Figures (and tables)</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./07-manuscript.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building a manuscript</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Building a manuscript</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./08-analysis-pipeline.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></span></a>
   </div>
 </li>
       </ul>
@@ -413,13 +407,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./09-debugging.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">When things go wrong</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">When things go wrong</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./10-scaling-up.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Scaling up</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Scaling up</span></span></a>
   </div>
 </li>
       </ul>
@@ -434,20 +428,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#look-before-you-run" id="toc-look-before-you-run" class="nav-link active" data-scroll-target="#look-before-you-run"><span class="header-section-number">9.1</span> Look before you run</a></li>
-  <li><a href="#why-is-it-rebuilding" id="toc-why-is-it-rebuilding" class="nav-link" data-scroll-target="#why-is-it-rebuilding"><span class="header-section-number">9.2</span> Why is it rebuilding?</a></li>
-  <li><a href="#making-it-rerun-anyway" id="toc-making-it-rerun-anyway" class="nav-link" data-scroll-target="#making-it-rerun-anyway"><span class="header-section-number">9.3</span> Making it rerun anyway</a></li>
-  <li><a href="#making-it-stop-rerunning" id="toc-making-it-stop-rerunning" class="nav-link" data-scroll-target="#making-it-stop-rerunning"><span class="header-section-number">9.4</span> Making it stop rerunning</a></li>
-  <li><a href="#the-errors-you-will-see" id="toc-the-errors-you-will-see" class="nav-link" data-scroll-target="#the-errors-you-will-see"><span class="header-section-number">9.5</span> The errors you will see</a>
+  <li><a href="#look-before-you-run" id="toc-look-before-you-run" class="nav-link active" data-scroll-target="#look-before-you-run"><span class="header-section-number">8.1</span> Look before you run</a></li>
+  <li><a href="#why-is-it-rebuilding" id="toc-why-is-it-rebuilding" class="nav-link" data-scroll-target="#why-is-it-rebuilding"><span class="header-section-number">8.2</span> Why is it rebuilding?</a></li>
+  <li><a href="#making-it-rerun-anyway" id="toc-making-it-rerun-anyway" class="nav-link" data-scroll-target="#making-it-rerun-anyway"><span class="header-section-number">8.3</span> Making it rerun anyway</a></li>
+  <li><a href="#making-it-stop-rerunning" id="toc-making-it-stop-rerunning" class="nav-link" data-scroll-target="#making-it-stop-rerunning"><span class="header-section-number">8.4</span> Making it stop rerunning</a></li>
+  <li><a href="#the-errors-you-will-see" id="toc-the-errors-you-will-see" class="nav-link" data-scroll-target="#the-errors-you-will-see"><span class="header-section-number">8.5</span> The errors you will see</a>
   <ul class="collapse">
-  <li><a href="#no-rule-to-produce" id="toc-no-rule-to-produce" class="nav-link" data-scroll-target="#no-rule-to-produce"><span class="header-section-number">9.5.1</span> No rule to produce</a></li>
-  <li><a href="#a-job-failed" id="toc-a-job-failed" class="nav-link" data-scroll-target="#a-job-failed"><span class="header-section-number">9.5.2</span> A job failed</a></li>
-  <li><a href="#incomplete-files" id="toc-incomplete-files" class="nav-link" data-scroll-target="#incomplete-files"><span class="header-section-number">9.5.3</span> Incomplete files</a></li>
-  <li><a href="#directory-cannot-be-locked" id="toc-directory-cannot-be-locked" class="nav-link" data-scroll-target="#directory-cannot-be-locked"><span class="header-section-number">9.5.4</span> Directory cannot be locked</a></li>
-  <li><a href="#the-ilp-solver-warning" id="toc-the-ilp-solver-warning" class="nav-link" data-scroll-target="#the-ilp-solver-warning"><span class="header-section-number">9.5.5</span> The ILP solver warning</a></li>
+  <li><a href="#no-rule-to-produce" id="toc-no-rule-to-produce" class="nav-link" data-scroll-target="#no-rule-to-produce"><span class="header-section-number">8.5.1</span> No rule to produce</a></li>
+  <li><a href="#a-job-failed" id="toc-a-job-failed" class="nav-link" data-scroll-target="#a-job-failed"><span class="header-section-number">8.5.2</span> A job failed</a></li>
+  <li><a href="#incomplete-files" id="toc-incomplete-files" class="nav-link" data-scroll-target="#incomplete-files"><span class="header-section-number">8.5.3</span> Incomplete files</a></li>
+  <li><a href="#directory-cannot-be-locked" id="toc-directory-cannot-be-locked" class="nav-link" data-scroll-target="#directory-cannot-be-locked"><span class="header-section-number">8.5.4</span> Directory cannot be locked</a></li>
+  <li><a href="#the-ilp-solver-warning" id="toc-the-ilp-solver-warning" class="nav-link" data-scroll-target="#the-ilp-solver-warning"><span class="header-section-number">8.5.5</span> The ILP solver warning</a></li>
   </ul></li>
-  <li><a href="#reading-a-workflow-you-did-not-write" id="toc-reading-a-workflow-you-did-not-write" class="nav-link" data-scroll-target="#reading-a-workflow-you-did-not-write"><span class="header-section-number">9.6</span> Reading a workflow you did not write</a></li>
-  <li><a href="#habits-that-prevent-most-of-this" id="toc-habits-that-prevent-most-of-this" class="nav-link" data-scroll-target="#habits-that-prevent-most-of-this"><span class="header-section-number">9.7</span> Habits that prevent most of this</a></li>
+  <li><a href="#reading-a-workflow-you-did-not-write" id="toc-reading-a-workflow-you-did-not-write" class="nav-link" data-scroll-target="#reading-a-workflow-you-did-not-write"><span class="header-section-number">8.6</span> Reading a workflow you did not write</a></li>
+  <li><a href="#habits-that-prevent-most-of-this" id="toc-habits-that-prevent-most-of-this" class="nav-link" data-scroll-target="#habits-that-prevent-most-of-this"><span class="header-section-number">8.7</span> Habits that prevent most of this</a></li>
   </ul>
 </nav>
     </div>
@@ -455,9 +449,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <main class="content" id="quarto-document-content">
 
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./09-debugging.html">In practice</a></li><li class="breadcrumb-item"><a href="./09-debugging.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">When things go wrong</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./09-debugging.html">In practice</a></li><li class="breadcrumb-item"><a href="./09-debugging.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">When things go wrong</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-debugging" class="quarto-section-identifier"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">When things go wrong</span></span></h1>
+<h1 class="title"><span id="sec-debugging" class="quarto-section-identifier"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">When things go wrong</span></span></h1>
 </div>
 
 
@@ -475,8 +469,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>Most of the trouble people have with Snakemake comes from one of two questions: <em>why is it doing that?</em> and <em>why is it not doing that?</em> This chapter is a reference for both, plus the errors you will actually see.</p>
-<section id="look-before-you-run" class="level2" data-number="9.1">
-<h2 data-number="9.1" class="anchored" data-anchor-id="look-before-you-run"><span class="header-section-number">9.1</span> Look before you run</h2>
+<section id="look-before-you-run" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="look-before-you-run"><span class="header-section-number">8.1</span> Look before you run</h2>
 <p><code>-n</code> is the answer to a surprising fraction of problems. It builds the DAG, decides what it would do, and does none of it:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">-n</span>              <span class="co"># what would you do?</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">-n</span> <span class="at">--quiet</span>      <span class="co"># just the summary table</span></span>
@@ -504,8 +498,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="why-is-it-rebuilding" class="level2" data-number="9.2">
-<h2 data-number="9.2" class="anchored" data-anchor-id="why-is-it-rebuilding"><span class="header-section-number">9.2</span> Why is it rebuilding?</h2>
+<section id="why-is-it-rebuilding" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="why-is-it-rebuilding"><span class="header-section-number">8.2</span> Why is it rebuilding?</h2>
 <p>Snakemake stores, for every output file, a record of how it was made: the checksums of the inputs, the shell command, and the params. Any of them changing makes the output stale. <code>--summary</code> prints the table:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">--summary</span> <span class="kw">|</span> <span class="fu">head</span> <span class="at">-6</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">output_file</span> date    rule    log-file<span class="er">(</span><span class="ex">s</span><span class="kw">)</span> <span class="ex">status</span>  plan</span>
@@ -520,8 +514,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>A rule reruns after you edited its shell command.</strong> Expected, and desirable — the command is part of the provenance.</p>
 <p><strong>Nothing reruns after you edit a script that is not listed as an input.</strong> This one is silent and it is the dangerous one. If a rule calls <code>Rscript scripts/figure.R</code> but only lists <code>{input.rds}</code>, then editing <code>figure.R</code> changes nothing as far as Snakemake is concerned, and your figure quietly stays stale. <strong>List your scripts as inputs.</strong> Every example in this book does.</p>
 </section>
-<section id="making-it-rerun-anyway" class="level2" data-number="9.3">
-<h2 data-number="9.3" class="anchored" data-anchor-id="making-it-rerun-anyway"><span class="header-section-number">9.3</span> Making it rerun anyway</h2>
+<section id="making-it-rerun-anyway" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="making-it-rerun-anyway"><span class="header-section-number">8.3</span> Making it rerun anyway</h2>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 50%">
@@ -558,8 +552,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <p><code>-R</code> is the one you will use. It is the right response to “I changed something Snakemake cannot see” — a package upgrade, an edit to a script you forgot to list, a change to a data file that lives outside the project.</p>
 </section>
-<section id="making-it-stop-rerunning" class="level2" data-number="9.4">
-<h2 data-number="9.4" class="anchored" data-anchor-id="making-it-stop-rerunning"><span class="header-section-number">9.4</span> Making it stop rerunning</h2>
+<section id="making-it-stop-rerunning" class="level2" data-number="8.4">
+<h2 data-number="8.4" class="anchored" data-anchor-id="making-it-stop-rerunning"><span class="header-section-number">8.4</span> Making it stop rerunning</h2>
 <p>The mirror image: files are current but Snakemake wants to rebuild them, usually because they were copied from somewhere or restored from a backup.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">--touch</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>--touch</code> marks every output as up to date without running anything. Use it when you know the files are fine, and note that you are making an assertion Snakemake cannot check.</p>
@@ -581,17 +575,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="the-errors-you-will-see" class="level2" data-number="9.5">
-<h2 data-number="9.5" class="anchored" data-anchor-id="the-errors-you-will-see"><span class="header-section-number">9.5</span> The errors you will see</h2>
-<section id="no-rule-to-produce" class="level3" data-number="9.5.1">
-<h3 data-number="9.5.1" class="anchored" data-anchor-id="no-rule-to-produce"><span class="header-section-number">9.5.1</span> No rule to produce</h3>
+<section id="the-errors-you-will-see" class="level2" data-number="8.5">
+<h2 data-number="8.5" class="anchored" data-anchor-id="the-errors-you-will-see"><span class="header-section-number">8.5</span> The errors you will see</h2>
+<section id="no-rule-to-produce" class="level3" data-number="8.5.1">
+<h3 data-number="8.5.1" class="anchored" data-anchor-id="no-rule-to-produce"><span class="header-section-number">8.5.1</span> No rule to produce</h3>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">--cores</span> 1 out/coverage-summary.csv</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">MissingRuleException:</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">No</span> rule to produce out/coverage-summary.csv <span class="er">(</span><span class="cf">if</span> <span class="ex">you</span> use input functions make sure that they don<span class="st">'t raise unexpected exceptions).</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>You asked for a file no rule can make. Nine times in ten it is a typo, in the target or in a rule’s <code>input:</code>. Check spelling, check the directory, and check whether a <code>wildcard_constraints</code> is stopping the match — a constraint of <code>\d+</code> on <code>{n}</code> will make <code>nfifty_rho0_naive.rds</code> unmatchable, which is the point, but the message does not say so.</p>
 </section>
-<section id="a-job-failed" class="level3" data-number="9.5.2">
-<h3 data-number="9.5.2" class="anchored" data-anchor-id="a-job-failed"><span class="header-section-number">9.5.2</span> A job failed</h3>
+<section id="a-job-failed" class="level3" data-number="8.5.2">
+<h3 data-number="8.5.2" class="anchored" data-anchor-id="a-job-failed"><span class="header-section-number">8.5.2</span> A job failed</h3>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">--cores</span> 1 rds/sim/n50_rho0_bayes.rds</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>        <span class="kw">(</span><span class="bu">command</span> exited with non-zero exit code<span class="kw">)</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Shutting</span> down, this might take some time.</span>
@@ -611,30 +605,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Two things happened that you did not see. Any output the job had already written was deleted — you get <code>Removing output files of failed job … since they might be corrupted</code>, so a half-written <code>.rds</code> can never be mistaken for a real result. (Here the script died before writing anything, so there was nothing to remove.) The log file, by contrast, was kept: if the rule declared one, the R error message is in it.</p>
 <p>The example above is the wildcard problem from <a href="03-wildcards.html" class="quarto-xref"><span>Chapter 3</span></a>: <code>bayes</code> matched <code>{method}</code>, so Snakemake built a perfectly good job for a method that does not exist. <code>wildcard_constraints</code> turns this into a “no rule to produce” error before anything runs.</p>
 </section>
-<section id="incomplete-files" class="level3" data-number="9.5.3">
-<h3 data-number="9.5.3" class="anchored" data-anchor-id="incomplete-files"><span class="header-section-number">9.5.3</span> Incomplete files</h3>
+<section id="incomplete-files" class="level3" data-number="8.5.3">
+<h3 data-number="8.5.3" class="anchored" data-anchor-id="incomplete-files"><span class="header-section-number">8.5.3</span> Incomplete files</h3>
 <blockquote class="blockquote">
 <p>The files below seem to be incomplete.</p>
 </blockquote>
 <p>A previous run was stopped while a job was part-way through writing its output — by <code>Ctrl-C</code> as readily as by a hard kill, since <code>Ctrl-C</code> terminates running jobs rather than waiting for them (<a href="05-parallel-and-logs.html" class="quarto-xref"><span>Chapter 5</span></a>). <code>snakemake --rerun-incomplete</code> discards the suspect files and rebuilds them.</p>
 </section>
-<section id="directory-cannot-be-locked" class="level3" data-number="9.5.4">
-<h3 data-number="9.5.4" class="anchored" data-anchor-id="directory-cannot-be-locked"><span class="header-section-number">9.5.4</span> Directory cannot be locked</h3>
+<section id="directory-cannot-be-locked" class="level3" data-number="8.5.4">
+<h3 data-number="8.5.4" class="anchored" data-anchor-id="directory-cannot-be-locked"><span class="header-section-number">8.5.4</span> Directory cannot be locked</h3>
 <blockquote class="blockquote">
 <p>Error: Directory cannot be locked.</p>
 </blockquote>
 <p>Either another Snakemake is running in this directory — check before you assume it is not — or one was killed without cleaning up. If you are sure nothing is running, <code>snakemake --unlock</code>.</p>
 </section>
-<section id="the-ilp-solver-warning" class="level3" data-number="9.5.5">
-<h3 data-number="9.5.5" class="anchored" data-anchor-id="the-ilp-solver-warning"><span class="header-section-number">9.5.5</span> The ILP solver warning</h3>
+<section id="the-ilp-solver-warning" class="level3" data-number="8.5.5">
+<h3 data-number="8.5.5" class="anchored" data-anchor-id="the-ilp-solver-warning"><span class="header-section-number">8.5.5</span> The ILP solver warning</h3>
 <blockquote class="blockquote">
 <p>Failed to solve scheduling problem with ILP solver, falling back to greedy scheduler.</p>
 </blockquote>
 <p>Harmless. Snakemake schedules jobs optimally when it can find a working solver, and falls back to a greedy scheduler when it cannot; the workflow runs correctly either way. It shows up on some Homebrew and conda installs. Ignore it, or install <code>pulp</code> properly if the noise bothers you.</p>
 </section>
 </section>
-<section id="reading-a-workflow-you-did-not-write" class="level2" data-number="9.6">
-<h2 data-number="9.6" class="anchored" data-anchor-id="reading-a-workflow-you-did-not-write"><span class="header-section-number">9.6</span> Reading a workflow you did not write</h2>
+<section id="reading-a-workflow-you-did-not-write" class="level2" data-number="8.6">
+<h2 data-number="8.6" class="anchored" data-anchor-id="reading-a-workflow-you-did-not-write"><span class="header-section-number">8.6</span> Reading a workflow you did not write</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">--list</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">all</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="ex">figure1</span></span>
@@ -644,11 +638,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><code>--list</code> shows the rule names. Then:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">--dag</span> <span class="kw">|</span> <span class="ex">dot</span> <span class="at">-Tpdf</span> <span class="op">&gt;</span> dag.pdf          <span class="co"># the job graph, one node per job</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">--rulegraph</span> <span class="kw">|</span> <span class="ex">dot</span> <span class="at">-Tpdf</span> <span class="op">&gt;</span> rules.pdf  <span class="co"># the rule graph, one node per rule</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Both need <a href="https://graphviz.org/">Graphviz</a> for <code>dot</code>. For a grid of any size, use <code>--rulegraph</code>: <code>--dag</code> draws a node per <em>job</em>, which for the example in <a href="07-manuscript.html" class="quarto-xref"><span>Chapter 7</span></a> means twenty-two of them.</p>
+<p>Both need <a href="https://graphviz.org/">Graphviz</a> for <code>dot</code>. For a grid of any size, use <code>--rulegraph</code>: <code>--dag</code> draws a node per <em>job</em>, which for the example in <a href="07-manuscript.html" class="quarto-xref"><span>Chapter 6</span></a> means twenty-two of them.</p>
 <p>Failing that, read <code>rule all</code> first. It tells you what the project is for, and everything else follows from it.</p>
 </section>
-<section id="habits-that-prevent-most-of-this" class="level2" data-number="9.7">
-<h2 data-number="9.7" class="anchored" data-anchor-id="habits-that-prevent-most-of-this"><span class="header-section-number">9.7</span> Habits that prevent most of this</h2>
+<section id="habits-that-prevent-most-of-this" class="level2" data-number="8.7">
+<h2 data-number="8.7" class="anchored" data-anchor-id="habits-that-prevent-most-of-this"><span class="header-section-number">8.7</span> Habits that prevent most of this</h2>
 <ol type="1">
 <li><strong>List every script as an input.</strong> The one failure mode Snakemake cannot warn you about is the dependency you did not declare.</li>
 <li><strong>Dry-run before long runs.</strong> Twenty seconds against three hours.</li>
@@ -1077,12 +1071,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./08-analysis-pipeline.html" class="pagination-link" aria-label="A data analysis pipeline">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./10-scaling-up.html" class="pagination-link" aria-label="Scaling up">
-        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Scaling up</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Scaling up</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -5,6 +5,10 @@
 source("_common.R")
 ```
 
+Move to `examples/04-manuscript`. It is the simulation study of the last three
+chapters with two things added: rules that turn the eighteen result files into a
+figure and a table, and a rule that compiles a paper out of them.
+
 Here is the situation this chapter is about. You are using an editor that rebuilds
 your PDF every time you save, so the document always matches its LaTeX source. It
 does not match its *figures*: `out/figure1.pdf` was made by some script at some

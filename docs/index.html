@@ -386,20 +386,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06-figures-tables.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Figures (and tables)</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./07-manuscript.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building a manuscript</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Building a manuscript</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./08-analysis-pipeline.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></span></a>
   </div>
 </li>
       </ul>
@@ -416,13 +410,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./09-debugging.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">When things go wrong</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">When things go wrong</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./10-scaling-up.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Scaling up</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Scaling up</span></span></a>
   </div>
 </li>
       </ul>
@@ -531,7 +525,7 @@ Note
 </div>
 </div>
 </div>
-<p><a href="08-analysis-pipeline.html" class="quarto-xref"><span>8&nbsp; A data analysis pipeline</span></a> then applies the same ideas to a piece of applied collaborative work — raw CSV, cleaning, models, Table 1, rendered report — for readers whose focus is analysis rather than methods research (most of us). I focus on the manuscript pipeline here because it parallels where I learned Snakemake, in my dissertation work.</p>
+<p><a href="08-analysis-pipeline.html" class="quarto-xref"><span>7&nbsp; A data analysis pipeline</span></a> then applies the same ideas to a piece of applied collaborative work — raw CSV, cleaning, models, Table 1, rendered report — for readers whose focus is analysis rather than methods research (most of us). I focus on the manuscript pipeline here because it parallels where I learned Snakemake, in my dissertation work.</p>
 </section>
 <section id="installing-snakemake" class="level2">
 <h2 class="anchored" data-anchor-id="installing-snakemake">Installing Snakemake</h2>
@@ -540,7 +534,7 @@ Note
 <p>Check that it worked:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">--version</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This “book” was written against Snakemake 9.13. Version 8 introduced a number of changes to how cluster execution is configured, and a few flags used here do not exist in version 7 or earlier.</p>
-<p>You will also want R with <code>optparse</code> and <code>ggplot2</code>; <a href="07-manuscript.html" class="quarto-xref"><span>7&nbsp; Building a manuscript</span></a> additionally uses <code>tidyr</code>, <code>kableExtra</code> and a LaTeX installation, and <a href="08-analysis-pipeline.html" class="quarto-xref"><span>8&nbsp; A data analysis pipeline</span></a> uses <code>knitr</code> and Quarto. Each example’s <code>README.md</code> lists what it needs.</p>
+<p>You will also want R with <code>optparse</code> and <code>ggplot2</code>; <a href="07-manuscript.html" class="quarto-xref"><span>6&nbsp; Building a manuscript</span></a> additionally uses <code>tidyr</code>, <code>kableExtra</code> and a LaTeX installation, and <a href="08-analysis-pipeline.html" class="quarto-xref"><span>7&nbsp; A data analysis pipeline</span></a> uses <code>knitr</code> and Quarto. Each example’s <code>README.md</code> lists what it needs.</p>
 </section>
 <section id="getting-the-examples" class="level2">
 <h2 class="anchored" data-anchor-id="getting-the-examples">Getting the examples</h2>
@@ -551,7 +545,7 @@ Note
 </section>
 <section id="acknowledgments" class="level2">
 <h2 class="anchored" data-anchor-id="acknowledgments">Acknowledgments</h2>
-<p>The format and spirit of this tutorial are modeled on the <a href="https://iowabiostat.github.io/hpc/">University of Iowa Biostatistics HPC tutorial</a> by Patrick Breheny and Grant Brown, whose final chapter on Snakemake is the seed this grew from. The manuscript structure in <a href="07-manuscript.html" class="quarto-xref"><span>7&nbsp; Building a manuscript</span></a> follows the conventions in Patrick Breheny’s <a href="https://github.com/pbreheny/manuscript-template">manuscript template</a>.</p>
+<p>The format and spirit of this tutorial are modeled on the <a href="https://iowabiostat.github.io/hpc/">University of Iowa Biostatistics HPC tutorial</a> by Patrick Breheny and Grant Brown, whose final chapter on Snakemake is the seed this grew from. The manuscript structure in <a href="07-manuscript.html" class="quarto-xref"><span>6&nbsp; Building a manuscript</span></a> follows the conventions in Patrick Breheny’s <a href="https://github.com/pbreheny/manuscript-template">manuscript template</a>.</p>
 
 
 </section>

@@ -30,7 +30,6 @@ book:
         - 05-parallel-and-logs.qmd
     - part: "Products"
       chapters:
-        - 06-figures-tables.qmd
         - 07-manuscript.qmd
         - 08-analysis-pipeline.qmd
     - part: "In practice"
