@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>9&nbsp; When things go wrong – Snakemake for biostatisticians</title>
+<title>10&nbsp; Sharing results – Snakemake for biostatisticians</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -68,8 +68,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./10-sharing.html" rel="next">
-<link href="./08-analysis-pipeline.html" rel="prev">
+<link href="./09-debugging.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -286,7 +285,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./09-debugging.html">In practice</a></li><li class="breadcrumb-item"><a href="./09-debugging.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">When things go wrong</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./09-debugging.html">In practice</a></li><li class="breadcrumb-item"><a href="./10-sharing.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Sharing results</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -412,13 +411,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./09-debugging.html" class="sidebar-item-text sidebar-link active">
+  <a href="./09-debugging.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">When things go wrong</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10-sharing.html" class="sidebar-item-text sidebar-link">
+  <a href="./10-sharing.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Sharing results</span></span></a>
   </div>
 </li>
@@ -434,17 +433,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#look-before-you-run" id="toc-look-before-you-run" class="nav-link active" data-scroll-target="#look-before-you-run"><span class="header-section-number">9.1</span> Look before you run</a></li>
-  <li><a href="#what-is-the-status-of-each-file" id="toc-what-is-the-status-of-each-file" class="nav-link" data-scroll-target="#what-is-the-status-of-each-file"><span class="header-section-number">9.2</span> What is the status of each file?</a></li>
-  <li><a href="#making-it-rerun-anyway" id="toc-making-it-rerun-anyway" class="nav-link" data-scroll-target="#making-it-rerun-anyway"><span class="header-section-number">9.3</span> Making it rerun anyway</a></li>
-  <li><a href="#making-it-not-rerun" id="toc-making-it-not-rerun" class="nav-link" data-scroll-target="#making-it-not-rerun"><span class="header-section-number">9.4</span> Making it not rerun</a></li>
-  <li><a href="#the-errors-you-will-see" id="toc-the-errors-you-will-see" class="nav-link" data-scroll-target="#the-errors-you-will-see"><span class="header-section-number">9.5</span> The errors you will see</a>
+  <li><a href="#the-expensive-half-and-the-cheap-half" id="toc-the-expensive-half-and-the-cheap-half" class="nav-link active" data-scroll-target="#the-expensive-half-and-the-cheap-half"><span class="header-section-number">10.1</span> The expensive half and the cheap half</a></li>
+  <li><a href="#why-not-git" id="toc-why-not-git" class="nav-link" data-scroll-target="#why-not-git"><span class="header-section-number">10.2</span> Why not git</a></li>
+  <li><a href="#dat" id="toc-dat" class="nav-link" data-scroll-target="#dat"><span class="header-section-number">10.3</span> dat</a></li>
+  <li><a href="#what-does-not-arrive-with-the-files" id="toc-what-does-not-arrive-with-the-files" class="nav-link" data-scroll-target="#what-does-not-arrive-with-the-files"><span class="header-section-number">10.4</span> What does not arrive with the files</a>
   <ul class="collapse">
-  <li><a href="#no-rule-to-produce" id="toc-no-rule-to-produce" class="nav-link" data-scroll-target="#no-rule-to-produce"><span class="header-section-number">9.5.1</span> No rule to produce</a></li>
-  <li><a href="#a-job-failed" id="toc-a-job-failed" class="nav-link" data-scroll-target="#a-job-failed"><span class="header-section-number">9.5.2</span> A job failed</a></li>
-  <li><a href="#incomplete-files" id="toc-incomplete-files" class="nav-link" data-scroll-target="#incomplete-files"><span class="header-section-number">9.5.3</span> Incomplete files</a></li>
+  <li><a href="#why-bare---touch-is-not-the-fix" id="toc-why-bare---touch-is-not-the-fix" class="nav-link" data-scroll-target="#why-bare---touch-is-not-the-fix"><span class="header-section-number">10.4.1</span> Why bare <code>--touch</code> is not the fix</a></li>
+  <li><a href="#the-recipe-touch-the-results-build-the-rest" id="toc-the-recipe-touch-the-results-build-the-rest" class="nav-link" data-scroll-target="#the-recipe-touch-the-results-build-the-rest"><span class="header-section-number">10.4.2</span> The recipe: touch the results, build the rest</a></li>
   </ul></li>
-  <li><a href="#habits-that-prevent-most-of-this" id="toc-habits-that-prevent-most-of-this" class="nav-link" data-scroll-target="#habits-that-prevent-most-of-this"><span class="header-section-number">9.6</span> Habits that prevent most of this</a></li>
+  <li><a href="#try-it" id="toc-try-it" class="nav-link" data-scroll-target="#try-it"><span class="header-section-number">10.5</span> Try it</a></li>
   </ul>
 </nav>
     </div>
@@ -452,9 +449,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <main class="content" id="quarto-document-content">
 
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./09-debugging.html">In practice</a></li><li class="breadcrumb-item"><a href="./09-debugging.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">When things go wrong</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./09-debugging.html">In practice</a></li><li class="breadcrumb-item"><a href="./10-sharing.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Sharing results</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-debugging" class="quarto-section-identifier"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">When things go wrong</span></span></h1>
+<h1 class="title"><span id="sec-sharing" class="quarto-section-identifier"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Sharing results</span></span></h1>
 </div>
 
 
@@ -474,140 +471,90 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="reading-time">
 6 min read
 </div>
-<p>Most of the trouble people have with Snakemake comes from one of two questions: <em>why is it doing that?</em> and <em>why is it not doing that?</em> This chapter provides some useful tools for debugging.</p>
-<section id="look-before-you-run" class="level2" data-number="9.1">
-<h2 data-number="9.1" class="anchored" data-anchor-id="look-before-you-run"><span class="header-section-number">9.1</span> Look before you run</h2>
-<p><code>-n</code> is the answer to a surprising fraction of problems. It builds the DAG, decides what it would do, and does none of it:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">-n</span>              <span class="co"># what would you do?</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Each planned job comes with a <code>reason:</code> line:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">-n</span> out/figure1.pdf</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">rule</span> figure1:</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input:</span> scripts/figure.R, scripts/setup.R, rds/200/sim/n50_rho0_naive.rds, rds/200/sim/n50_rho0_split.rds, rds/200/sim/n50_rho50_naive.rds, rds/200/sim/n50_rho50_split.rds, rds/200/sim/n50_rho80_naive.rds, rds/200/sim/n50_rho80_split.rds, rds/200/sim/n100_rho0_naive.rds, rds/200/sim/n100_rho0_split.rds, rds/200/sim/n100_rho50_naive.rds, rds/200/sim/n100_rho50_split.rds, rds/200/sim/n100_rho80_naive.rds, rds/200/sim/n100_rho80_split.rds, rds/200/sim/n400_rho0_naive.rds, rds/200/sim/n400_rho0_split.rds, rds/200/sim/n400_rho50_naive.rds, rds/200/sim/n400_rho50_split.rds, rds/200/sim/n400_rho80_naive.rds, rds/200/sim/n400_rho80_split.rds</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="ex">output:</span> out/figure1.pdf</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="ex">log:</span> logs/figure1.log</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="ex">jobid:</span> 0</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Input files updated by another job: rds/200/sim/n100_rho50_split.rds, rds/200/sim/n100_rho0_naive.rds, rds/200/sim/n400_rho80_split.rds, rds/200/sim/n400_rho50_naive.rds, rds/200/sim/n100_rho50_naive.rds, rds/200/sim/n50_rho80_split.rds, rds/200/sim/n100_rho80_split.rds, rds/200/sim/n400_rho0_naive.rds, rds/200/sim/n50_rho0_split.rds, rds/200/sim/n400_rho0_split.rds, rds/200/sim/n50_rho80_naive.rds, rds/200/sim/n400_rho80_naive.rds, rds/200/sim/n100_rho80_naive.rds, rds/200/sim/n400_rho50_split.rds, rds/200/sim/n50_rho50_naive.rds, rds/200/sim/n50_rho0_naive.rds, rds/200/sim/n50_rho50_split.rds, rds/200/sim/n100_rho0_split.rds</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="ex">resources:</span> tmpdir=<span class="op">&lt;</span>TBD<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Everything so far has assumed one machine. A coauthor who clones your repository gets the code, which is the cheap half of the project; what they do not get is the two days of compute that produced the numbers. This chapter is about handing over the expensive half, and about the one thing that goes wrong when you do.</p>
+<section id="the-expensive-half-and-the-cheap-half" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="the-expensive-half-and-the-cheap-half"><span class="header-section-number">10.1</span> The expensive half and the cheap half</h2>
+<p>This is where the discipline of <a href="02-first-snakefile.html#sec-shape" class="quarto-xref"><span>Section 2.6</span></a> — computed results in <code>rds/</code>, figures and tables in <code>out/</code> — stops being tidiness and starts paying rent. What you share is <code>rds/</code>, on its own: it is the expensive half, and a collaborator who has it can regenerate every figure and table in seconds.</p>
+<p>A simulation that takes two days to run is not a build artifact in the way a figure is.</p>
 </section>
-<section id="what-is-the-status-of-each-file" class="level2" data-number="9.2">
-<h2 data-number="9.2" class="anchored" data-anchor-id="what-is-the-status-of-each-file"><span class="header-section-number">9.2</span> What is the status of each file?</h2>
-<p><code>--summary</code> lets you inspect the files statuses, one row per file Snakemake knows about:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">--summary</span> <span class="kw">|</span> <span class="fu">head</span> <span class="at">-6</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">output_file</span> date    rule    log-file<span class="er">(</span><span class="ex">s</span><span class="kw">)</span> <span class="ex">status</span>  plan</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">build/paper.pdf</span> Thu Aug  6 08:26:37 2026    manuscript  logs/paper-latexmk.log  ok  no update</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="ex">out/figure1.pdf</span> Thu Aug  6 08:26:37 2026    figure1 logs/figure1.log    ok  no update</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="ex">rds/200/sim/n50_rho0_naive.rds</span>  Thu Aug  6 08:26:35 2026    sim logs/200/sim/n50_rho0_naive.log ok  no update</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="ex">rds/200/sim/n50_rho0_split.rds</span>  Thu Aug  6 08:26:35 2026    sim logs/200/sim/n50_rho0_split.log ok  no update</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="ex">rds/200/sim/n50_rho50_naive.rds</span> Thu Aug  6 08:26:35 2026    sim logs/200/sim/n50_rho50_naive.log    ok  no update</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The <code>plan</code> column tells you what would happen and the <code>status</code> column whether the recorded provenance still matches.</p>
+<section id="why-not-git" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="why-not-git"><span class="header-section-number">10.2</span> Why not git</h2>
+<p>Git is the tool you would reach for otherwise, except that git is bad at exactly this kind of content. A few hundred megabytes of <code>.rds</code> files bloats the repository permanently — history keeps every version you ever committed, so it is not fixed by deleting them later — diff and merge do nothing useful on serialized objects, and results derived from protected health information have no business on GitHub at all.</p>
 </section>
-<section id="making-it-rerun-anyway" class="level2" data-number="9.3">
-<h2 data-number="9.3" class="anchored" data-anchor-id="making-it-rerun-anyway"><span class="header-section-number">9.3</span> Making it rerun anyway</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Command</th>
-<th>What it does</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>snakemake -R sim</code></td>
-<td>rerun rule <code>sim</code> and everything downstream</td>
-</tr>
-<tr class="even">
-<td><code>snakemake --forcerun sim</code></td>
-<td>same thing, spelled out</td>
-</tr>
-<tr class="odd">
-<td><code>snakemake -f out/figure1.pdf</code></td>
-<td>rebuild just that file</td>
-</tr>
-<tr class="even">
-<td><code>snakemake -F</code></td>
-<td>force everything, from scratch</td>
-</tr>
-<tr class="odd">
-<td><code>snakemake --delete-all-output</code></td>
-<td>delete everything the workflow produced</td>
-</tr>
-</tbody>
-</table>
-<p><code>-R</code> is what you can use when you say “I changed something Snakemake cannot see”. E.g. a package upgrade (more on this in the future).</p>
+<section id="dat" class="level2" data-number="10.3">
+<h2 data-number="10.3" class="anchored" data-anchor-id="dat"><span class="header-section-number">10.3</span> dat</h2>
+<p><a href="https://github.com/pbreheny/dat"><code>dat</code></a> is built for the gap the previous section described. It gives a directory a git-style push/pull workflow backed by AWS S3, without the version history:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> rds</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">dat</span> init</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">dat</span> push</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>and, on a collaborator’s machine:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">dat</span> clone jsmith7.rds.bucket rds</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">dat</span> pull</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>What makes it more than a wrapper around <code>rsync</code> is that it detects conflicts: if someone has modified a file you are about to overwrite, it says so rather than silently clobbering their work. It hashes file contents, so pushing a directory in which one of four hundred simulations changed transfers one file, and <code>dat status</code> will tell you whether you are in sync.</p>
+<p>The division of labor is natural. Git holds the code: small, textual, and wanting history. <code>dat</code> holds the results: large, binary, and only ever wanting to be <em>current</em>. Each is one command to push, and a collaborator with both has your entire project.</p>
 </section>
-<section id="making-it-not-rerun" class="level2" data-number="9.4">
-<h2 data-number="9.4" class="anchored" data-anchor-id="making-it-not-rerun"><span class="header-section-number">9.4</span> Making it not rerun</h2>
-<p>The mirror image: files are current but Snakemake wants to rebuild them, usually because they were copied from somewhere or restored from a backup.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">--touch</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><code>--touch</code> marks every output as up to date without running anything. Use it when you know the files are fine, and note that you are making an assertion Snakemake cannot check.</p>
-<p>The case where you will actually want it is results that arrived from a collaborator without the metadata that explains them (<code>.snakefile</code>), and there <code>--touch</code> on its own is not enough — <a href="10-sharing.html" class="quarto-xref"><span>Chapter 10</span></a> has the recipe.</p>
-<p><code>--rerun-triggers</code> narrows what Snakemake is allowed to notice. All five signals are on by default:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">--rerun-triggers</span> code input mtime params software-env   <span class="co"># the default</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">--rerun-triggers</span> input                                  <span class="co"># only file contents</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>which is occasionally useful.</p>
-<p>[to be continued…]</p>
-<!-- ::: {.callout-note} -->
-<!-- ## `--rerun-triggers mtime` is not `make` -->
-<!-- Snakemake's own help text offers `--rerun-triggers mtime` as "the traditional way -->
-<!-- of just considering file modification dates". It does not behave that way: on -->
-<!-- 9.13, `touch`ing an input under `--rerun-triggers mtime` still does not cause a -->
-<!-- rerun, because the checksum comparison described in @sec-rerun applies -->
-<!-- regardless. If you want a rebuild, ask for one with `-R` rather than trying to -->
-<!-- manufacture one through timestamps. -->
-<!-- ::: -->
+<section id="what-does-not-arrive-with-the-files" class="level2" data-number="10.4">
+<h2 data-number="10.4" class="anchored" data-anchor-id="what-does-not-arrive-with-the-files"><span class="header-section-number">10.4</span> What does not arrive with the files</h2>
+<p>Sharing tool aside, there are complexities with snakemake when sharing result files.</p>
+<p>Your coauthor clones the repository and pulls the results folder. Every <code>.rds</code> file is sitting there. But Snakemake’s record of how those files were made — <code>.snakemake/</code>, which is local and was never shared (<a href="03-rerun.html" class="quarto-xref"><span>Chapter 3</span></a>):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">-n</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Job</span> stats:</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">job</span>           count</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="ex">----------</span>  <span class="at">-------</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="ex">all</span>               1</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="ex">figure1</span>           1</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="ex">manuscript</span>        1</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="ex">sim</span>              18</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="ex">table1</span>            1</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="ex">total</span>            22</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Twenty-two jobs, eighteen of them the simulations that just arrived. On a real project that is the two days of compute the sharing was supposed to avoid.</p>
+<section id="why-bare---touch-is-not-the-fix" class="level3" data-number="10.4.1">
+<h3 data-number="10.4.1" class="anchored" data-anchor-id="why-bare---touch-is-not-the-fix"><span class="header-section-number">10.4.1</span> Why bare <code>--touch</code> is not the fix</h3>
+<p><code>--touch</code> marks outputs as up to date without running anything, which sounds like exactly what is needed. Run it as it comes and it does too much:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">--touch</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">22</span> of 22 steps <span class="er">(</span><span class="ex">100%</span><span class="kw">)</span> <span class="cf">done</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">-n</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="ex">Nothing</span> to be done <span class="er">(</span><span class="ex">all</span> requested files are present and up to date<span class="kw">)</span><span class="bu">.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Twenty-two of twenty-two. It asserted the figure, the table and the paper along with the simulations are up to date, and there is now nothing left for Snakemake to do. Those are precisely the things you wanted rebuilt: they cost seconds, and rebuilding them is what makes the paper on your disk yours rather than a copy of your coauthor’s.</p>
 </section>
-<section id="the-errors-you-will-see" class="level2" data-number="9.5">
-<h2 data-number="9.5" class="anchored" data-anchor-id="the-errors-you-will-see"><span class="header-section-number">9.5</span> The errors you will see</h2>
-<section id="no-rule-to-produce" class="level3" data-number="9.5.1">
-<h3 data-number="9.5.1" class="anchored" data-anchor-id="no-rule-to-produce"><span class="header-section-number">9.5.1</span> No rule to produce</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">--cores</span> 1 out/coverage-summary.csv</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">MissingRuleException:</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">No</span> rule to produce out/coverage-summary.csv <span class="er">(</span><span class="cf">if</span> <span class="ex">you</span> use input functions make sure that they don<span class="st">'t raise unexpected exceptions).</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>You asked for a file no rule can make. Nine times in ten it is a typo, in the target or in a rule’s <code>input:</code>. Check spelling, check the directory, and check whether wildcards are being read correctly.</p>
-<p>[Details on debugging wildcards.]</p>
-</section>
-<section id="a-job-failed" class="level3" data-number="9.5.2">
-<h3 data-number="9.5.2" class="anchored" data-anchor-id="a-job-failed"><span class="header-section-number">9.5.2</span> A job failed</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">--cores</span> 1 rds/sim/n50_rho0_bayes.rds</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>        <span class="kw">(</span><span class="bu">command</span> exited with non-zero exit code<span class="kw">)</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Shutting</span> down, this might take some time.</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="ex">Exiting</span> because a job execution failed. Look below for error messages</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="ex">Error</span> in rule sim:</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="ex">message:</span> None</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="ex">jobid:</span> 0</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input:</span> sim.R</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="ex">output:</span> rds/sim/n50_rho0_bayes.rds</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="ex">shell:</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        <span class="ex">Rscript</span> sim.R <span class="at">--n</span> 50 <span class="at">--rho</span> 0 <span class="at">--method</span> bayes <span class="at">--out</span> rds/sim/n50_rho0_bayes.rds</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        <span class="kw">(</span><span class="bu">command</span> exited with non-zero exit code<span class="kw">)</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="ex">WorkflowError:</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="ex">At</span> least one job did not complete successfully.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Snakemake reports the rule, the wildcards, and the exact shell command. <strong>Copy that command and run it yourself</strong> — you will get the R error directly, and you can step through the script interactively with the same arguments.</p>
-<p>Two things happened that you did not see. Any output the job had already written was deleted — you get <code>Removing output files of failed job … since they might be corrupted</code>, so a half-written <code>.rds</code> can never be mistaken for a real result. (Here the script died before writing anything, so there was nothing to remove.) The log file, by contrast, was kept: if the rule declared one, the R error message is in it so it is often a good idea to start there.</p>
-<p>The example above is the wildcard problem from <a href="04-wildcards.html" class="quarto-xref"><span>Chapter 4</span></a>: <code>bayes</code> matched <code>{method}</code>, so Snakemake built a perfectly good job for a method that does not exist. <code>wildcard_constraints</code> can turn this into a “no rule to produce” error before anything runs.</p>
-</section>
-<section id="incomplete-files" class="level3" data-number="9.5.3">
-<h3 data-number="9.5.3" class="anchored" data-anchor-id="incomplete-files"><span class="header-section-number">9.5.3</span> Incomplete files</h3>
-<blockquote class="blockquote">
-<p>The files below seem to be incomplete.</p>
-</blockquote>
-<p>A previous run was stopped while a job was part-way through writing its output.</p>
-<p><code>snakemake --rerun-incomplete</code> discards the suspect files and rebuilds them.</p>
+<section id="the-recipe-touch-the-results-build-the-rest" class="level3" data-number="10.4.2">
+<h3 data-number="10.4.2" class="anchored" data-anchor-id="the-recipe-touch-the-results-build-the-rest"><span class="header-section-number">10.4.2</span> The recipe: touch the results, build the rest</h3>
+<p>Be specific. Name the expensive outputs, and leave everything downstream alone:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">--touch</span> <span class="at">--force</span> <span class="va">$(</span><span class="ex">snakemake</span> <span class="at">--summary</span> all <span class="kw">|</span> <span class="fu">awk</span> <span class="st">'{print $1}'</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="st">'\.rds$'</span><span class="va">)</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">18</span> of 18 steps <span class="er">(</span><span class="ex">100%</span><span class="kw">)</span> <span class="cf">done</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> snakemake <span class="at">-n</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="ex">Job</span> stats:</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="ex">job</span>           count</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="ex">----------</span>  <span class="at">-------</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="ex">all</span>               1</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="ex">figure1</span>           1</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="ex">manuscript</span>        1</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="ex">table1</span>            1</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="ex">total</span>             4</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Eighteen touched, and the four jobs that matter are still to do. Then run <code>snakemake</code> normally and the figure, the table and the PDF are built on your machine, in seconds, from the results you were sent.</p>
+<p>Read it inside out: <code>--summary all</code> prints one row per output file the workflow knows about, <code>awk '{print $1}'</code> takes the filename column, and <code>grep '\.rds$'</code> keeps the simulation results while dropping the figures, tables, PDFs and the header line. <code>--touch</code> acts at the jobs to be run, so <code>--force</code> acts on the jobs you name and nothing else.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span><code>--touch</code> is an assertion, not a check
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You are telling Snakemake that files it has never seen are the correct output of the current code. It has no way to verify that, and it will believe you. If your coauthor generated those results with a different version of <code>sim.R</code> than the one you just cloned, the pipeline is now quietly wrong.</p>
+</div>
+</div>
 </section>
 </section>
-<section id="habits-that-prevent-most-of-this" class="level2" data-number="9.6">
-<h2 data-number="9.6" class="anchored" data-anchor-id="habits-that-prevent-most-of-this"><span class="header-section-number">9.6</span> Habits that prevent most of this</h2>
+<section id="try-it" class="level2" data-number="10.5">
+<h2 data-number="10.5" class="anchored" data-anchor-id="try-it"><span class="header-section-number">10.5</span> Try it</h2>
+<p>In <code>examples/04-manuscript</code>, with everything already built:</p>
 <ol type="1">
-<li><strong>List every script as an input.</strong> The one failure mode Snakemake cannot warn you about is the dependency you did not declare.</li>
-<li><strong>Dry-run before long runs.</strong> A minute may save you hours.</li>
-<li><strong>Then smoke-test with a small config.</strong> <code>--config iterations=20</code> finds broken plumbing without simulating anything.</li>
-<li><strong>Give every rule a log.</strong> Debugging a parallel run without logs can be a headache.</li>
-<li><strong>Delete <code>rds/</code> and <code>out/</code> occasionally and rebuild from scratch.</strong> It is the only way to know the pipeline still works end to end — and the thing you are implicitly promising anyone who reads your paper.</li>
+<li>Delete <code>.snakemake/</code> and run <code>snakemake -n</code>. Which of the planned jobs are the expensive ones, and which would have cost you seconds anyway?</li>
+<li>Run bare <code>snakemake --touch</code>, then <code>snakemake -n</code>. Confirm that nothing is left to do.</li>
+<li>Delete <code>.snakemake/</code> again, run the <code>--touch --force</code> recipe, and then <code>snakemake</code>. Four jobs run. Then edit <code>scripts/sim.R</code> and confirm the full cascade comes back.</li>
 </ol>
 
 
@@ -1029,14 +976,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./08-analysis-pipeline.html" class="pagination-link" aria-label="A data analysis pipeline">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">A data analysis pipeline</span></span>
+      <a href="./09-debugging.html" class="pagination-link" aria-label="When things go wrong">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">When things go wrong</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./10-sharing.html" class="pagination-link" aria-label="Sharing results">
-        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Sharing results</span></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav>
 </div> <!-- /content -->

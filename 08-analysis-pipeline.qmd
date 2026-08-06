@@ -8,8 +8,7 @@ source("_common.R")
 Many biostatisticians spend more time on analyses than on simulation studies, and
 the shape of the work is different: instead of a fan-out over a parameter grid, a
 mostly linear chain from a file someone emailed you to a report you send back. The
-Snakemake ideas transfer directly, and one of them --- the report as a rule ---
-addresses a problem specific to this kind of work.
+Snakemake ideas transfer directly..
 
 Move to `examples/05-analysis`. It is a small randomized trial: 200 participants,
 two arms, FEV1 measured at baseline and week 12.
@@ -75,8 +74,7 @@ works, and it has two failure modes that get worse as the project grows.
 
 The first is time. A report that refits everything takes as long as the slowest
 model *every time you fix a typo*, and the temptation is to start caching chunks,
-at which point you no longer know whether the numbers in the output correspond to
-the code in the file.
+which I've had very little luck with.
 
 The second is scope. Rendering becomes all-or-nothing --- you cannot ask for just
 the models --- and the results exist only inside the rendered HTML, so the next
@@ -118,24 +116,9 @@ so the sentence and the table cannot disagree.
 
 ## Models as data
 
-```{r}
-#| echo: false
-#| output: asis
-embed_file("examples/05-analysis/scripts/analysis.R", from = "^specs <- list",
-           to = "^\\}\\)\\)", filename = "scripts/analysis.R (excerpt)")
-```
+This of the models as a step in the pipeline where the input is data and the output is the model results (a different type of data) that can serve as input into the next step. Each model should get its own file.
 
-Two things worth copying here. The model specifications are a named list, so adding
-a sensitivity analysis means adding one line and touching nothing else. And the
-script saves both the fitted objects and a tidy data frame of the estimand --- the
-first for anything you did not anticipate, the second so the report does not need to
-know how to dig a confidence interval out of an `lm`.
-
-```{r}
-#| echo: false
-#| output: asis
-transcript("05-analysis-log.txt")
-```
+[To be continued...]
 
 ## When the data changes
 
@@ -154,7 +137,5 @@ command and a careful look at one log file.
 ## Try it
 
 1. Edit a value in `data/trial.csv` and run `snakemake -n`. What reruns?
-2. Add a rule producing a subgroup analysis by smoking status, and show it in the
-   report.
 3. Delete `rds/clean.rds` but not the things built from it. What does Snakemake
    do, and is that what you expected?

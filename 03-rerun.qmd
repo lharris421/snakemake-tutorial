@@ -64,48 +64,19 @@ transcript("04-cascade.txt")
 (That transcript comes from the larger example of @sec-manuscript, which is why
 there are 22 jobs rather than 4.)
 
-Content is not the only trigger. Snakemake also stores the shell command and the
-parameters used for each output, so editing a rule's command --- not just the
-script it calls --- makes the affected outputs stale too. @sec-debugging covers how
+Content is not the only trigger. Snakemake also stores the shell command used for each output, so editing a rule's command --- not just the
+script it calls --- makes the affected outputs stale too. 
+
+@sec-debugging covers how
 to inspect and override all of this.
 
-::: {.callout-warning}
-## The timestamp really is a gate
 
-Because the check is an *and*, a changed file whose timestamp is not newer than
-the output is invisible: Snakemake never gets as far as comparing the checksum. You
-will not produce that situation by editing a file --- editing sets the timestamp to
-now --- but you can arrive at it by other routes, because several common tools
-preserve timestamps deliberately:
-
-```bash
-cp -p old/sim.R scripts/sim.R      # -p preserves the original mtime
-rsync -a backup/ .              # -a implies -t
-tar xf archive.tar              # restores the archived mtimes
-```
-
-Restore a script from a backup or an archive that way and the pipeline can sit
-there insisting everything is up to date. If you have moved files around by any
-means other than editing them, `touch` the ones you restored, or force the issue
-with `snakemake -R` (@sec-debugging).
-:::
-
-::: {.callout-note}
-## Deleting `.snakemake/` is safe
-
-It is a cache of metadata, not results. Delete it and the next run rebuilds
-everything, because Snakemake no longer has any record of how the existing files
-were made. Add it to `.gitignore` and otherwise ignore it.
-:::
-
-
-::: {.callout-note}
 ## Declare what a script sources
 
 Scripts grow to the point where they share things --- a set of functions, the
 labels and colors several figures use --- and those live in files of their own,
-which is what `R/` is for in @sec-shape. Snakemake has no way to know that a script
-reads another file, so a shared file has to be listed as an input to every rule
+which is what `R/` is for in @sec-shape for shared functions. Snakemake has no way to know that a script
+reads another file unless you tell it, so a shared file has to be listed as an input to every rule
 whose script sources it. An undeclared dependency is the one failure mode Snakemake
 cannot warn you about: edit a shared function and every result built from it stays
 quietly stale.
@@ -117,7 +88,6 @@ separately: editing a hex code plans four jobs and leaves the simulations alone,
 while editing a function plans all twenty-two. Had both lived in one file, the
 color change would have rerun eighteen simulations, because Snakemake cannot tell
 which half of a file you touched.
-:::
 
 ## Try it
 

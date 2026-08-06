@@ -40,8 +40,7 @@ flowchart TB
 ```
 
 **The methods repository is an R package.** `R/` holds the estimators, with the
-usual `DESCRIPTION` and `NAMESPACE`, so it can be installed, tested, versioned and
-cited on its own. `scripts/` holds one script per kind of simulation, each taking
+usual `DESCRIPTION` and `NAMESPACE`, so it can be installed and tested. `scripts/` holds one script per kind of simulation, each taking
 `optparse` flags and writing one `.rds` named for its parameters --- exactly the
 scripts of @sec-rscript, just more of them.
 
@@ -82,7 +81,7 @@ too, so that it can find the package and write its results in the right place.
 ### When you need an f-string, and when you must not {#sec-fstrings}
 
 This is the first rule in the book whose paths are f-strings, and the reason is
-worth understanding, because getting it wrong fails quietly.
+worth understanding.
 
 **In `input:`, `output:`, `log:` and `benchmark:`, braces mean wildcards.**
 Snakemake reads those strings as patterns, so a plain `"{LOC}/rds/x.rds"` does not

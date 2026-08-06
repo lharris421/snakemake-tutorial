@@ -9,7 +9,7 @@ source("_common.R")
 place: you will want 20 while you are debugging and 1000 for the final results, and
 changing that should not mean editing the simulation code.
 
-Move to `examples/03-config`, which puts all of it in one file.
+Move to `examples/03-config`, which puts shared parameters into a single file.
 
 ## config.yaml
 
@@ -33,8 +33,7 @@ and everything in it is available as `config`, a dictionary: `config["iterations
 is `200`. Use `config.get("key", default)` when a setting is optional.
 
 Notice how little is in there. A config is for settings that apply to the project
-as a whole --- `iterations` means the same thing to every rule that computes
-anything.
+as a whole --- `iterations` means the same thing to every simulation.
 
 ## Runs that don't overwrite each other {#sec-iterations-path}
 
@@ -69,43 +68,6 @@ embed_file("examples/03-config/Snakefile", from = "        rds = expand",
            to = "                     method = ", filename = "Snakefile (excerpt)")
 ```
 
-## wildcard_constraints
-
-@sec-wildcards warned that a wildcard matches anything. Constraints fix that:
-
-```{r}
-#| echo: false
-#| output: asis
-embed_file("examples/03-config/Snakefile", from = "^wildcard_constraints:",
-           to = '^    method = ', filename = "Snakefile (excerpt)")
-```
-
-`r"\d+"` is a regular expression matching one or more digits; the `r` prefix marks a
-raw string, so the backslash reaches the regex intact. Declared at the top level
-they apply to every rule, and they can also be attached to a single rule, as
-@sec-manuscript does.
-
-Two reasons to bother:
-
-**Ambiguity.** With unconstrained wildcards there is more than one way to match
-`n{n}_rho{rho}_{method}.rds` against a name containing extra underscores, and
-Snakemake resolves it by its rules rather than yours.
-
-**Failing early.** Without the `\d+` on `{n}`, asking for
-`rds/200/sim/nfifty_rho0_naive.rds` matches quite happily ---
-
-```{.default}
-wildcards: iterations=200, n=fifty, rho=0, method=naive
-```
-
---- and Snakemake goes off and runs `sim.R --n fifty`, which dies inside R however
-long the job takes to get that far. With the constraint, nothing can produce that
-file and you are told so before anything starts.
-
-A misspelled *extension* is a different matter: `n50_rho0_naive.RDS` fails whether
-or not you have constraints, because the pattern ends in a literal `.rds` and
-`.RDS` is not that. Constraints police the wildcards, not the text around them.
-
 ## Overriding from the command line
 
 Any config value can be replaced for a single run with `--config`:
@@ -126,44 +88,9 @@ transcript("03-smoke-vs-full.txt")
 Five seconds against eleven, for a grid that would take considerably longer at the
 iteration counts of a real paper.
 
-::: {.callout-warning}
-## `--config` does not always rebuild what you expect
-
-What an override actually rebuilds depends on how the setting is used, and the two
-cases here behave differently:
-
-- **`--config iterations=20`** asks for *different files*. Eighteen new simulations
-  run; the old ones are left alone.
-- **Dropping a sample size from a rule's `expand()`** is a Snakefile edit rather
-  than a config one, and it reruns no simulations at all --- the remaining results
-  are still perfectly valid. The figure does rerun, with the reason `Set of input
-  files has changed since last execution`, because it is now summarizing twelve
-  files instead of eighteen.
-
-Note that `--config` wants one `key=value` per setting and will not take a list on
-the command line (`--config n=[50,100]` is a parse error on 9.13). Change the grid
-in `config.yaml`, or point `--configfile` at a second YAML file whose values
-override the first.
-
-When you want to force the issue, `snakemake --forcerun sim` reruns every job of
-that rule regardless. See @sec-debugging.
-:::
-
-## Where to draw the line
-
-A useful test: **if changing it changes the results, it belongs in the config; if
-changing it changes what the code does, it belongs in the code.**
-
-Iteration counts and file locations --- config. The definition of the estimator ---
-code. The temptation, once you have a config file, is to make everything
-configurable, and you end up with a 200-line YAML file harder to read than the code
-it configures. The config here has one setting, and it is the one that genuinely
-applies to everything.
-
 ## Try it
 
 1. Run with `--config iterations=20`, then again with `--config iterations=200`.
    What does Snakemake rerun, and why?
-2. Add `1000` to the `n` list in `config.yaml` and run `snakemake -n`.
 3. Delete the `wildcard_constraints` block and ask for
    `rds/sim/n50_rho0_na_ive.rds`. What happens, and what did `{method}` match?

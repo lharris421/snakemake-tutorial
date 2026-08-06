@@ -130,14 +130,28 @@ rm -rf .snakemake
   snakemake -n 2>&1 | filter | first_stats
 } > "$OUT/10-no-metadata.txt"
 
+## Bare --touch asserts every output, including the cheap ones you wanted rebuilt
 {
-  say "snakemake --touch --forcerun \$(snakemake --summary all | awk '{print \$1}' | grep '\\.rds\$')"
-  snakemake --touch --forcerun \
-    $(snakemake --summary all 2>/dev/null | awk '{print $1}' | grep '\.rds$') 2>&1 |
-    filter | grep -E "steps \(100%\) done|touch"
+  say "snakemake --touch"
+  snakemake --touch 2>&1 | filter | grep -E "steps \(100%\) done"
   say "snakemake -n"
   snakemake -n 2>&1 | filter
-} > "$OUT/10-touch-forcerun.txt"
+} > "$OUT/10-touch-everything.txt"
+
+## The recipe: touch only the results.  --force acts on the named targets alone,
+## where --forcerun would propagate downstream and touch the figures too.
+rm -rf .snakemake
+{
+  say "snakemake --touch --force \$(snakemake --summary all | awk '{print \$1}' | grep '\\.rds\$')"
+  snakemake --touch --force \
+    $(snakemake --summary all 2>/dev/null | awk '{print $1}' | grep '\.rds$') 2>&1 |
+    filter | grep -E "steps \(100%\) done"
+  say "snakemake -n"
+  snakemake -n 2>&1 | filter | first_stats
+} > "$OUT/10-touch-results.txt"
+
+## leave the example built, so the checked-out copy is consistent
+snakemake --cores 4 > /dev/null 2>&1
 
 ## ---------------------------------------------------------------- example 05
 cd "$ROOT/examples/05-analysis"

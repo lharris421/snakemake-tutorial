@@ -22,7 +22,7 @@ silently mixes up two scenarios.
 
 Wildcards fix this. Move to `examples/02-wildcards`.
 
-## A wildcard is a hole in a filename
+## A wildcard is a blank space in a filename
 
 ```{r}
 #| echo: false
@@ -41,15 +41,47 @@ This is the mental adjustment that makes Snakemake click. You do not tell it to 
 the simulation eighteen times. You tell it what a result file is *called* as a
 function of its parameters, and then you ask for the files you want.
 
+## wildcard_constraints
+
 ::: {.callout-important}
 ## Wildcards match anything, including nonsense
 
 A wildcard is a regular expression, `.+` by default. Nothing in the rule above says
 `method` has to be `naive` or `split`, so asking for
 `rds/sim/n50_rho0_bayes.rds` produces a perfectly valid job that runs `sim.R
---method bayes` and fails inside R. @sec-config shows how to constrain wildcards,
-and @sec-debugging shows what that failure looks like.
+--method bayes` and fails inside R.
 :::
+
+Constraints fix that:
+
+```{r}
+#| echo: false
+#| output: asis
+embed_file("examples/03-config/Snakefile", from = "^wildcard_constraints:",
+           to = '^    method = ', filename = "Snakefile (excerpt)")
+```
+
+`r"\d+"` is a regular expression matching one or more digits; the `r` prefix marks a
+raw string, so the backslash reaches the regex intact. Declared at the top level
+they apply to every rule, and they can also be attached to a single rule, as
+@sec-manuscript does.
+
+Two reasons to bother:
+
+**Ambiguity.** With unconstrained wildcards there is more than one way to match
+`n{n}_rho{rho}_{method}.rds` against a name containing extra underscores, and
+Snakemake resolves it by its rules rather than yours.
+
+**Failing early.** Without the `\d+` on `{n}`, asking for
+`rds/200/sim/nfifty_rho0_naive.rds` matches quite happily ---
+
+```{.default}
+wildcards: iterations=200, n=fifty, rho=0, method=naive
+```
+
+--- and Snakemake goes off and runs `sim.R --n fifty`, which dies inside R however
+long the job takes to get that far. With the constraint, nothing can produce that
+file and you are told so before anything starts.
 
 ## Naming files so this works
 
@@ -68,7 +100,7 @@ filename is an invitation to trouble.
 
 ## expand()
 
-Something still has to say which eighteen files we want. That is `expand()`:
+Something still has to say which eighteen files we want. That is `expand()` in the figure rule (what actually needs to results):
 
 ```{r}
 #| echo: false
@@ -87,14 +119,14 @@ that one call returns a list of 3 × 3 × 2 = 18 filenames. Those are the inputs
 `[50, 100, 400]` is a list, the same idea as `c(50, 100, 400)` in R, and
 `n = [50, 100, 400]` passes it to `expand()` by name. That is essentially the
 entire Python vocabulary required to use Snakemake: lists, strings in quotes, and
-the occasional dictionary in @sec-config.
+the occasional dictionary in @sec-config (and even that is optional).
 :::
 
 The grid is written out inside the rule that needs it, rather than in variables at
 the top of the file, and that is usually where it belongs: another rule is free to
 sweep a different one, and a supplementary figure covering only the large sample
 sizes would simply expand over fewer. When several rules genuinely share a grid,
-define it once above them --- `N = [50, 100, 400]` --- and use the variable in each.
+define it once above them.
 
 The script on the other end receives all eighteen filenames as arguments and
 stacks them:
@@ -109,7 +141,7 @@ embed_file("examples/02-wildcards/figure.R", from = "^args <- commandArgs",
 Note that `expand()` fills wildcards in, and `{wildcards.n}` reads them back out.
 These are opposite operations, and it is worth being clear about which one you are
 doing: `expand()` appears in the rule that *consumes* many files, and
-`{wildcards.…}` in the rule that *produces* one.
+`{wildcards.…}` in the rule that *produces* them.
 
 ## Running it
 
@@ -160,7 +192,7 @@ This is how you develop. Rather than running the whole grid to find out whether
 your new method works, ask for one small scenario, look at it, and only then let
 the rest go.
 
-This is also extremely powerful, because now if you want a certain simulation... you just ahve to ask for it rather than edit an R file and run it.
+This is also extremely powerful, because now if you want a certain simulation... you just have to ask for it rather than edit an R file and run it.
 
 ## Try it
 

@@ -134,10 +134,10 @@ the flag is called and what a normal value looks like, and you get a script that
 runs unmodified when you source it by hand.
 :::
 
-## One script, one output file
+## Output paths
 
-The last convention, and the one Snakemake actually requires: **a script should
-write to a path it was told, not a path it invented.**
+The last convention: **a script should
+write to a path it was told.**
 
 ```{r}
 #| echo: false
@@ -151,18 +151,17 @@ outputs before running it, but scripts that also work when you run them by hand
 shouldn't count on that.
 
 This is what makes a script composable. `sim.R` does not know it is part of a
-pipeline; it knows how to turn a set of parameters into one file. The Snakefile in
-the next chapter is nothing more than a list of which parameters go with which
-filename.
+pipeline; it knows how to turn a set of parameters into output. The Snakefile in
+the next chapter is nothing more than a list of which parameters (or more generally, inputs) go with which
+outputs.
 
 ## Where the results go
 
 Two decisions that will save you pain later:
 
-**Results are files, and files are named for what produced them.** A file called
+**Results are files, and files should be named for what produced them.** A file called
 `n400_rho80_split.rds` tells you the sample size, the correlation, and the method.
-A file called `results2_final.rds` tells you nothing, and in six months neither
-will you.
+A file called `results2_final.rds` tells you nothing.
 
 **Git is for source, not output.** Commit the scripts and the inputs; let
 everything the code produces be rebuilt. That covers figures and tables as firmly

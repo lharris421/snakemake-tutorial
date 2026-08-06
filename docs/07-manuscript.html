@@ -81,9 +81,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-192c5b54330881b8834634f52bddb120.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-888029900da5f60e0a1580e2221eca5d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-192c5b54330881b8834634f52bddb120.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-4b4444c7fb6c0b71d62132f8c6fbe29d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-82c4ba76db74bc5bcce771225f0a2579.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-4b4444c7fb6c0b71d62132f8c6fbe29d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -421,8 +421,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10-scaling-up.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Scaling up</span></span></a>
+  <a href="./10-sharing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Sharing results</span></span></a>
   </div>
 </li>
       </ul>
@@ -466,6 +466,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<div class="reading-time">
+5 min read
+</div>
 <p>Move to <code>examples/04-manuscript</code>. It is the simulation study of the last three chapters with two things added: rules that turn the eighteen result files into a figure and a table, and a rule that compiles a paper out of them.</p>
 <p>Here is the situation this chapter is about. You are using an editor that rebuilds your PDF every time you save, so the document always matches its LaTeX source. It does not match its <em>figures</em>: <code>out/figure1.pdf</code> was made by some script at some point, and if you change the simulation nothing tells the manuscript about it. The document is only as current as the last time you remembered to rerun things.</p>
 <p>Making the manuscript a rule closes that gap.</p>
@@ -516,7 +519,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>That diagram is not hand-drawn: it is the graph Snakemake reports for this workflow, and you can get one for your own with</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">--rulegraph</span> <span class="kw">|</span> <span class="ex">dot</span> <span class="at">-Tpdf</span> <span class="op">&gt;</span> rules.pdf</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>One node per <em>rule</em>, which is the readable view. <code>snakemake --dag</code> draws one node per <em>job</em> instead, so <code>sim</code> becomes the eighteen separate boxes it really is (<a href="09-debugging.html" class="quarto-xref"><span>Chapter 9</span></a>).</p>
-<p><code>paper.tex</code> itself is only a wrapper — a document class, a preamble, and <code>\input{main.tex}</code> — so that the prose lives in one file and the formatting in another:</p>
+<p><code>paper.tex</code> itself is only a wrapper — a document class, <code>\input{preamble.tex}</code>, and <code>\input{main.tex}</code> — so that the prose lives in one file and the formatting in another:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>paper.tex</strong></pre>
@@ -580,7 +583,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="7.3" class="anchored" data-anchor-id="try-it"><span class="header-section-number">7.3</span> Try it</h2>
 <ol type="1">
 <li>Change the figure’s y-axis label and run <code>snakemake --cores 4</code>. Which jobs run? Which do not, and why not?</li>
-<li>Introduce a deliberate LaTeX error in <code>main.tex</code> and run the build. Where does Snakemake tell you to look, and what is in that file?</li>
 </ol>
 
 

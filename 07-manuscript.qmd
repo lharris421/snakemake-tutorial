@@ -57,7 +57,7 @@ One node per *rule*, which is the readable view. `snakemake --dag` draws one nod
 per *job* instead, so `sim` becomes the eighteen separate boxes it really is
 (@sec-debugging).
 
-`paper.tex` itself is only a wrapper --- a document class, a preamble, and
+`paper.tex` itself is only a wrapper --- a document class, `\input{preamble.tex}`, and
 `\input{main.tex}` --- so that the prose lives in one file and the formatting in
 another:
 
@@ -110,5 +110,3 @@ try again.
 
 1. Change the figure's y-axis label and run `snakemake --cores 4`. Which jobs run?
    Which do not, and why not?
-3. Introduce a deliberate LaTeX error in `main.tex` and run the build. Where does
-   Snakemake tell you to look, and what is in that file?

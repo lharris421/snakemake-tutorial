@@ -81,9 +81,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-192c5b54330881b8834634f52bddb120.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-888029900da5f60e0a1580e2221eca5d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-192c5b54330881b8834634f52bddb120.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-4b4444c7fb6c0b71d62132f8c6fbe29d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-82c4ba76db74bc5bcce771225f0a2579.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-4b4444c7fb6c0b71d62132f8c6fbe29d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -418,8 +418,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10-scaling-up.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Scaling up</span></span></a>
+  <a href="./10-sharing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Sharing results</span></span></a>
   </div>
 </li>
       </ul>
@@ -436,7 +436,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#doing-nothing-quickly" id="toc-doing-nothing-quickly" class="nav-link active" data-scroll-target="#doing-nothing-quickly"><span class="header-section-number">3.1</span> Doing nothing, quickly</a></li>
   <li><a href="#what-counts-as-out-of-date" id="toc-what-counts-as-out-of-date" class="nav-link" data-scroll-target="#what-counts-as-out-of-date"><span class="header-section-number">3.2</span> What counts as out of date</a></li>
-  <li><a href="#try-it" id="toc-try-it" class="nav-link" data-scroll-target="#try-it"><span class="header-section-number">3.3</span> Try it</a></li>
+  <li><a href="#declare-what-a-script-sources" id="toc-declare-what-a-script-sources" class="nav-link" data-scroll-target="#declare-what-a-script-sources"><span class="header-section-number">3.3</span> Declare what a script sources</a></li>
+  <li><a href="#try-it" id="toc-try-it" class="nav-link" data-scroll-target="#try-it"><span class="header-section-number">3.4</span> Try it</a></li>
   </ul>
 </nav>
     </div>
@@ -463,6 +464,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<div class="reading-time">
+5 min read
+</div>
 <p><a href="02-first-snakefile.html" class="quarto-xref"><span>Chapter 2</span></a> ended with a working pipeline. What makes one worth having is not that it runs, but what it does the <em>second</em> time you ask — and, once a project is real, what it decides to leave alone.</p>
 <section id="doing-nothing-quickly" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="doing-nothing-quickly"><span class="header-section-number">3.1</span> Doing nothing, quickly</h2>
@@ -532,54 +536,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="ex">table1</span>            1</span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="ex">total</span>            22</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>(That transcript comes from the larger example of <a href="07-manuscript.html" class="quarto-xref"><span>Chapter 7</span></a>, which is why there are 22 jobs rather than 4.)</p>
-<p>Content is not the only trigger. Snakemake also stores the shell command and the parameters used for each output, so editing a rule’s command — not just the script it calls — makes the affected outputs stale too. <a href="09-debugging.html" class="quarto-xref"><span>Chapter 9</span></a> covers how to inspect and override all of this.</p>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span>The timestamp really is a gate
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Because the check is an <em>and</em>, a changed file whose timestamp is not newer than the output is invisible: Snakemake never gets as far as comparing the checksum. You will not produce that situation by editing a file — editing sets the timestamp to now — but you can arrive at it by other routes, because several common tools preserve timestamps deliberately:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> <span class="at">-p</span> old/sim.R scripts/sim.R      <span class="co"># -p preserves the original mtime</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rsync</span> <span class="at">-a</span> backup/ .              <span class="co"># -a implies -t</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tar</span> xf archive.tar              <span class="co"># restores the archived mtimes</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Restore a script from a backup or an archive that way and the pipeline can sit there insisting everything is up to date. If you have moved files around by any means other than editing them, <code>touch</code> the ones you restored, or force the issue with <code>snakemake -R</code> (<a href="09-debugging.html" class="quarto-xref"><span>Chapter 9</span></a>).</p>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Deleting <code>.snakemake/</code> is safe
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>It is a cache of metadata, not results. Delete it and the next run rebuilds everything, because Snakemake no longer has any record of how the existing files were made. Add it to <code>.gitignore</code> and otherwise ignore it.</p>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Declare what a script sources
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Scripts grow to the point where they share things — a set of functions, the labels and colors several figures use — and those live in files of their own, which is what <code>R/</code> is for in <a href="02-first-snakefile.html#sec-shape" class="quarto-xref"><span>Section 2.6</span></a>. Snakemake has no way to know that a script reads another file, so a shared file has to be listed as an input to every rule whose script sources it. An undeclared dependency is the one failure mode Snakemake cannot warn you about: edit a shared function and every result built from it stays quietly stale.</p>
-<p>That is also an argument for keeping such files narrow, because the declaration is all-or-nothing. In the larger example of <a href="07-manuscript.html" class="quarto-xref"><span>Chapter 7</span></a> the simulation functions are in <code>R/</code> and the plot labels and colors are in <code>scripts/setup.R</code>, listed separately: editing a hex code plans four jobs and leaves the simulations alone, while editing a function plans all twenty-two. Had both lived in one file, the color change would have rerun eighteen simulations, because Snakemake cannot tell which half of a file you touched.</p>
-</div>
-</div>
+<p>Content is not the only trigger. Snakemake also stores the shell command used for each output, so editing a rule’s command — not just the script it calls — makes the affected outputs stale too.</p>
+<p><a href="09-debugging.html" class="quarto-xref"><span>Chapter 9</span></a> covers how to inspect and override all of this.</p>
 </section>
-<section id="try-it" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="try-it"><span class="header-section-number">3.3</span> Try it</h2>
+<section id="declare-what-a-script-sources" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="declare-what-a-script-sources"><span class="header-section-number">3.3</span> Declare what a script sources</h2>
+<p>Scripts grow to the point where they share things — a set of functions, the labels and colors several figures use — and those live in files of their own, which is what <code>R/</code> is for in <a href="02-first-snakefile.html#sec-shape" class="quarto-xref"><span>Section 2.6</span></a> for shared functions. Snakemake has no way to know that a script reads another file unless you tell it, so a shared file has to be listed as an input to every rule whose script sources it. An undeclared dependency is the one failure mode Snakemake cannot warn you about: edit a shared function and every result built from it stays quietly stale.</p>
+<p>That is also an argument for keeping such files narrow, because the declaration is all-or-nothing. In the larger example of <a href="07-manuscript.html" class="quarto-xref"><span>Chapter 7</span></a> the simulation functions are in <code>R/</code> and the plot labels and colors are in <code>scripts/setup.R</code>, listed separately: editing a hex code plans four jobs and leaves the simulations alone, while editing a function plans all twenty-two. Had both lived in one file, the color change would have rerun eighteen simulations, because Snakemake cannot tell which half of a file you touched.</p>
+</section>
+<section id="try-it" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="try-it"><span class="header-section-number">3.4</span> Try it</h2>
 <ol type="1">
 <li>Delete <code>out/</code> and rebuild. Time it. Then delete <code>rds/</code> as well and compare.</li>
 <li>Change the <code>n &lt;- 100</code> line in <code>sim.R</code> to <code>n &lt;- 200</code> and run <code>snakemake -n</code>. Which jobs are planned, and why?</li>

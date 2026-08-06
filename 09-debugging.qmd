@@ -25,9 +25,9 @@ Each planned job comes with a `reason:` line:
 transcript("04-reason.txt")
 ```
 
-## Why is the status of each file?
+## What is the status of each file?
 
-@sec-rerun covers what makes an output stale. `--summary` lets you inspect the files statuses, one row per file Snakemake knows about:
+`--summary` lets you inspect the files statuses, one row per file Snakemake knows about:
 
 ```{r}
 #| echo: false
@@ -48,10 +48,10 @@ recorded provenance still matches.
 | `snakemake -F` | force everything, from scratch |
 | `snakemake --delete-all-output` | delete everything the workflow produced |
 
-`-R` is the one you will use. It is the right response to "I changed something
+`-R` is what you can use when you say "I changed something
 Snakemake cannot see". E.g. a package upgrade (more on this in the future).
 
-## Making it stop rerunning
+## Making it not rerun
 
 The mirror image: files are current but Snakemake wants to rebuild them, usually
 because they were copied from somewhere or restored from a backup.
@@ -64,6 +64,10 @@ snakemake --touch
 know the files are fine, and note that you are making an assertion Snakemake cannot
 check.
 
+The case where you will actually want it is results that arrived from a
+collaborator without the metadata that explains them (`.snakefile`), and there `--touch` on its
+own is not enough --- @sec-sharing has the recipe.
+
 `--rerun-triggers` narrows what Snakemake is allowed to notice. All five signals
 are on by default:
 
@@ -72,20 +76,20 @@ snakemake --rerun-triggers code input mtime params software-env   # the default
 snakemake --rerun-triggers input                                  # only file contents
 ```
 
-which is occasionally useful --- dropping `params`, say, when you are sweeping a
-setting that does not really affect the output and do not want the whole grid
-rebuilding each time.
+which is occasionally useful.
 
-::: {.callout-note}
-## `--rerun-triggers mtime` is not `make`
+[to be continued...]
 
-Snakemake's own help text offers `--rerun-triggers mtime` as "the traditional way
-of just considering file modification dates". It does not behave that way: on
-9.13, `touch`ing an input under `--rerun-triggers mtime` still does not cause a
-rerun, because the checksum comparison described in @sec-rerun applies
-regardless. If you want a rebuild, ask for one with `-R` rather than trying to
-manufacture one through timestamps.
-:::
+<!-- ::: {.callout-note} -->
+<!-- ## `--rerun-triggers mtime` is not `make` -->
+
+<!-- Snakemake's own help text offers `--rerun-triggers mtime` as "the traditional way -->
+<!-- of just considering file modification dates". It does not behave that way: on -->
+<!-- 9.13, `touch`ing an input under `--rerun-triggers mtime` still does not cause a -->
+<!-- rerun, because the checksum comparison described in @sec-rerun applies -->
+<!-- regardless. If you want a rebuild, ask for one with `-R` rather than trying to -->
+<!-- manufacture one through timestamps. -->
+<!-- ::: -->
 
 ## The errors you will see
 
@@ -98,10 +102,9 @@ transcript("09-missing-rule.txt")
 ```
 
 You asked for a file no rule can make. Nine times in ten it is a typo, in the target
-or in a rule's `input:`. Check spelling, check the directory, and check whether a
-`wildcard_constraints` is stopping the match --- a constraint of `\d+` on `{n}` will
-make `nfifty_rho0_naive.rds` unmatchable, which is the point, but the message does
-not say so.
+or in a rule's `input:`. Check spelling, check the directory, and check whether wildcards are being read correctly.
+
+[Details on debugging wildcards.]
 
 ### A job failed
 
@@ -119,70 +122,29 @@ Two things happened that you did not see. Any output the job had already written
 was deleted --- you get `Removing output files of failed job … since they might be
 corrupted`, so a half-written `.rds` can never be mistaken for a real result. (Here
 the script died before writing anything, so there was nothing to remove.) The log
-file, by contrast, was kept: if the rule declared one, the R error message is in it.
+file, by contrast, was kept: if the rule declared one, the R error message is in it so it is often a good idea to start there.
 
 The example above is the wildcard problem from @sec-wildcards: `bayes` matched
 `{method}`, so Snakemake built a perfectly good job for a method that does not
-exist. `wildcard_constraints` turns this into a "no rule to produce" error before
+exist. `wildcard_constraints` can turn this into a "no rule to produce" error before
 anything runs.
 
 ### Incomplete files
 
 > The files below seem to be incomplete.
 
-A previous run was stopped while a job was part-way through writing its output ---
-by `Ctrl-C` as readily as by a hard kill, since `Ctrl-C` terminates running jobs
-rather than waiting for them (@sec-parallel). `snakemake --rerun-incomplete`
-discards the suspect files and rebuilds them.
+A previous run was stopped while a job was part-way through writing its output.
 
-### Directory cannot be locked
-
-> Error: Directory cannot be locked.
-
-Either another Snakemake is running in this directory --- check before you assume it
-is not --- or one was killed without cleaning up. If you are sure nothing is
-running, `snakemake --unlock`.
-
-### The ILP solver warning
-
-> Failed to solve scheduling problem with ILP solver, falling back to greedy
-> scheduler.
-
-Harmless. Snakemake schedules jobs optimally when it can find a working solver, and
-falls back to a greedy scheduler when it cannot; the workflow runs correctly either
-way. It shows up on some Homebrew and conda installs. Ignore it, or install
-`pulp` properly if the noise bothers you.
-
-## Reading a workflow you did not write
-
-```{r}
-#| echo: false
-#| output: asis
-transcript("09-list.txt")
-```
-
-`--list` shows the rule names. Then:
-
-```bash
-snakemake --dag | dot -Tpdf > dag.pdf          # the job graph, one node per job
-snakemake --rulegraph | dot -Tpdf > rules.pdf  # the rule graph, one node per rule
-```
-
-Both need [Graphviz](https://graphviz.org/) for `dot`. For a grid of any size, use
-`--rulegraph`: `--dag` draws a node per *job*, which for the example in
-@sec-manuscript means twenty-two of them.
-
-Failing that, read `rule all` first. It tells you what the project is for, and
-everything else follows from it.
+`snakemake --rerun-incomplete` discards the suspect files and rebuilds them.
 
 ## Habits that prevent most of this
 
 1. **List every script as an input.** The one failure mode Snakemake cannot warn
    you about is the dependency you did not declare.
-2. **Dry-run before long runs.** Twenty seconds against three hours.
-3. **Smoke-test with a small config.** `--config iterations=20` finds broken
+2. **Dry-run before long runs.** A minute may save you hours.
+3. **Then smoke-test with a small config.** `--config iterations=20` finds broken
    plumbing without simulating anything.
-4. **Give every rule a log.** Debugging a parallel run without logs is guesswork.
+4. **Give every rule a log.** Debugging a parallel run without logs can be a headache.
 5. **Delete `rds/` and `out/` occasionally and rebuild from scratch.** It is the
    only way
    to know the pipeline still works end to end --- and the thing you are implicitly

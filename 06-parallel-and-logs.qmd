@@ -38,12 +38,17 @@ rule sim:
 ```
 
 Then `--cores 8` runs two such jobs at a time rather than eight.
+
+Sometimes if each iteration is very expensive, you may want to parallelize over iterations. This sort of mechanism can be found in [University of Iowa
+Biostatistics HPC tutorial](https://iowabiostat.github.io/hpc/).
 :::
+
+
 
 ## Logs
 
 Once eighteen jobs are interleaving their output, the terminal becomes unreadable,
-and the run you actually want to look at scrolled past an hour ago. The `log:`
+and the run you actually want to is buried. The `log:`
 directive gives each job its own file:
 
 ```{r}
@@ -82,7 +87,7 @@ scrollback of a parallel run.
 
 Outputs of a failed job are removed so that a half-written file is never mistaken
 for a real one. Logs are deliberately kept, because they are the evidence. This also
-means a log from a successful run sticks around until the job runs again.
+means a log from a run sticks around until the job runs again.
 :::
 
 ## Benchmarks
@@ -140,6 +145,5 @@ which discards the suspect files and rebuilds them.
 
 1. In `examples/03-config`, run with `--cores 1`, then `--cores 4`, and compare.
    Why is the speedup less than four?
-2. Delete one simulation's `.rds` file and run again. How many jobs run?
 3. Add a `log:` directive to the `figure` rule in `examples/03-config` and check
-   that `ggsave`'s output ends up in it.
+   that `ggsave`'s message ends up in it.

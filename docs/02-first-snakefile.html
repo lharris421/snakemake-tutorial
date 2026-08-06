@@ -81,9 +81,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-192c5b54330881b8834634f52bddb120.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-888029900da5f60e0a1580e2221eca5d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-192c5b54330881b8834634f52bddb120.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-4b4444c7fb6c0b71d62132f8c6fbe29d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-82c4ba76db74bc5bcce771225f0a2579.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-4b4444c7fb6c0b71d62132f8c6fbe29d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -421,8 +421,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10-scaling-up.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Scaling up</span></span></a>
+  <a href="./10-sharing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Sharing results</span></span></a>
   </div>
 </li>
       </ul>
@@ -470,6 +470,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<div class="reading-time">
+13 min read
+</div>
 <p>Start in <code>examples/01-first-rules</code>. It contains two R scripts — <code>sim.R</code>, which runs the simulation for one method, and <code>figure.R</code>, which turns simulation output into a figure — and a file called <code>Snakefile</code>.</p>
 <p>By hand, building the figure means running three commands in the right order:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> sim.R naive rds/sim-naive.rds</span>
@@ -652,7 +655,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input:</span> figure.R, rds/sim-naive.rds, rds/sim-split.rds</span>
 <span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>    <span class="ex">output:</span> out/figure1.pdf</span>
 <span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>    <span class="ex">jobid:</span> 1</span>
-<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Missing output files: out/figure1.pdf<span class="kw">;</span> <span class="ex">Input</span> files updated by another job: rds/sim-split.rds, rds/sim-naive.rds</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>    <span class="ex">reason:</span> Missing output files: out/figure1.pdf<span class="kw">;</span> <span class="ex">Input</span> files updated by another job: rds/sim-naive.rds, rds/sim-split.rds</span>
 <span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>    <span class="ex">resources:</span> tmpdir=/var/folders/gz/hbrw64n97wb0vy5prhnxst400000gp/T</span>
 <span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a><span class="ex">wrote</span> out/figure1.pdf </span>
 <span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a></span>
@@ -675,14 +678,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="2.5" class="anchored" data-anchor-id="building-one-thing"><span class="header-section-number">2.5</span> Building one thing</h2>
 <p>You can also name a target directly, which is invaluable when you are developing and want to check one piece:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">--cores</span> 1 rds/sim-naive.rds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Snakemake finds the rule that can produce that file, builds whatever it needs, and stops. You can also name a <em>rule</em> — <code>snakemake --cores 1 figure</code> — which asks for that rule’s outputs.</p>
-<p>Neither form cares about <code>rule all</code>. A rule that nothing in <code>rule all</code> reaches is still perfectly buildable by naming it, which is how a half-finished piece of a project gets exercised before it is wired into the paper.</p>
-<p>The one restriction is that <strong>a rule whose output contains a wildcard cannot be named</strong> — Snakemake would have no way to know which values you meant:</p>
+<p>Snakemake finds the rule that can produce that file, builds whatever it needs, and stops. You can also name a <em>rule</em> — <code>snakemake --cores 1 figure</code> — which asks for that rule’s outputs. The one restriction is that <strong>a rule whose output contains a wildcard cannot be named</strong> — Snakemake would have no way to know which values you meant:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>$ snakemake --cores 1 sim</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>WorkflowError:</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>Target rules may not contain wildcards. Please specify concrete files or a rule</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>without wildcards at the command line …</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Name a file instead, and the wildcards come from the filename as usual:</p>
+<p>So name the file instead, and the wildcards come from the filename as usual:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">--cores</span> 1 rds/200/sim/n50_rho0_naive.rds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="sec-shape" class="level2" data-number="2.6">
@@ -702,27 +703,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  rds/               &lt;- computed results</span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  out/               &lt;- figures and tables</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Three of those deserve to be stated as rules rather than suggestions.</p>
-<p><strong>One Snakefile, at the root.</strong> Not one per subdirectory. The Snakefile is the only place that describes how the pieces of the project fit together, so a newcomer — a coauthor, a reviewer, you in a year — has exactly one file to open to find out what this project builds and what it builds it from. Snakemake does let you split rules across files with <code>include:</code>, and that is worth reaching for once a single file becomes genuinely unwieldy, but the default should be one file you can read top to bottom.</p>
-<p><strong><code>rds/</code> holds what the pipeline computes.</strong> Simulation output, fitted models, cleaned data — the objects that took time to produce and that everything else is derived from. They are serialized R objects, hence the name; use whatever name you like, but use one directory.</p>
+<p><strong>One Snakefile, at the root.</strong> Not one per subdirectory. The Snakefile is the only place that describes how the pieces of the project fit together, so a newcomer — a coauthor, a reviewer, you in a year — has exactly one file to open to find out what this project builds and what it builds it from. Snakemake does let you split rules across files with <code>include:</code>, and that is worth reaching for once a single file becomes genuinely unwieldy.</p>
+<p><strong><code>rds/</code> holds what the pipeline computes.</strong> Simulation output, fitted models, cleaned data — the objects that took time to produce and that everything else is derived from. I save results as <code>.rds</code> files, hence the name.</p>
 <p><strong><code>out/</code> holds what a human looks at.</strong> Figures and tables: the things that end up in the manuscript or the report.</p>
-<p>The reason to split these rather than pile everything into one <code>results/</code> folder is that the two halves behave completely differently. <code>rds/</code> is expensive, is reused across a paper and a talk and a grant renewal, and may take days to regenerate — it is the thing worth backing up and worth sending to a coauthor. <code>out/</code> is cheap: delete it and <code>snakemake</code> puts it back in seconds, from the contents of <code>rds/</code>. Once they are separate directories you can treat them differently, and <a href="10-scaling-up.html" class="quarto-xref"><span>Chapter 10</span></a> does exactly that.</p>
-<p>The corollary is that anything <em>not</em> in <code>rds/</code> or <code>out/</code> is either code, settings, or something a human wrote. That is a useful thing to be able to say about a directory — and it is what makes the next rule easy to apply.</p>
+<p>The reason to split these rather than pile everything into one <code>results/</code> folder is that the two halves behave completely differently. <code>rds/</code> is expensive, is reused across a paper and a talk and a grant renewal, and may take days to regenerate — it is the thing worth backing up and worth sending to a coauthor. <code>out/</code> is cheap: delete it and <code>snakemake</code> puts it back in seconds, from the contents of <code>rds/</code>. Once they are separate directories you can treat them differently, and <a href="10-sharing.html" class="quarto-xref"><span>Chapter 10</span></a> does exactly that: <code>rds/</code> is the half you hand to a coauthor.</p>
 <p><strong>Neither <code>rds/</code> nor <code>out/</code> is tracked by git.</strong> Not because they are large, or binary, or likely to go stale — those are consequences, and reasoning from them means relitigating the question for every new kind of file. The rule is simpler than that:</p>
 <blockquote class="blockquote">
 <p>Git is for source, not output.</p>
 </blockquote>
 <p>Source is what a person wrote: the scripts, the Snakefile, the config, the <code>.tex</code> files. Everything in <code>rds/</code> and <code>out/</code> was produced by running that source, so none of it belongs in the repository.</p>
-<div class="code-with-filename">
-<div class="code-with-filename-file">
-<pre><strong>.gitignore</strong></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" data-filename=".gitignore"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>rds/</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>out/</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>.snakemake/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Stated that way it also settles the case people otherwise talk themselves out of. A figure is small and it is genuinely convenient to look at a PDF on GitHub — but size has nothing to do with whether something is source, and <code>out/figure1.pdf</code> is as much an output as a four hundred megabyte <code>.rds</code>. If you want to see the figures, run <code>snakemake</code>. It takes seconds, and what you get is guaranteed to match the code you are looking at.</p>
-<p>The one thing this costs you is that a fresh clone cannot show anybody a result until it has been rebuilt. When the rebuild takes days rather than seconds that is a real cost, and <a href="10-scaling-up.html" class="quarto-xref"><span>Chapter 10</span></a> deals with it — by sharing <code>rds/</code> outside of git, not by committing it.</p>
+<p>Stated that way it also settles the case people otherwise talk themselves out of. A figure is small and it is genuinely convenient to look at a PDF on GitHub — but size has nothing to do with whether something is source, and <code>out/figure1.pdf</code> is as much an output as a four hundred megabyte <code>.rds</code>. If you want to see the figures, run <code>snakemake</code>. It takes seconds, and what you get is guaranteed to match the code you are looking at. My only exception is if the final paper / presenation on github serves as dissemination and is essentially fixed.</p>
+<p>The one thing this costs you is that a fresh clone cannot show anybody a result until it has been rebuilt. When the rebuild takes days rather than seconds that is a real cost, and the answer is to share <code>rds/</code> outside of git rather than to commit it — which is a topic of its own, and <a href="10-sharing.html" class="quarto-xref"><span>Chapter 10</span></a> is where it is dealt with.</p>
 </section>
 <section id="try-it" class="level2" data-number="2.7">
 <h2 data-number="2.7" class="anchored" data-anchor-id="try-it"><span class="header-section-number">2.7</span> Try it</h2>

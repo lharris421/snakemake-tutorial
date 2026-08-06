@@ -81,9 +81,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-192c5b54330881b8834634f52bddb120.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-888029900da5f60e0a1580e2221eca5d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-192c5b54330881b8834634f52bddb120.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-4b4444c7fb6c0b71d62132f8c6fbe29d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-82c4ba76db74bc5bcce771225f0a2579.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-4b4444c7fb6c0b71d62132f8c6fbe29d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -421,8 +421,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10-scaling-up.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Scaling up</span></span></a>
+  <a href="./10-sharing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Sharing results</span></span></a>
   </div>
 </li>
       </ul>
@@ -443,7 +443,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#what-we-build" id="toc-what-we-build" class="nav-link" data-scroll-target="#what-we-build">What we build</a></li>
   <li><a href="#installing-snakemake" id="toc-installing-snakemake" class="nav-link" data-scroll-target="#installing-snakemake">Installing Snakemake</a></li>
   <li><a href="#getting-the-examples" id="toc-getting-the-examples" class="nav-link" data-scroll-target="#getting-the-examples">Getting the examples</a></li>
-  <li><a href="#acknowledgments" id="toc-acknowledgments" class="nav-link" data-scroll-target="#acknowledgments">Acknowledgments</a></li>
+  <li><a href="#acknowledgments-and-scope" id="toc-acknowledgments-and-scope" class="nav-link" data-scroll-target="#acknowledgments-and-scope">Acknowledgments and Scope</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -486,6 +486,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="preface" class="level1 unnumbered">
 <h1 class="unnumbered">Preface</h1>
+<div class="reading-time">
+6 min read
+</div>
 <p>Somewhere on your hard drive there is a folder with a paper in it, and in that folder there is a file called <code>figure1.pdf</code>.</p>
 <p>Where did it come from? Which script made it? Was that script the current version of the script, or the one from before you fixed the bug in the data-generating function? If a reviewer asks you to change the sample sizes from 50, 100 and 400 to 50, 100, 400 and 1000, how many things do you have to remember to rerun, and in what order, before the number in the abstract is right again?</p>
 <p>Most of us answer these questions with memory and discipline. Both work fine until the project gets big, or a coauthor touches it, or you come back to it after eight months. This tutorial is about answering them with a file instead.</p>
@@ -500,17 +503,17 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>This tutorial reflects a combination of snakemake best practices any my own personal experiences. It also is also not comprehensive, certainly not in all that is possible with snakemake (which I have just begun to scratch the surface on) but even in what I have experimented with. It is meant to hit on what I see is an important foundation to get your creative juices flowing, so you can see how powerful snakemake is and imagine that how much further you can take it than what is introduced here.</p>
+<p>This tutorial reflects a combination of snakemake best practices and my own personal experiences. It also is also not comprehensive, certainly not in all that is possible with snakemake (which I have just begun to scratch the surface on) but even in what I have experimented with. It is meant to hit on what I see is an important foundation to get your creative juices flowing, so you can see how powerful snakemake is and imagine that how much further you can take it than what is introduced here.</p>
 </div>
 </div>
 <section id="who-this-is-for" class="level2">
 <h2 class="anchored" data-anchor-id="who-this-is-for">Who this is for</h2>
-<p>Statisticians and biostatisticians who write R, run simulations, and produce manuscripts or analysis reports. You should be comfortable in R. You do <strong>not</strong> need to know Python (Snakemake is written in Python, and its files are Python, but you will need about five minutes’ worth of it, all of which is explained), and you do not need to have used <code>make</code> or any other build tool.</p>
-<p>Everything here runs on a laptop. However, one of Snakemake’s (many) party tricks is that the same workflow can be dispatched to a cluster by adding a configuration file and changing nothing else, but that is out of scope; <a href="10-scaling-up.html#sec-next" class="quarto-xref"><span>Where to go next</span></a> points at where to read about it when you need it.</p>
+<p>Anyone who writes R, run simulations, and produce manuscripts or analysis reports. You should be comfortable in R. You do <strong>not</strong> need to know Python (Snakemake is written in Python, and its files are Python, but you will need about five minutes’ worth of it, all of which is explained), and you do not need to have used <code>make</code> or any other build tool.</p>
+<p>Everything here runs on a laptop. However, one of Snakemake’s (many) party tricks is that the same workflow can be dispatched to a cluster rather easily, but that is out of scope here. See <a href="https://iowabiostat.github.io/hpc/">University of Iowa Biostatistics HPC tutorial</a>.</p>
 </section>
 <section id="what-we-build" class="level2">
 <h2 class="anchored" data-anchor-id="what-we-build">What we build</h2>
-<p>One example runs through most of the book. It is a small simulation study of a problem every biostatistician has been asked about: what happens to confidence intervals when the model was chosen using the same data.</p>
+<p>One example runs through most of the book. It is a small simulation study of a problem you may have been asked about: what happens to confidence intervals when the model was chosen using the same data.</p>
 <p>In this example we will: generate data, select variables by forward selection, and compare the intervals you get by naively refitting against the intervals you get by splitting the sample. Then we compute this over a grid of sample sizes and correlation levels, turn the results into a figure and a table, and compile the whole thing into a manuscript — so that changing one line of the simulation code and typing <code>snakemake</code> rebuilds the PDF, correctly, every time.</p>
 <p>By the end the pipeline looks like this:</p>
 <div class="cell" data-layout-align="center">
@@ -531,7 +534,7 @@ Note
 </div>
 </div>
 </div>
-<p><a href="08-analysis-pipeline.html" class="quarto-xref"><span>8&nbsp; A data analysis pipeline</span></a> then applies the same ideas to a piece of applied collaborative work — raw CSV, cleaning, models, Table 1, rendered report — for readers whose focus is analysis rather than methods research (most of us). I focus on the manuscript pipeline here because it parallels where I learned Snakemake, in my dissertation work.</p>
+<p><a href="08-analysis-pipeline.html" class="quarto-xref"><span>8&nbsp; A data analysis pipeline</span></a> then applies the same ideas to a piece of applied collaborative work — raw CSV, cleaning, models, Table 1, rendered report — for readers whose focus is analysis rather than methods research (most of us). I focus on the manuscript pipeline here because it parallels where I learned to use Snakemake but the idea of <a href="08-analysis-pipeline.html" class="quarto-xref"><span>8&nbsp; A data analysis pipeline</span></a> is that the same ideas transfer.</p>
 </section>
 <section id="installing-snakemake" class="level2">
 <h2 class="anchored" data-anchor-id="installing-snakemake">Installing Snakemake</h2>
@@ -549,9 +552,11 @@ Note
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> snakemake-tutorial/examples/01-first-rules</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">snakemake</span> <span class="at">--cores</span> 2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="acknowledgments" class="level2">
-<h2 class="anchored" data-anchor-id="acknowledgments">Acknowledgments</h2>
-<p>The format and spirit of this tutorial are modeled on the <a href="https://iowabiostat.github.io/hpc/">University of Iowa Biostatistics HPC tutorial</a> by Patrick Breheny and Grant Brown, whose final chapter on Snakemake is the seed this grew from. The manuscript structure in <a href="07-manuscript.html" class="quarto-xref"><span>7&nbsp; Building a manuscript</span></a> follows the conventions in Patrick Breheny’s <a href="https://github.com/pbreheny/manuscript-template">manuscript template</a>.</p>
+<section id="acknowledgments-and-scope" class="level2">
+<h2 class="anchored" data-anchor-id="acknowledgments-and-scope">Acknowledgments and Scope</h2>
+<p>The format and spirit of this tutorial are modeled on the <a href="https://iowabiostat.github.io/hpc/">University of Iowa Biostatistics HPC tutorial</a> by Patrick Breheny and Grant Brown, whose final chapter on Snakemake is the seed this grew from. The manuscript structure in <a href="07-manuscript.html" class="quarto-xref"><span>7&nbsp; Building a manuscript</span></a> follows the conventions in Patrick Breheny’s <a href="https://github.com/pbreheny/manuscript-template">manuscript template</a> and the general project workflow I’d suggest follows Iowa Biostat’s project <a href="https://github.com/IowaBiostat/project-workflow/tree/main/example-project">workflow template</a>.</p>
+<p>This points to the fact that there are a number of great resources that already touch on using snakemake in practice. The goal of this tutorial is to help build a solid snakemake foundation rather than delve into all the intricacies.</p>
+<p>I eventually plan to compile more complex examples of how to use snakemake… but I first need to decide which are generally useful.</p>
 
 
 </section>

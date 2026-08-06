@@ -36,7 +36,7 @@ book:
     - part: "In practice"
       chapters:
         - 09-debugging.qmd
-        - 10-scaling-up.qmd
+        - 10-sharing.qmd
 
 format:
   html:
@@ -48,6 +48,9 @@ format:
     code-link: false
     toc-depth: 3
     fig-align: center
+
+filters:
+  - tools/reading-time.lua
 
 execute:
   freeze: false

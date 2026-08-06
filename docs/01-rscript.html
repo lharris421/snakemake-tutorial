@@ -81,9 +81,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-192c5b54330881b8834634f52bddb120.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-888029900da5f60e0a1580e2221eca5d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-192c5b54330881b8834634f52bddb120.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-4b4444c7fb6c0b71d62132f8c6fbe29d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-82c4ba76db74bc5bcce771225f0a2579.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-4b4444c7fb6c0b71d62132f8c6fbe29d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -418,8 +418,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10-scaling-up.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Scaling up</span></span></a>
+  <a href="./10-sharing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Sharing results</span></span></a>
   </div>
 </li>
       </ul>
@@ -438,7 +438,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#rscript" id="toc-rscript" class="nav-link" data-scroll-target="#rscript"><span class="header-section-number">1.2</span> Rscript</a></li>
   <li><a href="#taking-arguments" id="toc-taking-arguments" class="nav-link" data-scroll-target="#taking-arguments"><span class="header-section-number">1.3</span> Taking arguments</a></li>
   <li><a href="#optparse" id="toc-optparse" class="nav-link" data-scroll-target="#optparse"><span class="header-section-number">1.4</span> optparse</a></li>
-  <li><a href="#one-script-one-output-file" id="toc-one-script-one-output-file" class="nav-link" data-scroll-target="#one-script-one-output-file"><span class="header-section-number">1.5</span> One script, one output file</a></li>
+  <li><a href="#output-paths" id="toc-output-paths" class="nav-link" data-scroll-target="#output-paths"><span class="header-section-number">1.5</span> Output paths</a></li>
   <li><a href="#where-the-results-go" id="toc-where-the-results-go" class="nav-link" data-scroll-target="#where-the-results-go"><span class="header-section-number">1.6</span> Where the results go</a></li>
   </ul>
 </nav>
@@ -466,6 +466,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<div class="reading-time">
+7 min read
+</div>
 <p>Snakemake does not run R code. It runs <em>commands</em>, and it decides when to run them. So before any of it is useful, your analysis has to be something you can start from a terminal without clicking anything — and, ideally, something you can point at different parameter values without editing the file.</p>
 <p>This chapter has nothing to do with Snakemake. If you already write scripts that take arguments and save their output to a file you name, skip to <a href="02-first-snakefile.html" class="quarto-xref"><span>Chapter 2</span></a>.</p>
 <section id="interactive-work-is-not-reproducible" class="level2" data-number="1.1">
@@ -550,9 +553,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="one-script-one-output-file" class="level2" data-number="1.5">
-<h2 data-number="1.5" class="anchored" data-anchor-id="one-script-one-output-file"><span class="header-section-number">1.5</span> One script, one output file</h2>
-<p>The last convention, and the one Snakemake actually requires: <strong>a script should write to a path it was told, not a path it invented.</strong></p>
+<section id="output-paths" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="output-paths"><span class="header-section-number">1.5</span> Output paths</h2>
+<p>The last convention: <strong>a script should write to a path it was told.</strong></p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>sim.R (excerpt)</strong></pre>
@@ -562,12 +565,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"wrote"</span>, opt<span class="sc">$</span>out, <span class="st">"-- coverage:"</span>, <span class="fu">round</span>(<span class="fu">mean</span>(res<span class="sc">$</span>covered), <span class="dv">3</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Note the <code>dir.create()</code>. Snakemake creates the directories for a rule’s declared outputs before running it, but scripts that also work when you run them by hand shouldn’t count on that.</p>
-<p>This is what makes a script composable. <code>sim.R</code> does not know it is part of a pipeline; it knows how to turn a set of parameters into one file. The Snakefile in the next chapter is nothing more than a list of which parameters go with which filename.</p>
+<p>This is what makes a script composable. <code>sim.R</code> does not know it is part of a pipeline; it knows how to turn a set of parameters into output. The Snakefile in the next chapter is nothing more than a list of which parameters (or more generally, inputs) go with which outputs.</p>
 </section>
 <section id="where-the-results-go" class="level2" data-number="1.6">
 <h2 data-number="1.6" class="anchored" data-anchor-id="where-the-results-go"><span class="header-section-number">1.6</span> Where the results go</h2>
 <p>Two decisions that will save you pain later:</p>
-<p><strong>Results are files, and files are named for what produced them.</strong> A file called <code>n400_rho80_split.rds</code> tells you the sample size, the correlation, and the method. A file called <code>results2_final.rds</code> tells you nothing, and in six months neither will you.</p>
+<p><strong>Results are files, and files should be named for what produced them.</strong> A file called <code>n400_rho80_split.rds</code> tells you the sample size, the correlation, and the method. A file called <code>results2_final.rds</code> tells you nothing.</p>
 <p><strong>Git is for source, not output.</strong> Commit the scripts and the inputs; let everything the code produces be rebuilt. That covers figures and tables as firmly as it covers a 200 MB <code>.rds</code> file — a figure is output no matter how small it is.</p>
 <p><strong>Computed results and finished products live in separate directories.</strong> Every example in this book writes serialized results — the expensive part — to <code>rds/</code>, and figures and tables to <code>out/</code>. Nothing is written anywhere else, and neither directory is tracked. It draws a clean line between the things that took an afternoon to compute and the things that can be redrawn in a second. <a href="02-first-snakefile.html#sec-shape" class="quarto-xref"><span>Section 2.6</span></a> says more about the layout once you have seen a Snakefile.</p>
 

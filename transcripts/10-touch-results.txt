@@ -1,0 +1,11 @@
+$ snakemake --touch --force $(snakemake --summary all | awk '{print $1}' | grep '\.rds$')
+18 of 18 steps (100%) done
+$ snakemake -n
+Job stats:
+job           count
+----------  -------
+all               1
+figure1           1
+manuscript        1
+table1            1
+total             4

@@ -1,0 +1,134 @@
+# Sharing results {#sec-sharing}
+
+```{r}
+#| include: false
+source("_common.R")
+```
+
+Everything so far has assumed one machine. A coauthor who clones your repository
+gets the code, which is the cheap half of the project; what they do not get is the
+two days of compute that produced the numbers. This chapter is about handing over
+the expensive half, and about the one thing that goes wrong when you do.
+
+## The expensive half and the cheap half
+
+This is where the discipline of @sec-shape --- computed results in `rds/`, figures
+and tables in `out/` --- stops being tidiness and starts paying rent. What you
+share is `rds/`, on its own: it is the expensive half, and a collaborator who has
+it can regenerate every figure and table in seconds.
+
+A simulation that takes two days to run is not a build artifact in the way a figure
+is. 
+
+## Why not git
+
+Git is the tool you would
+reach for otherwise, except that git is bad at exactly this kind of content. A few
+hundred megabytes of `.rds` files bloats the repository permanently --- history
+keeps every version you ever committed, so it is not fixed by deleting them later
+--- diff and merge do nothing useful on serialized objects, and results derived
+from protected health information have no business on GitHub at all.
+
+## dat
+
+[`dat`](https://github.com/pbreheny/dat) is built for the gap the previous section
+described. It gives a directory a git-style push/pull workflow backed by AWS S3,
+without the version history:
+
+```bash
+cd rds
+dat init
+dat push
+```
+
+and, on a collaborator's machine:
+
+```bash
+dat clone jsmith7.rds.bucket rds
+dat pull
+```
+
+What makes it more than a wrapper around `rsync` is that it detects conflicts: if
+someone has modified a file you are about to overwrite, it says so rather than
+silently clobbering their work. It hashes file contents, so pushing a directory in
+which one of four hundred simulations changed transfers one file, and `dat status`
+will tell you whether you are in sync.
+
+The division of labor is natural. Git holds the code: small, textual, and wanting
+history. `dat` holds the results: large, binary, and only ever wanting to be
+*current*. Each is one command to push, and a collaborator with both has your
+entire project.
+
+## What does not arrive with the files
+
+Sharing tool aside, there are complexities with snakemake when sharing result files.
+
+Your coauthor clones the repository and pulls the results folder. Every `.rds` file
+is sitting there. But Snakemake's record of how those files were made ---
+`.snakemake/`, which is local and was never shared (@sec-rerun):
+
+```{r}
+#| echo: false
+#| output: asis
+transcript("10-no-metadata.txt")
+```
+
+Twenty-two jobs, eighteen of them the simulations that just arrived. On a real
+project that is the two days of compute the sharing was supposed to avoid.
+
+### Why bare `--touch` is not the fix
+
+`--touch` marks outputs as up to date without running anything, which sounds like
+exactly what is needed. Run it as it comes and it does too much:
+
+```{r}
+#| echo: false
+#| output: asis
+transcript("10-touch-everything.txt")
+```
+
+Twenty-two of twenty-two. It asserted the figure, the table and the paper along
+with the simulations are up to date, and there is now nothing left for Snakemake to do. Those are
+precisely the things you wanted rebuilt: they cost seconds, and rebuilding them is
+what makes the paper on your disk yours rather than a copy of your coauthor's.
+
+### The recipe: touch the results, build the rest
+
+Be specific. Name the expensive outputs, and leave everything downstream alone:
+
+```{r}
+#| echo: false
+#| output: asis
+transcript("10-touch-results.txt")
+```
+
+Eighteen touched, and the four jobs that matter are still to do. Then run
+`snakemake` normally and the figure, the table and the PDF are built on your
+machine, in seconds, from the results you were sent.
+
+Read it inside out: `--summary all` prints one row per output
+file the workflow knows about, `awk '{print $1}'` takes the filename column, and
+`grep '\.rds$'` keeps the simulation results while dropping the figures, tables,
+PDFs and the header line. `--touch` acts at the jobs to be run, so `--force` acts on the jobs you name and nothing else. 
+
+
+::: {.callout-warning}
+## `--touch` is an assertion, not a check
+
+You are telling Snakemake that files it has never seen are the correct output of
+the current code. It has no way to verify that, and it will believe you. If your
+coauthor generated those results with a different version of `sim.R` than the one
+you just cloned, the pipeline is now quietly wrong.
+:::
+
+## Try it
+
+In `examples/04-manuscript`, with everything already built:
+
+1. Delete `.snakemake/` and run `snakemake -n`. Which of the planned jobs are the
+   expensive ones, and which would have cost you seconds anyway?
+2. Run bare `snakemake --touch`, then `snakemake -n`. Confirm that nothing is left
+   to do.
+3. Delete `.snakemake/` again, run the `--touch --force` recipe, and then
+   `snakemake`. Four jobs run. Then edit `scripts/sim.R` and confirm the full
+   cascade comes back.
