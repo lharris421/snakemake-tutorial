@@ -111,6 +111,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 </head>
@@ -384,7 +387,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./06-figures-tables.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Figures and tables</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Figures (and tables)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -490,6 +493,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>        <span class="co">"&gt; {log} 2&gt;&amp;1"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><code>latexmk</code> is doing the LaTeX-specific work — running <code>pdflatex</code> and BibTeX as many times as it takes for references and citations to settle. Snakemake’s contribution is the <code>input:</code> block: the PDF depends on the figure and the table, which depend on the simulations, which depend on the code. One command now walks the entire chain.</p>
+<p>Written out, that chain is the whole project:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+  A["scripts/sim.R&lt;br/&gt;R/*.R"] --&gt; S["rds/200/sim/&lt;br/&gt;18 files"]
+  S --&gt; F[out/figure1.pdf]
+  S --&gt; T[out/table1.tex]
+  B["scripts/figure.R&lt;br/&gt;scripts/setup.R"] --&gt; F
+  C["scripts/table.R&lt;br/&gt;scripts/setup.R"] --&gt; T
+  F --&gt; P[build/paper.pdf]
+  T --&gt; P
+  D["paper.tex, main.tex&lt;br/&gt;preamble.tex, config.yaml"] --&gt; P
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>Every arrow is a line in the Snakefile, and every one of them is a claim that Snakemake will enforce. Nothing reaches <code>build/paper.pdf</code> except through a rule.</p>
+<p>You do not have to draw this by hand for your own projects, incidentally — <code>snakemake --rulegraph | dot -Tpdf &gt; rules.pdf</code> produces it from the Snakefile (<a href="09-debugging.html" class="quarto-xref"><span>Chapter 9</span></a>).</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -960,8 +986,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./06-figures-tables.html" class="pagination-link" aria-label="Figures and tables">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Figures and tables</span></span>
+      <a href="./06-figures-tables.html" class="pagination-link" aria-label="Figures (and tables)">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Figures (and tables)</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

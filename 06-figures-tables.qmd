@@ -1,9 +1,12 @@
-# Figures and tables {#sec-figures}
+# Figures (and tables) {#sec-figures}
 
 ```{r}
 #| include: false
 source("_common.R")
 ```
+
+This chapter goes into a bit more detail on . Move to
+`examples/04-manuscript`, which is the complete version of the simulation study.
 
 ## The aggregating rule
 

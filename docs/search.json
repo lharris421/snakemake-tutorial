@@ -469,45 +469,45 @@
   {
     "objectID": "06-figures-tables.html",
     "href": "06-figures-tables.html",
-    "title": "6  Figures and tables",
+    "title": "6  Figures (and tables)",
     "section": "",
-    "text": "6.1 The aggregating rule\nEverything so far has produced .rds files, which nobody reads. This chapter turns them into the two things a paper is actually made of. Move to examples/04-manuscript, which is the complete version of the simulation study.\nThe expand() sits in the rule that needs it. rule table1 next to it writes out the same call, because it happens to summarize the same grid — but it is free not to, and a supplementary figure covering only the large sample sizes would simply sweep less.\nIf multiple figures / tables share the same grid, they can certainly be defined once outside individual rules.\nThe R script receives all eighteen filenames as trailing arguments and stacks them:\npositional_arguments = TRUE tells optparse to accept bare arguments alongside the named flags, so the script can be called as",
+    "text": "6.1 The aggregating rule\nThis chapter goes into a bit more detail on . Move to examples/04-manuscript, which is the complete version of the simulation study.\nThe expand() sits in the rule that needs it. rule table1 next to it writes out the same call, because it happens to summarize the same grid — but it is free not to, and a supplementary figure covering only the large sample sizes would simply sweep less.\nIf multiple figures / tables share the same grid, they can certainly be defined once outside individual rules.\nThe R script receives all eighteen filenames as trailing arguments and stacks them:\npositional_arguments = TRUE tells optparse to accept bare arguments alongside the named flags, so the script can be called as",
     "crumbs": [
       "Products",
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Figures and tables</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Figures (and tables)</span>"
     ]
   },
   {
     "objectID": "06-figures-tables.html#the-aggregating-rule",
     "href": "06-figures-tables.html#the-aggregating-rule",
-    "title": "6  Figures and tables",
+    "title": "6  Figures (and tables)",
     "section": "",
     "text": "Snakefile (excerpt)\n\nrule figure1:\n    input:\n        script = \"scripts/figure.R\",\n        setup = \"scripts/setup.R\",\n        rds = expand(\"rds/{iterations}/sim/n{n}_rho{rho}_{method}.rds\",\n                     iterations = ITER,\n                     n = [50, 100, 400],\n                     rho = [0, 50, 80],\n                     method = [\"naive\", \"split\"])\n    output:\n        \"out/figure1.pdf\"\n    log:\n        \"logs/figure1.log\"\n    shell:\n        \"Rscript {input.script} --out {output} \"\n        \"{input.rds} &gt; {log} 2&gt;&1\"\n\n\n\n\n\n\nscripts/figure.R (excerpt)\n\nparsed &lt;- parse_args(OptionParser(option_list = option_list),\n                     positional_arguments = TRUE)\nopt &lt;- parsed$options\ninfiles &lt;- parsed$args\n\nres &lt;- do.call(rbind, lapply(infiles, readRDS))\n\n\nRscript scripts/figure.R --out out/figure1.pdf rds/200/sim/*.rds",
     "crumbs": [
       "Products",
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Figures and tables</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Figures (and tables)</span>"
     ]
   },
   {
     "objectID": "06-figures-tables.html#figures",
     "href": "06-figures-tables.html#figures",
-    "title": "6  Figures and tables",
+    "title": "6  Figures (and tables)",
     "section": "6.2 Figures",
     "text": "6.2 Figures\nNothing about the plotting code is Snakemake-specific — it is the ggsave() call you would write anyway:\n\n\nscripts/figure.R (excerpt)\n\np &lt;- ggplot(cov, aes(n, covered, color = method, group = method)) +\n  geom_line() +\n  geom_point() +\n  geom_hline(yintercept = opt$level, linetype = 2) +\n  facet_wrap(~rho) +\n  scale_x_log10(breaks = sort(unique(cov$n))) +\n  scale_color_manual(values = colors, labels = method_labels) +\n  coord_cartesian(ylim = c(0.5, 1)) +\n  labs(x = \"n\", y = sprintf(\"Coverage of %g%% CI\", 100 * opt$level),\n       color = \"Method\") +\n  theme_minimal()\n\ndir.create(dirname(opt$out), showWarnings = FALSE, recursive = TRUE)\nggsave(opt$out, p, width = 7, height = 3)\ncat(\"wrote\", opt$out, \"\\n\")\n\nTwo conventions, though, that matter more inside a pipeline than outside one:\nKeep the appearance in one place. The figure and the table both turn naive into something a reader sees, so the label and the color are decided once, in scripts/setup.R, which the scripts that draw things source:\n\n\nscripts/setup.R (excerpt)\n\nmethod_labels &lt;- c(\n  \"naive\" = \"Naive\",\n  \"split\" = \"Sample splitting\"\n)\n\ncolors &lt;- c(\"naive\" = \"#d95f02\", \"split\" = \"#1b9e77\")\n\nrather than being buried in two separate ggplot calls that can drift apart.\n\n\n\n\n\n\nNoteDeclare what a script sources — and split it so that hurts less\n\n\n\nSnakemake has no way to know that figure.R reads another file, so scripts/setup.R is listed in the input: of the rules whose scripts source it. An undeclared dependency is the one failure mode Snakemake cannot warn you about: change a color and the figure that uses it stays quietly stale (Chapter 9). Declare it wherever changing it could change an output.\nWhich is an argument for keeping such files narrow. setup.R here holds only presentation — labels, colors, the plotting packages — and the simulation rules do not use setup.R. The simulation functions live somewhere else entirely, one per file:\n\n\nexamples/04-manuscript\n\nR/gen_data.R          sourced by scripts/sim.R      -&gt; an input to rule sim\nR/select_forward.R\nR/one_rep.R\nscripts/setup.R          sourced by figure.R and table.R\n\nso that the two kinds of change cost what they should. Editing a hex code plans four jobs — the figure, the table and the two PDFs — and leaves the grid alone. Editing R/one_rep.R plans all twenty-two, because the results really are wrong now. Had both lived in one setup.R, the color change would have rerun eighteen unnecessary simulations, since Snakemake cannot tell which half of a file you touched.\nThe R/ directory is the layout an R package uses. IowaBiostat/project-workflow is a talk and a small example project that goes into this further and is worth giving a read.",
     "crumbs": [
       "Products",
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Figures and tables</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Figures (and tables)</span>"
     ]
   },
   {
     "objectID": "06-figures-tables.html#try-it",
     "href": "06-figures-tables.html#try-it",
-    "title": "6  Figures and tables",
+    "title": "6  Figures (and tables)",
     "section": "6.3 Try it",
     "text": "6.3 Try it\n\nChange the color palette in scripts/setup.R and run snakemake -n; then do the same to R/gen_data.R. Count the jobs each time, and explain the difference.\nAdd a figure2 rule showing coverage against rho instead of n, and add it to rule all.\nDelete out/table1.tex and run snakemake --cores 4. How far back does Snakemake go?",
     "crumbs": [
       "Products",
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Figures and tables</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Figures (and tables)</span>"
     ]
   },
   {
@@ -515,7 +515,7 @@
     "href": "07-manuscript.html",
     "title": "7  Building a manuscript",
     "section": "",
-    "text": "7.1 The rule\nHere is the situation this chapter is about. You are using an editor that rebuilds your PDF every time you save, so the document always matches its LaTeX source. It does not match its figures: out/figure1.pdf was made by some script at some point, and if you change the simulation nothing tells the manuscript about it. The document is only as current as the last time you remembered to rerun things.\nMaking the manuscript a rule closes that gap.\nlatexmk is doing the LaTeX-specific work — running pdflatex and BibTeX as many times as it takes for references and citations to settle. Snakemake’s contribution is the input: block: the PDF depends on the figure and the table, which depend on the simulations, which depend on the code. One command now walks the entire chain.",
+    "text": "7.1 The rule\nHere is the situation this chapter is about. You are using an editor that rebuilds your PDF every time you save, so the document always matches its LaTeX source. It does not match its figures: out/figure1.pdf was made by some script at some point, and if you change the simulation nothing tells the manuscript about it. The document is only as current as the last time you remembered to rerun things.\nMaking the manuscript a rule closes that gap.\nlatexmk is doing the LaTeX-specific work — running pdflatex and BibTeX as many times as it takes for references and citations to settle. Snakemake’s contribution is the input: block: the PDF depends on the figure and the table, which depend on the simulations, which depend on the code. One command now walks the entire chain.\nWritten out, that chain is the whole project:\nflowchart LR\n  A[\"scripts/sim.R&lt;br/&gt;R/*.R\"] --&gt; S[\"rds/200/sim/&lt;br/&gt;18 files\"]\n  S --&gt; F[out/figure1.pdf]\n  S --&gt; T[out/table1.tex]\n  B[\"scripts/figure.R&lt;br/&gt;scripts/setup.R\"] --&gt; F\n  C[\"scripts/table.R&lt;br/&gt;scripts/setup.R\"] --&gt; T\n  F --&gt; P[build/paper.pdf]\n  T --&gt; P\n  D[\"paper.tex, main.tex&lt;br/&gt;preamble.tex, config.yaml\"] --&gt; P\nEvery arrow is a line in the Snakefile, and every one of them is a claim that Snakemake will enforce. Nothing reaches build/paper.pdf except through a rule.\nYou do not have to draw this by hand for your own projects, incidentally — snakemake --rulegraph | dot -Tpdf &gt; rules.pdf produces it from the Snakefile (Chapter 9).",
     "crumbs": [
       "Products",
       "<span class='chapter-number'>7</span>  <span class='chapter-title'>Building a manuscript</span>"
@@ -526,7 +526,7 @@
     "href": "07-manuscript.html#the-rule",
     "title": "7  Building a manuscript",
     "section": "",
-    "text": "Snakefile (excerpt)\n\n## The manuscript depends on the figure and the table, which depend on the\n## simulations, which depend on the code.  That chain is the whole point: change\n## sim.R and `snakemake` rebuilds the PDF, through every step in between.\nrule manuscript:\n    input:\n        tex = \"paper.tex\",\n        shared = [\"main.tex\", \"preamble.tex\"],\n        config = \"config.yaml\",\n        figure = \"out/figure1.pdf\",\n        table = \"out/table1.tex\"\n    output:\n        \"build/paper.pdf\"\n    log:\n        \"logs/paper-latexmk.log\"\n    shell:\n        \"latexmk -pdf -interaction=nonstopmode -outdir=build {input.tex} \"\n        \"&gt; {log} 2&gt;&1\"\n\n\n\n\n\n\n\n\nNoteJournal versions, arXiv, supplements\n\n\n\nA real paper is eventually built more than one way. The separation above is what makes multiple versions with different formats lightweight — each variant is another wrapper around the same main.tex, and another rule producing its own PDF.\nSetting that up well is a LaTeX question rather than a Snakemake one, and pbreheny/manuscript-template already covers it.",
+    "text": "Snakefile (excerpt)\n\n## The manuscript depends on the figure and the table, which depend on the\n## simulations, which depend on the code.  That chain is the whole point: change\n## sim.R and `snakemake` rebuilds the PDF, through every step in between.\nrule manuscript:\n    input:\n        tex = \"paper.tex\",\n        shared = [\"main.tex\", \"preamble.tex\"],\n        config = \"config.yaml\",\n        figure = \"out/figure1.pdf\",\n        table = \"out/table1.tex\"\n    output:\n        \"build/paper.pdf\"\n    log:\n        \"logs/paper-latexmk.log\"\n    shell:\n        \"latexmk -pdf -interaction=nonstopmode -outdir=build {input.tex} \"\n        \"&gt; {log} 2&gt;&1\"\n\n\n\n\n\n\n\n\n\n\n\n\nNoteJournal versions, arXiv, supplements\n\n\n\nA real paper is eventually built more than one way. The separation above is what makes multiple versions with different formats lightweight — each variant is another wrapper around the same main.tex, and another rule producing its own PDF.\nSetting that up well is a LaTeX question rather than a Snakemake one, and pbreheny/manuscript-template already covers it.",
     "crumbs": [
       "Products",
       "<span class='chapter-number'>7</span>  <span class='chapter-title'>Building a manuscript</span>"
